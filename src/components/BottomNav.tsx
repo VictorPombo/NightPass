@@ -1,0 +1,131 @@
+import { C } from '../constants/theme'
+import type { PageId } from './Sidebar'
+
+interface BottomNavItem {
+  id: PageId
+  icon: string
+  label: string
+  emoji: string
+}
+
+const BOTTOM_NAV: BottomNavItem[] = [
+  { id: 'checkin',   icon: 'door-open',      emoji: '🚪', label: 'Check-in' },
+  { id: 'dashboard', icon: 'speedometer2',   emoji: '📊', label: 'Dashboard' },
+  { id: 'reservas',  icon: 'bookmark-check', emoji: '🎫', label: 'Reservas' },
+  { id: 'events',    icon: 'calendar-event', emoji: '📅', label: 'Eventos' },
+]
+
+interface Props {
+  active: PageId
+  setActive: (id: PageId) => void
+  setMOpen: (v: boolean) => void
+  newCI: number
+}
+
+export function BottomNav({ active, setActive, setMOpen, newCI }: Props) {
+  const isBottomTab = (id: PageId) => BOTTOM_NAV.some(n => n.id === id)
+
+  return (
+    <nav
+      className="np-bottom-nav"
+      style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 150,
+        background: 'rgba(10,14,26,0.97)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderTop: `1px solid rgba(59,130,246,0.12)`,
+        display: 'flex',
+        height: 62,
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}
+    >
+      {BOTTOM_NAV.map(item => {
+        const isActive = active === item.id
+        const showBadge = item.id === 'checkin' && newCI > 0
+        return (
+          <button
+            key={item.id}
+            onClick={() => setActive(item.id)}
+            style={{
+              flex: 1,
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center',
+              gap: 2,
+              background: 'none', border: 'none',
+              color: isActive ? C.acc : C.mut,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              position: 'relative',
+              transition: 'color .15s',
+            }}
+          >
+            {/* Active indicator */}
+            {isActive && (
+              <div style={{
+                position: 'absolute', top: 0, left: '50%',
+                transform: 'translateX(-50%)',
+                width: 28, height: 2,
+                background: C.acc,
+                borderRadius: '0 0 2px 2px',
+              }} />
+            )}
+
+            <div style={{ position: 'relative' }}>
+              <i
+                className={`bi bi-${item.icon}${isActive ? '-fill' : ''}`}
+                style={{ fontSize: 20, lineHeight: 1 }}
+              />
+              {showBadge && (
+                <span style={{
+                  position: 'absolute', top: -5, right: -8,
+                  background: C.acc, color: '#fff',
+                  fontSize: 9, fontWeight: 800,
+                  padding: '1px 5px', borderRadius: 8,
+                  minWidth: 16, textAlign: 'center', lineHeight: '14px',
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                }}>
+                  {newCI > 99 ? '99+' : newCI}
+                </span>
+              )}
+            </div>
+
+            <span style={{ fontSize: 10, fontWeight: isActive ? 700 : 500, lineHeight: 1 }}>
+              {item.label}
+            </span>
+          </button>
+        )
+      })}
+
+      {/* Menu button */}
+      <button
+        onClick={() => setMOpen(true)}
+        style={{
+          flex: 1,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          gap: 2,
+          background: 'none', border: 'none',
+          color: !isBottomTab(active) ? C.acc : C.mut,
+          cursor: 'pointer',
+          fontFamily: 'inherit',
+          position: 'relative',
+          transition: 'color .15s',
+        }}
+      >
+        {!isBottomTab(active) && (
+          <div style={{
+            position: 'absolute', top: 0, left: '50%',
+            transform: 'translateX(-50%)',
+            width: 28, height: 2,
+            background: C.acc,
+            borderRadius: '0 0 2px 2px',
+          }} />
+        )}
+        <i className="bi bi-grid-fill" style={{ fontSize: 20, lineHeight: 1 }} />
+        <span style={{ fontSize: 10, fontWeight: !isBottomTab(active) ? 700 : 500, lineHeight: 1 }}>
+          Menu
+        </span>
+      </button>
+    </nav>
+  )
+}

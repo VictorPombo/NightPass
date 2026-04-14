@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NightPass - Gerenciar Lista</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+*:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+body{background:#0a0a0f;color:#f5f0e1;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.container{max-width:520px;margin:0 auto;padding:20px 16px 60px}
+/* Header */
+.header{text-align:center;padding:24px 0 16px}
+.header .logo{font-size:28px;margin-bottom:4px}
+.header h1{font-size:20px;font-weight:800;color:#a78bfa}
+.header .sub{font-size:12px;color:#7c5cbf;margin-top:2px}
+/* Cards */
+.card{background:#161222;border:1px solid #2a2036;border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.card h2{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#a78bfa}
+/* Info */
+.info-row{display:flex;gap:14px;flex-wrap:wrap;color:#a89a7d;font-size:13px;margin-bottom:6px}
+.info-row span{display:flex;align-items:center;gap:4px}
+/* Badges */
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-purple{background:#7c3aed22;color:#a78bfa;border:1px solid #7c3aed44}
+.badge-green{background:#10b98122;color:#10b981;border:1px solid #10b98144}
+.badge-amber{background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44}
+/* Guest items */
+.guest-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:6px;transition:background .2s}
+.guest-item.confirmed{background:#10b98110;border:1px solid #10b98133}
+.guest-item.pending{background:#f59e0b08;border:1px solid #f59e0b33}
+.guest-item.checked-in{background:#3b82f610;border:1px solid #3b82f633}
+.guest-name{font-size:14px;font-weight:600;color:#f5f0e1}
+.guest-meta{font-size:11px;color:#a89a7d;margin-top:2px}
+.guest-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
+.btn-confirm{background:#10b98122;color:#10b981;border:1px solid #10b98144;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;min-height:32px;font-family:inherit}
+.btn-unconfirm{background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;min-height:32px;font-family:inherit}
+.btn-remove{background:#f8717122;color:#f87171;border:1px solid #f8717144;border-radius:8px;width:30px;height:30px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* Forms */
+label{font-size:10px;color:#a89a7d;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0a0f;border:1px solid #2a2036;border-radius:8px;padding:11px 13px;min-height:42px;color:#f5f0e1;font-size:13px;outline:none;font-family:inherit;transition:border-color .2s}
+textarea{min-height:80px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:#7c3aed88}
+.form-row{display:grid;gap:10px;margin-bottom:10px}
+.cols-2{grid-template-columns:1fr 1fr}
+/* Buttons */
+.btn{border:none;border-radius:10px;padding:12px 20px;min-height:44px;font-weight:700;font-size:13px;cursor:pointer;width:100%;transition:opacity .2s,transform .1s;font-family:inherit}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-purple{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff}
+.btn-green{background:linear-gradient(135deg,#059669,#10b981);color:#fff}
+.btn-wa{background:linear-gradient(135deg,#128c7e,#25d366);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{opacity:.85;transform:scale(.98)}
+/* Invite link box */
+.link-box{background:#0a0a0f;border:1px solid #7c3aed44;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:10px}
+.link-url{flex:1;font-size:12px;color:#a78bfa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-copy{background:#7c3aed22;border:1px solid #7c3aed44;color:#a78bfa;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit}
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;animation:fadeIn .3s}
+.toast-success{background:#10b981;color:#fff;box-shadow:0 4px 20px rgba(16,185,129,0.35)}
+.toast-error{background:#f87171;color:#fff;box-shadow:0 4px 20px rgba(248,113,113,0.35)}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.loading{text-align:center;padding:60px 0;color:#a89a7d}
+.empty{text-align:center;padding:24px 0;color:#a89a7d;font-size:13px}
+.closed{text-align:center;padding:60px 20px}
+.closed h2{color:#f87171;margin-bottom:8px}
+.closed p{color:#a89a7d;font-size:14px}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c5cbf;margin-bottom:8px}
+/* Stats bar */
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.stat{background:#0a0a0f;border:1px solid #2a2036;border-radius:10px;padding:8px 14px;text-align:center;flex:1}
+.stat-val{font-size:20px;font-weight:800;color:#a78bfa}
+.stat-label{font-size:10px;color:#a89a7d;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="container" id="app"><div class="loading">Carregando...</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+var SB_URL='https://irghwfzcbazujddfftsx.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyZ2h3ZnpjYmF6dWpkZGZmdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjI4OTAsImV4cCI6MjA4ODEzODg5MH0.CMrdK4-7rWbgYcqttWtGF1CIWjywL0KVxYCBx27emhw';
+var SB=window.supabase.createClient(SB_URL,SB_KEY);
+var app=document.getElementById('app');
+var params=new URLSearchParams(window.location.search);
+var token=params.get('t');
+var btoken=params.get('b');
+var mode=token?'reservation':'birthday';
+var guests=[];
+var event=null;
+var toast=null;
+var data=null;
+var BASE='https://nightpass-app.vercel.app';
+
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function showToast(msg,type){
+  if(toast)toast.remove();
+  toast=document.createElement('div');
+  toast.className='toast toast-'+type;
+  toast.textContent=msg;
+  document.body.appendChild(toast);
+  setTimeout(function(){if(toast)toast.remove();toast=null;},3000);
+}
+
+function inviteUrl(){return BASE+'/convite.html?t='+token;}
+
+function render(){
+  if(!token&&!btoken){
+    app.innerHTML='<div class="closed"><h2>Link inválido</h2><p>Este link não possui um token válido.</p></div>';
+    return;
+  }
+  if(!data){app.innerHTML='<div class="loading">Carregando...</div>';return;}
+
+  var isBday=mode==='birthday';
+  var evName=event?event.name:'';
+  var dateStr=isBday?data.birthday_date:data.reservation_date;
+  var evDate=dateStr?new Date(dateStr+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+  var totalG=guests.length;
+  var confirmedG=guests.filter(function(g){return g.confirmed;}).length;
+  var pendingG=guests.filter(function(g){return !g.confirmed;}).length;
+  var checkedInG=guests.filter(function(g){return g.checked_in;}).length;
+  var invUrl=inviteUrl();
+
+  var html='<div class="header">';
+  html+='<div class="logo">🎭</div>';
+  html+='<h1>'+(isBday?data.birthday_person_name:data.name)+'</h1>';
+  html+='<div class="sub">Gerenciamento de Lista · NightPass</div>';
+  html+='</div>';
+
+  // Detalhes
+  html+='<div class="card">';
+  html+='<h2>📋 Detalhes</h2>';
+  html+='<div class="info-row">';
+  if(evDate)html+='<span>📅 '+evDate+'</span>';
+  if(!isBday&&data.expected_arrival)html+='<span>🕐 '+data.expected_arrival.slice(0,5)+'</span>';
+  if(!isBday&&data.people_count)html+='<span>👥 '+data.people_count+' pessoas</span>';
+  html+='</div>';
+  if(!isBday&&data.location)html+='<div class="info-row"><span>📍 '+escHtml(data.location)+'</span></div>';
+  if(evName)html+='<div class="info-row"><span class="badge badge-purple">🎉 '+escHtml(evName)+'</span></div>';
+  html+='</div>';
+
+  // Stats
+  html+='<div class="stats">';
+  html+='<div class="stat"><div class="stat-val">'+totalG+'</div><div class="stat-label">Total</div></div>';
+  html+='<div class="stat"><div class="stat-val" style="color:#10b981">'+confirmedG+'</div><div class="stat-label">Confirmados</div></div>';
+  html+='<div class="stat"><div class="stat-val" style="color:#f59e0b">'+pendingG+'</div><div class="stat-label">Pendentes</div></div>';
+  if(checkedInG>0)html+='<div class="stat"><div class="stat-val" style="color:#3b82f6">'+checkedInG+'</div><div class="stat-label">Entraram</div></div>';
+  html+='</div>';
+
+  // Link de convite para convidados
+  if(!isBday&&token){
+    html+='<div class="card">';
+    html+='<h2>📲 Link de Convite</h2>';
+    html+='<p style="font-size:12px;color:#a89a7d;margin-bottom:10px">Envie este link para seus convidados. Eles preenchem os dados e aparecem aqui automaticamente.</p>';
+    html+='<div class="link-box"><div class="link-url">'+escHtml(invUrl)+'</div><button class="btn-copy" onclick="copyInvite()">📋 Copiar</button></div>';
+    html+='<div style="margin-top:10px">';
+    html+='<button class="btn btn-wa" onclick="shareWA()" style="margin-bottom:8px">📲 Compartilhar no WhatsApp</button>';
+    html+='</div>';
+    // Mensagem personalizada do convite
+    html+='<div style="margin-top:14px"><div class="section-label">Mensagem personalizada do convite</div>';
+    html+='<textarea id="inviteMsg" placeholder="Ex: Galera, tô comemorando meu aniversário! Confirme sua presença pelo link 🎉" style="margin-bottom:8px">'+escHtml(data.invite_message||'')+'</textarea>';
+    html+='<button class="btn btn-purple" onclick="saveInviteMsg()" style="max-width:180px">💾 Salvar mensagem</button>';
+    html+='</div>';
+    html+='</div>';
+  }
+
+  // Lista de convidados
+  html+='<div class="card">';
+  html+='<h2>👥 Convidados ('+totalG+')</h2>';
+  if(guests.length===0){
+    html+='<div class="empty">Nenhum convidado ainda.<br>Compartilhe o link de convite ou adicione manualmente abaixo.</div>';
+  }else{
+    // Pendentes primeiro, depois confirmados
+    var sorted=[].concat(guests).sort(function(a,b){
+      if(a.confirmed===b.confirmed)return 0;
+      return a.confirmed?1:-1;
+    });
+    sorted.forEach(function(g){
+      var cls=g.checked_in?'checked-in':g.confirmed?'confirmed':'pending';
+      html+='<div class="guest-item '+cls+'">';
+      // Status icon
+      html+='<div style="font-size:18px;flex-shrink:0">'+(g.checked_in?'✅':g.confirmed?'✅':'⏳')+'</div>';
+      // Info
+      html+='<div style="flex:1;min-width:0">';
+      html+='<div class="guest-name">'+escHtml(g.name)+'</div>';
+      html+='<div class="guest-meta">';
+      if(g.checked_in)html+='<span style="color:#3b82f6;font-weight:700">Entrou</span> · ';
+      else if(g.confirmed)html+='<span style="color:#10b981;font-weight:700">Confirmado</span> · ';
+      else html+='<span style="color:#f59e0b;font-weight:700">Pendente</span> · ';
+      html+=(g.phone?'📱 '+escHtml(g.phone)+' · ':'')+(g.birth_date?'🎂 '+new Date(g.birth_date+'T12:00').toLocaleDateString('pt-BR'):'');
+      html+='</div></div>';
+      // Actions
+      html+='<div class="guest-actions">';
+      if(!g.checked_in){
+        if(!g.confirmed)html+='<button class="btn-confirm" onclick="confirmGuest(\''+g.id+'\',true)">✓</button>';
+        else html+='<button class="btn-unconfirm" onclick="confirmGuest(\''+g.id+'\',false)">↩</button>';
+        html+='<button class="btn-remove" onclick="removeGuest(\''+g.id+'\')">✕</button>';
+      }
+      html+='</div>';
+      html+='</div>';
+    });
+  }
+  html+='</div>';
+
+  // Adicionar manualmente
+  html+='<div class="card">';
+  html+='<h2>➕ Adicionar Manualmente</h2>';
+  html+='<div class="form-row"><div><label>Nome completo *</label><input id="gName" placeholder="Nome do convidado" autocomplete="name"></div></div>';
+  html+='<div class="form-row cols-2">';
+  html+='<div><label>Celular (opcional)</label><input id="gPhone" type="tel" placeholder="(11) 99999-9999" autocomplete="tel"></div>';
+  html+='<div><label>Nascimento (opcional)</label><input id="gBdate" type="date"></div>';
+  html+='</div>';
+  html+='<button class="btn btn-green" onclick="addGuest()">➕ Adicionar (já confirmado)</button>';
+  html+='</div>';
+
+  app.innerHTML=html;
+}
+
+window.copyInvite=function(){
+  var url=inviteUrl();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){showToast('Link copiado!','success');});
+  }else{
+    var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    showToast('Link copiado!','success');
+  }
+};
+
+window.shareWA=function(){
+  var msg=data.invite_message&&data.invite_message.trim()?data.invite_message+'\n\n':'';
+  var dateStr=data.reservation_date?new Date(data.reservation_date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}):'';
+  var lines=msg+'🎉 *'+data.name+'* me convidou para um evento especial!\n';
+  if(dateStr)lines+='📅 '+dateStr+'\n';
+  if(data.location)lines+='📍 '+data.location+'\n';
+  lines+='\n👇 Confirme sua presença:\n'+inviteUrl();
+  window.open('https://wa.me/?text='+encodeURIComponent(lines),'_blank');
+};
+
+window.saveInviteMsg=function(){
+  var msg=(document.getElementById('inviteMsg').value||'').trim();
+  SB.from('reservations').update({invite_message:msg||null}).eq('id',data.id).then(function(r){
+    if(r.error){showToast('Erro ao salvar','error');return;}
+    data.invite_message=msg;
+    showToast('Mensagem salva!','success');
+  });
+};
+
+window.confirmGuest=function(id,val){
+  SB.from('reservation_guests').update({confirmed:val}).eq('id',id).then(function(r){
+    if(r.error){showToast('Erro','error');return;}
+    showToast(val?'Convidado confirmado! ✅':'Confirmação removida','success');
+    loadGuests();
+  });
+};
+
+window.removeGuest=function(id){
+  var table=mode==='birthday'?'birthday_guests':'reservation_guests';
+  SB.from(table).delete().eq('id',id).then(function(r){
+    if(r.error){showToast('Erro ao remover','error');return;}
+    showToast('Removido','success');
+    loadGuests();
+  });
+};
+
+// Rate limiting para addGuest
+var _addCount=0,_lastAdd=0;
+window.addGuest=function(){
+  var now=Date.now();
+  if(_addCount>=30){showToast('Limite atingido nesta sessão','error');return;}
+  if(now-_lastAdd<1500){showToast('Aguarde um momento','error');return;}
+  var name=(document.getElementById('gName').value||'').trim();
+  var phone=(document.getElementById('gPhone').value||'').trim();
+  var bdate=(document.getElementById('gBdate').value||'').trim();
+  if(!name){showToast('Digite o nome do convidado','error');return;}
+  if(name.length>100){showToast('Nome muito longo','error');return;}
+  _lastAdd=now;_addCount++;
+
+  var table=mode==='birthday'?'birthday_guests':'reservation_guests';
+  var fk=mode==='birthday'?'birthday_list_id':'reservation_id';
+  var insertData={name:name,phone:phone||null,birth_date:bdate||null,house_id:data.house_id,confirmed:true};
+  insertData[fk]=data.id;
+
+  SB.from(table).insert(insertData).then(function(r){
+    if(r.error){showToast('Erro: '+r.error.message,'error');_addCount--;return;}
+    SB.from('clients').select('id').eq('house_id',data.house_id).ilike('full_name',name).then(function(cr){
+      if(!cr.data||cr.data.length===0)SB.from('clients').insert({house_id:data.house_id,full_name:name,phone:phone||null,source:'guest_list',status:'active'});
+    });
+    showToast(name+' adicionado e confirmado!','success');
+    document.getElementById('gName').value='';
+    document.getElementById('gPhone').value='';
+    document.getElementById('gBdate').value='';
+    loadGuests();
+  });
+};
+
+function loadGuests(){
+  var table=mode==='birthday'?'birthday_guests':'reservation_guests';
+  var fk=mode==='birthday'?'birthday_list_id':'reservation_id';
+  SB.from(table).select('*').eq(fk,data.id).order('created_at').then(function(r){
+    guests=r.data||[];
+    render();
+  });
+}
+
+// Realtime
+function subscribeRealtime(){
+  if(mode!=='reservation'||!data)return;
+  SB.channel('lista_'+data.id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'reservation_guests',filter:'reservation_id=eq.'+data.id},function(){
+      loadGuests();
+    }).subscribe();
+}
+
+function init(){
+  if(!token&&!btoken){render();return;}
+  if(mode==='birthday'){
+    SB.from('birthday_lists').select('*').eq('token',btoken).single().then(function(r){
+      if(r.error||!r.data){app.innerHTML='<div class="closed"><h2>Lista não encontrada</h2><p>Este link pode ter expirado ou ser inválido.</p></div>';return;}
+      data=r.data;
+      if(data.event_id){SB.from('events').select('name').eq('id',data.event_id).single().then(function(er){event=er.data||null;loadGuests();});}
+      else loadGuests();
+    });
+  }else{
+    SB.from('reservations').select('*').eq('token',token).single().then(function(r){
+      if(r.error||!r.data){app.innerHTML='<div class="closed"><h2>Reserva não encontrada</h2><p>Este link pode ter expirado ou ser inválido.</p></div>';return;}
+      data=r.data;
+      if(data.event_id){SB.from('events').select('name').eq('id',data.event_id).single().then(function(er){event=er.data||null;loadGuests();subscribeRealtime();});}
+      else{loadGuests();subscribeRealtime();}
+    });
+  }
+}
+
+init();
+})();
+</script>
+</body>
+</html>

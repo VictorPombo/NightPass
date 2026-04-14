@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NightPass - Tarefa</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#f5f0e1;font-family:Inter,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.wrap{max-width:440px;width:100%;padding:24px 16px}
+.card{background:#161222;border:1px solid #2a2036;border-radius:16px;padding:24px;margin-bottom:12px}
+.logo{text-align:center;font-size:28px;margin-bottom:20px}
+h1{font-size:20px;font-weight:800;color:#f59e0b;margin-bottom:4px}
+.area{font-size:12px;color:#a89a7d;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+.info-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1e1a2a;font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-icon{font-size:16px;width:24px;text-align:center}
+.info-label{color:#a89a7d;font-size:11px}
+.info-val{color:#f5f0e1;font-weight:600}
+textarea{width:100%;background:#0a0a0f;border:1px solid #2a2036;border-radius:10px;padding:12px;color:#f5f0e1;font-size:13px;font-family:Inter,sans-serif;resize:vertical;min-height:80px;outline:none;margin-bottom:12px}
+textarea:focus{border-color:#f59e0b66}
+label{font-size:10px;color:#a89a7d;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+input{width:100%;background:#0a0a0f;border:1px solid #2a2036;border-radius:8px;padding:10px 12px;color:#f5f0e1;font-size:13px;font-family:Inter,sans-serif;outline:none;margin-bottom:12px}
+input:focus{border-color:#f59e0b66}
+.btn{border:none;border-radius:12px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;width:100%;font-family:Inter,sans-serif}
+.btn-gold{background:linear-gradient(135deg,#b8860b,#f59e0b);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.done-screen{text-align:center;padding:40px 20px}
+.done-icon{font-size:64px;margin-bottom:16px}
+.done-title{font-size:22px;font-weight:800;color:#10b981;margin-bottom:8px}
+.done-sub{color:#a89a7d;font-size:13px;line-height:1.6}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;animation:fadeIn .3s;background:#f87171;color:#fff}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.spinner{width:32px;height:32px;border:3px solid #2a2036;border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite;margin:60px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">🏭</div>
+  <div id="app"><div class="spinner"></div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+var SB=window.supabase.createClient('https://irghwfzcbazujddfftsx.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyZ2h3ZnpjYmF6dWpkZGZmdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjI4OTAsImV4cCI6MjA4ODEzODg5MH0.CMrdK4-7rWbgYcqttWtGF1CIWjywL0KVxYCBx27emhw');
+var app=document.getElementById('app');
+var params=new URLSearchParams(window.location.search);
+var token=params.get('t');
+var task=null;
+var event=null;
+var toast=null;
+
+function showToast(msg){
+  if(toast)toast.remove();
+  toast=document.createElement('div');
+  toast.className='toast';
+  toast.textContent=msg;
+  document.body.appendChild(toast);
+  setTimeout(function(){if(toast)toast.remove();toast=null;},3000);
+}
+
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function fmtDeadline(d){
+  if(!d)return '';
+  return new Date(d).toLocaleString('pt-BR',{weekday:'long',day:'2-digit',month:'long',hour:'2-digit',minute:'2-digit'});
+}
+
+function render(){
+  if(!task){app.innerHTML='<div style="text-align:center;padding:40px;color:#a89a7d">Tarefa não encontrada.</div>';return;}
+  if(task.status==='done'){
+    app.innerHTML='<div class="done-screen"><div class="done-icon">✅</div><div class="done-title">Tarefa concluída!</div><div class="done-sub">Esta tarefa já foi marcada como concluída.<br>'+(task.completed_at?'Em '+new Date(task.completed_at).toLocaleString('pt-BR'):'')+'</div></div>';
+    return;
+  }
+
+  var overdue=task.deadline&&new Date(task.deadline)<new Date();
+  var html='<div class="card">';
+  html+='<div class="area">'+escHtml(task.area_icon+' '+task.area)+'</div>';
+  html+='<h1>'+escHtml(task.title)+'</h1>';
+  if(task.description)html+='<p style="color:#a89a7d;font-size:13px;margin-bottom:16px">'+escHtml(task.description)+'</p>';
+  if(event)html+='<div class="info-row"><div class="info-icon">🎭</div><div><div class="info-label">Evento</div><div class="info-val">'+escHtml(event.name)+'</div></div></div>';
+  if(task.deadline)html+='<div class="info-row"><div class="info-icon">⏰</div><div><div class="info-label">Prazo'+(overdue?' — VENCIDO':' — restante')+'</div><div class="info-val" style="color:'+(overdue?'#f87171':'#f5f0e1')+'">'+fmtDeadline(task.deadline)+'</div></div></div>';
+  if(task.assignee_name)html+='<div class="info-row"><div class="info-icon">👤</div><div><div class="info-label">Responsável</div><div class="info-val">'+escHtml(task.assignee_name)+'</div></div></div>';
+  if(task.estimated_cost_cents)html+='<div class="info-row"><div class="info-icon">💰</div><div><div class="info-label">Valor estimado</div><div class="info-val">R$ '+((task.estimated_cost_cents/100).toFixed(2))+'</div></div></div>';
+  html+='</div>';
+
+  html+='<div class="card">';
+  html+='<label>Custo real (opcional)</label>';
+  html+='<input id="costVal" type="number" step="0.01" placeholder="R$ 0,00">';
+  html+='<label>Observação (opcional)</label>';
+  html+='<textarea id="notesVal" placeholder="Anote algo relevante sobre a conclusão..."></textarea>';
+  html+='<button class="btn btn-gold" id="btnDone" onclick="markDone()">✅ Marcar como concluído</button>';
+  html+='</div>';
+
+  app.innerHTML=html;
+}
+
+window.markDone=function(){
+  var btn=document.getElementById('btnDone');
+  var cost=document.getElementById('costVal').value;
+  var notes=document.getElementById('notesVal').value.trim();
+  if(btn)btn.disabled=true;
+  var update={status:'done',completed_at:new Date().toISOString(),completed_by:'responsável'};
+  if(cost)update.actual_cost_cents=Math.round(parseFloat(cost)*100);
+  if(notes)update.notes=notes;
+  SB.from('event_tasks').update(update).eq('id',task.id).then(function(r){
+    if(r.error){showToast('Erro: '+r.error.message);if(btn)btn.disabled=false;return;}
+    task={...task,...update};
+    app.innerHTML='<div class="done-screen"><div class="done-icon">✅</div><div class="done-title">Concluído!</div><div class="done-sub">Tarefa marcada como concluída com sucesso.</div></div>';
+  });
+};
+
+function init(){
+  if(!token){app.innerHTML='<div style="text-align:center;padding:40px;color:#a89a7d">Link inválido.</div>';return;}
+  SB.from('event_tasks').select('*').eq('token',token).single().then(function(r){
+    if(r.error||!r.data){app.innerHTML='<div style="text-align:center;padding:40px;color:#a89a7d">Tarefa não encontrada.</div>';return;}
+    task=r.data;
+    if(task.event_id){
+      SB.from('events').select('name,event_date').eq('id',task.event_id).single().then(function(er){
+        event=er.data||null;
+        render();
+      });
+    }else render();
+  });
+}
+init();
+})();
+</script>
+</body>
+</html>

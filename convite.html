@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NightPass - Convite</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#d4a017">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#f5f0e1;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.container{max-width:480px;margin:0 auto;padding:0 0 40px}
+/* Flyer hero */
+.hero{position:relative;width:100%;min-height:220px;background:linear-gradient(135deg,#1a0a2e,#0d1a2e);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.55}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,15,0.2) 0%,rgba(10,10,15,0.85) 100%)}
+.hero-content{position:relative;z-index:2;text-align:center;padding:32px 24px 24px}
+.hero-badge{display:inline-block;background:rgba(212,160,23,0.2);border:1px solid rgba(212,160,23,0.5);color:#d4a017;font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 14px;border-radius:20px;margin-bottom:12px;text-transform:uppercase}
+.hero-title{font-size:28px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,0.5)}
+.hero-sub{font-size:13px;color:rgba(245,240,225,0.7)}
+/* Cards */
+.pad{padding:0 16px}
+.card{background:#161222;border:1px solid #2a2418;border-radius:14px;padding:18px 20px;margin:12px 16px 0}
+.card h2{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#d4a017}
+/* Info row */
+.info-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1e1a2a;font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0}
+.info-label{color:#a89a7d;font-size:11px}
+.info-val{color:#f5f0e1;font-weight:600}
+/* Invite message */
+.invite-msg{background:#1a0f2e;border:1px solid #3a2a5a;border-radius:12px;padding:16px;margin:12px 16px 0;position:relative}
+.invite-msg::before{content:'"';font-size:48px;color:#7c3aed;opacity:0.3;position:absolute;top:-8px;left:12px;line-height:1;font-family:Georgia,serif}
+.invite-msg p{color:#c4b5e0;font-size:14px;line-height:1.6;padding-top:12px;font-style:italic}
+.invite-msg .from{color:#a78bfa;font-size:12px;font-weight:700;margin-top:10px}
+/* Form */
+label{font-size:10px;color:#a89a7d;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+input{width:100%;background:#0a0a0f;border:1px solid #2a2418;border-radius:10px;padding:13px 14px;min-height:46px;color:#f5f0e1;font-size:14px;outline:none;transition:border-color .2s;font-family:inherit}
+input:focus{border-color:#d4a01766}
+.field{margin-bottom:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:none;border-radius:12px;padding:15px 24px;min-height:50px;font-weight:800;font-size:15px;cursor:pointer;width:100%;transition:opacity .2s,transform .1s;font-family:inherit;letter-spacing:.02em}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-gold{background:linear-gradient(135deg,#b8860b,#d4a017,#f0bc20);color:#fff;box-shadow:0 4px 20px rgba(212,160,23,0.3)}
+.btn:active{opacity:.85;transform:scale(.98)}
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;animation:fadeUp .3s}
+.toast-success{background:#10b981;color:#fff;box-shadow:0 4px 20px rgba(16,185,129,0.4)}
+.toast-error{background:#f87171;color:#fff;box-shadow:0 4px 20px rgba(248,113,113,0.4)}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+/* Success */
+.success-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center}
+.success-icon{font-size:72px;margin-bottom:20px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-title{font-size:26px;font-weight:800;color:#10b981;margin-bottom:10px}
+.success-sub{color:#a89a7d;font-size:14px;line-height:1.6;max-width:320px}
+.success-card{background:#161222;border:1px solid #10b98133;border-radius:14px;padding:18px;margin:24px 0;width:100%;max-width:360px}
+.success-name{font-size:18px;font-weight:800;color:#f5f0e1;margin-bottom:4px}
+.success-event{font-size:13px;color:#a89a7d}
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:12px;color:#a89a7d}
+.spinner{width:36px;height:36px;border:3px solid #2a2418;border-top-color:#d4a017;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Error */
+.error-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:10px;padding:40px;text-align:center}
+.error-screen h2{color:#f87171;font-size:20px}
+.error-screen p{color:#a89a7d;font-size:13px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="loading"><div class="spinner"></div><span>Carregando convite...</span></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+var SB_URL='https://irghwfzcbazujddfftsx.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyZ2h3ZnpjYmF6dWpkZGZmdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjI4OTAsImV4cCI6MjA4ODEzODg5MH0.CMrdK4-7rWbgYcqttWtGF1CIWjywL0KVxYCBx27emhw';
+var SB=window.supabase.createClient(SB_URL,SB_KEY);
+var app=document.getElementById('app');
+var params=new URLSearchParams(window.location.search);
+var token=params.get('t');
+var data=null;
+var event=null;
+var house=null;
+var toast=null;
+var submitted=false;
+
+function showToast(msg,type){
+  if(toast)toast.remove();
+  toast=document.createElement('div');
+  toast.className='toast toast-'+type;
+  toast.textContent=msg;
+  document.body.appendChild(toast);
+  setTimeout(function(){if(toast)toast.remove();toast=null;},3500);
+}
+
+function fmtDate(d){
+  if(!d)return '';
+  return new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+
+function renderSuccess(name){
+  var evName=event?event.name:'';
+  var dateStr=fmtDate(data.reservation_date);
+  app.innerHTML='<div class="success-screen">'+
+    '<div class="success-icon">🎉</div>'+
+    '<div class="success-title">Você está na lista!</div>'+
+    '<div class="success-sub">Seu nome foi adicionado. Apresente seu celular na entrada para agilizar o check-in.</div>'+
+    '<div class="success-card">'+
+      '<div class="success-name">'+escHtml(name)+'</div>'+
+      '<div class="success-event">'+(evName?'🎉 '+escHtml(evName)+(dateStr?'<br>':''):'')+
+      (dateStr?'📅 '+dateStr:'')+
+      (data.location?'<br>📍 '+escHtml(data.location):'')+
+      '</div>'+
+    '</div>'+
+    '<div style="color:#a89a7d;font-size:12px">Qualquer dúvida, entre em contato com quem te enviou este link.</div>'+
+  '</div>';
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render(){
+  if(!token){
+    app.innerHTML='<div class="error-screen"><h2>Link inválido</h2><p>Este convite não possui um token válido.</p></div>';
+    return;
+  }
+  if(!data){
+    app.innerHTML='<div class="loading"><div class="spinner"></div><span>Carregando convite...</span></div>';
+    return;
+  }
+
+  var evName=event?event.name:'';
+  var dateStr=fmtDate(data.reservation_date);
+  var hasFlyer=data.flyer_url&&data.flyer_url.trim();
+  var hasMsg=data.invite_message&&data.invite_message.trim();
+  var houseAddr=house?(house.address?house.address+(house.city?', '+house.city:'')+(house.state?' - '+house.state:''):''):'';
+  var houseLogo=house&&house.logo_url?house.logo_url:'';
+  var houseName=house&&house.name?house.name:'';
+
+  // Hero — flyer completo se houver, senão gradiente
+  var html='<div class="hero">';
+  if(hasFlyer)html+='<img class="hero-img" src="'+escHtml(data.flyer_url)+'" alt="flyer">';
+  html+='<div class="hero-overlay"></div>';
+  html+='<div class="hero-content">';
+  // Logo da casa
+  if(houseLogo)html+='<img src="'+escHtml(houseLogo)+'" alt="logo" style="width:52px;height:52px;border-radius:12px;object-fit:cover;margin-bottom:10px;border:2px solid rgba(212,160,23,0.4);box-shadow:0 4px 16px rgba(0,0,0,0.4)">';
+  html+='<div class="hero-badge">🎭 Você está convidado</div>';
+  html+='<div class="hero-title">'+escHtml(data.name)+'</div>';
+  if(evName)html+='<div class="hero-sub">🎉 '+escHtml(evName)+'</div>';
+  if(houseName&&!houseLogo)html+='<div class="hero-sub" style="margin-top:4px">'+escHtml(houseName)+'</div>';
+  html+='</div></div>';
+
+  // Flyer separado se a imagem for grande/portfolio
+  if(hasFlyer){
+    html+='<div style="padding:0 16px;margin-top:12px">';
+    html+='<img src="'+escHtml(data.flyer_url)+'" alt="Flyer do evento" style="width:100%;border-radius:14px;display:block;max-height:420px;object-fit:cover;border:1px solid rgba(212,160,23,0.2)">';
+    html+='</div>';
+  }
+
+  // Detalhes do evento
+  html+='<div class="card"><h2>📋 Detalhes do Evento</h2>';
+  if(houseName)html+='<div class="info-row"><div class="info-icon">'+(houseLogo?'<img src="'+escHtml(houseLogo)+'" style="width:20px;height:20px;border-radius:4px;object-fit:cover">':'🏠')+'</div><div><div class="info-label">Local</div><div class="info-val">'+escHtml(houseName)+'</div></div></div>';
+  if(dateStr)html+='<div class="info-row"><div class="info-icon">📅</div><div><div class="info-label">Data</div><div class="info-val">'+dateStr+'</div></div></div>';
+  if(data.expected_arrival)html+='<div class="info-row"><div class="info-icon">🕐</div><div><div class="info-label">Horário de entrada</div><div class="info-val">'+data.expected_arrival.slice(0,5)+'</div></div></div>';
+  if(data.location)html+='<div class="info-row"><div class="info-icon">🪑</div><div><div class="info-label">Espaço / Mesa</div><div class="info-val">'+escHtml(data.location)+'</div></div></div>';
+  if(houseAddr)html+='<div class="info-row"><div class="info-icon">📍</div><div><div class="info-label">Endereço</div><div class="info-val">'+escHtml(houseAddr)+'</div></div></div>';
+  html+='</div>';
+
+  // Mensagem personalizada
+  if(hasMsg){
+    html+='<div class="invite-msg">';
+    html+='<p>'+escHtml(data.invite_message).replace(/\n/g,'<br>')+'</p>';
+    html+='<div class="from">— '+escHtml(data.name)+'</div>';
+    html+='</div>';
+  }
+
+  // Formulário de cadastro
+  html+='<div class="card">';
+  html+='<h2>✍️ Confirmar Presença</h2>';
+  html+='<div class="field"><label>Seu nome completo *</label><input id="gName" placeholder="Como você se chama?" autocomplete="name"></div>';
+  html+='<div class="row2">';
+  html+='<div class="field"><label>Celular (opcional)</label><input id="gPhone" type="tel" placeholder="(11) 99999-9999" autocomplete="tel"></div>';
+  html+='<div class="field"><label>Nascimento (opcional)</label><input id="gBdate" type="date"></div>';
+  html+='</div>';
+  html+='<p style="font-size:11px;color:#a89a7d;margin-bottom:14px">💡 Celular + nascimento = check-in automático na portaria</p>';
+  html+='<button class="btn btn-gold" onclick="register()" id="btnReg">Confirmar minha presença ✅</button>';
+  html+='</div>';
+
+  html+='<div style="text-align:center;padding:20px 16px 0;color:#a89a7d;font-size:11px">Powered by NightPass 🎭</div>';
+
+  app.innerHTML=html;
+}
+
+window.register=function(){
+  if(submitted)return;
+  var name=(document.getElementById('gName').value||'').trim();
+  var phone=(document.getElementById('gPhone').value||'').trim();
+  var bdate=(document.getElementById('gBdate').value||'').trim();
+  if(!name){showToast('Digite seu nome completo','error');return;}
+  if(name.length>100){showToast('Nome muito longo','error');return;}
+
+  var btn=document.getElementById('btnReg');
+  if(btn){btn.disabled=true;btn.textContent='Enviando...';}
+  submitted=true;
+
+  SB.from('reservation_guests').insert({
+    reservation_id:data.id,
+    house_id:data.house_id,
+    name:name,
+    phone:phone||null,
+    birth_date:bdate||null,
+    confirmed:false
+  }).then(function(r){
+    if(r.error){
+      submitted=false;
+      if(btn){btn.disabled=false;btn.textContent='Confirmar minha presença ✅';}
+      showToast('Erro: '+r.error.message,'error');
+      return;
+    }
+    // Tenta criar cliente no sistema
+    SB.from('clients').select('id').eq('house_id',data.house_id).ilike('full_name',name).then(function(cr){
+      if(!cr.data||cr.data.length===0){
+        SB.from('clients').insert({house_id:data.house_id,full_name:name,phone:phone||null,source:'guest_invite',status:'active'});
+      }
+    });
+    renderSuccess(name);
+  });
+};
+
+function init(){
+  if(!token){render();return;}
+  SB.from('reservations').select('*, houses(name, logo_url, address, city, state)').eq('token',token).single().then(function(r){
+    if(r.error||!r.data){
+      app.innerHTML='<div class="error-screen"><h2>Convite não encontrado</h2><p>Este link pode ter expirado ou ser inválido.</p></div>';
+      return;
+    }
+    data=r.data;
+    house=r.data.houses||null;
+    if(data.event_id){
+      SB.from('events').select('name').eq('id',data.event_id).single().then(function(er){
+        event=er.data||null;
+        render();
+      });
+    }else{
+      render();
+    }
+  });
+}
+
+init();
+})();
+</script>
+</body>
+</html>

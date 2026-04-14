@@ -1,0 +1,33 @@
+.vercel
+node_modules
+dist
+.env.local
+.env
+
+# Claude / MCP configs locais (podem conter tokens)
+.claude/
+.mcp.json
+
+# Arquivos temporários de debug/patch
+patch*.py
+patch*.js
+check*.py
+check*.js
+debug*.py
+fix_*.py
+find_*.py
+trace_*.py
+count_*.py
+analyze_*.py
+extract_*.py
+_extract_*.txt
+_tmp_*.js
+_tmp_*.txt
+tmp_*.txt
+test_*.py
+*.py
+xquads-squads/
+meta-ads-mcp/
+dash-preview.html
+nightpass.html
+design-preview.html

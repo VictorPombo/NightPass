@@ -1,0 +1,15 @@
+patch*.py
+check_*.py
+count_parens.py
+analyze_ev.py
+debug_aniv.py
+find_unclosed.py
+trace_*.py
+test_depth.py
+tmp_*.txt
+_tmp_check.js
+check_js.js
+meta-ads-mcp
+xquads-squads
+CLAUDE.md
+.claude
