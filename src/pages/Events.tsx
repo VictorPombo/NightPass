@@ -704,56 +704,73 @@ export function EventsPage({ house, onGoToReservas }: Props) {
         </div>
 
         {/* ── Artists section (full width) ── */}
-        <div style={{ marginTop: 14, background: 'rgba(255,255,255,0.03)', border: `1px solid ${C.brd}`, borderRadius: 12, padding: '12px 14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: C.txt }}>🎤 Artistas do Evento</span>
-            <button onClick={addArtist} style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 8, padding: '5px 12px', color: C.acc, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+        <div style={{ marginTop: 14, background: C.card, border: `1px solid ${C.brd}`, borderRadius: 12, padding: '16px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <span style={{ fontSize: 14, fontWeight: 800, color: C.txt, display: 'flex', alignItems: 'center', gap: 6 }}><span style={{fontSize: 16}}>🎤</span> Artistas do Evento</span>
+            <button onClick={addArtist} style={{ background: 'rgba(6, 182, 212, 0.15)', border: `1px solid rgba(6, 182, 212, 0.3)`, borderRadius: 8, padding: '6px 14px', color: C.acc, fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
               + Adicionar Artista
             </button>
           </div>
           {artists.length === 0 && (
-            <div style={{ color: C.mut, fontSize: 12, textAlign: 'center', padding: '10px 0' }}>Nenhum artista adicionado ainda.</div>
+            <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px dashed ${C.brd}`, borderRadius: 8, color: C.mut, fontSize: 13, textAlign: 'center', padding: '24px 0', fontWeight: 500 }}>Nenhum artista adicionado ainda.</div>
           )}
           {/* Header row */}
           {artists.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 150px 1fr 110px 36px', gap: 8, marginBottom: 2 }}>
-              <label style={{ fontSize: 11, color: C.mut, fontWeight: 600 }}>Nome do Artista</label>
-              <label style={{ fontSize: 11, color: C.mut, fontWeight: 600 }}>Tipo de Cachê</label>
-              <label style={{ fontSize: 11, color: C.mut, fontWeight: 600 }}>Valor do Cachê</label>
-              <label style={{ fontSize: 11, color: C.mut, fontWeight: 600 }}>🍺 Consumação</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 150px 1.2fr 120px 40px', gap: 10, marginBottom: 8, padding: '0 4px' }}>
+              <label style={{ fontSize: 11, color: C.txt, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nome do Artista</label>
+              <label style={{ fontSize: 11, color: C.txt, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tipo de Cachê</label>
+              <label style={{ fontSize: 11, color: C.txt, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Valor do Cachê</label>
+              <label style={{ fontSize: 11, color: C.gold, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>🍺 Consumação</label>
               <span />
             </div>
           )}
-          {artists.map((ar, i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 150px 1fr 110px 36px', gap: 8, marginBottom: 6, alignItems: 'center' }}>
-              <input {...inp} value={ar.name} onChange={e => setArtist(i, { name: e.target.value })} placeholder="Nome do artista..." />
-              <select {...inp} value={ar.fee_type} onChange={e => setArtist(i, { fee_type: e.target.value as ArtistEntry['fee_type'] })}>
-                <option value="fixed">Fixo (R$)</option>
-                <option value="percent">% portaria</option>
-                <option value="mixed">Fixo + %</option>
-                <option value="tbd">A combinar</option>
-              </select>
-              {/* Fee value cell */}
-              {ar.fee_type === 'fixed' && (
-                <input type="number" step="0.01" min="0" {...inp} value={ar.fee_cents} onChange={e => setArtist(i, { fee_cents: parseFloat(e.target.value) || 0 })} placeholder="R$ 0,00" />
-              )}
-              {ar.fee_type === 'percent' && (
-                <input type="number" step="1" min="0" max="100" {...inp} value={ar.fee_percent} onChange={e => setArtist(i, { fee_percent: parseFloat(e.target.value) || 0 })} placeholder="%" />
-              )}
-              {ar.fee_type === 'mixed' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                  <input type="number" step="0.01" min="0" {...inp} value={ar.fee_cents} onChange={e => setArtist(i, { fee_cents: parseFloat(e.target.value) || 0 })} placeholder="R$ fixo" />
-                  <input type="number" step="1" min="0" max="100" {...inp} value={ar.fee_percent} onChange={e => setArtist(i, { fee_percent: parseFloat(e.target.value) || 0 })} placeholder="%" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {artists.map((ar, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1.2fr 150px 1.2fr 120px 40px', gap: 10, alignItems: 'center', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: 10, border: `1px solid rgba(255,255,255,0.03)` }}>
+                <input {...inp} style={{...inp.style, background: C.bg2}} value={ar.name} onChange={e => setArtist(i, { name: e.target.value })} placeholder="Ex: DJ Alok..." />
+                <select {...inp} style={{...inp.style, background: C.bg2}} value={ar.fee_type} onChange={e => setArtist(i, { fee_type: e.target.value as ArtistEntry['fee_type'] })}>
+                  <option value="fixed">Fixo (R$)</option>
+                  <option value="percent">% portaria</option>
+                  <option value="mixed">Fixo + %</option>
+                  <option value="tbd">A combinar</option>
+                </select>
+                {/* Fee value cell */}
+                {ar.fee_type === 'fixed' && (
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 12, top: 11, color: C.mut, fontSize: 13, fontWeight: 600 }}>R$</span>
+                    <input type="number" step="0.01" min="0" {...inp} style={{...inp.style, background: C.bg2, paddingLeft: 34}} value={ar.fee_cents || ''} onChange={e => setArtist(i, { fee_cents: parseFloat(e.target.value) || 0 })} placeholder="0,00" />
+                  </div>
+                )}
+                {ar.fee_type === 'percent' && (
+                  <div style={{ position: 'relative' }}>
+                    <input type="number" step="1" min="0" max="100" {...inp} style={{...inp.style, background: C.bg2, paddingRight: 24}} value={ar.fee_percent || ''} onChange={e => setArtist(i, { fee_percent: parseFloat(e.target.value) || 0 })} placeholder="0" />
+                    <span style={{ position: 'absolute', right: 12, top: 11, color: C.mut, fontSize: 13, fontWeight: 600 }}>%</span>
+                  </div>
+                )}
+                {ar.fee_type === 'mixed' && (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: 8, top: 11, color: C.mut, fontSize: 12, fontWeight: 600 }}>R$</span>
+                      <input type="number" step="0.01" min="0" {...inp} style={{...inp.style, background: C.bg2, paddingLeft: 26, paddingRight: 4}} value={ar.fee_cents || ''} onChange={e => setArtist(i, { fee_cents: parseFloat(e.target.value) || 0 })} placeholder="0" />
+                    </div>
+                    <div style={{ position: 'relative' }}>
+                      <input type="number" step="1" min="0" max="100" {...inp} style={{...inp.style, background: C.bg2, paddingRight: 20, paddingLeft: 8}} value={ar.fee_percent || ''} onChange={e => setArtist(i, { fee_percent: parseFloat(e.target.value) || 0 })} placeholder="0" />
+                      <span style={{ position: 'absolute', right: 8, top: 11, color: C.mut, fontSize: 12, fontWeight: 600 }}>%</span>
+                    </div>
+                  </div>
+                )}
+                {ar.fee_type === 'tbd' && (
+                  <div style={{ ...inp.style, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(250, 204, 21, 0.1)', color: C.gold, fontSize: 12, fontWeight: 700, border: '1px solid rgba(250, 204, 21, 0.2)' }}>A combinar</div>
+                )}
+                {/* Consumação */}
+                <div style={{ position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: 10, top: 11, color: C.gold, fontSize: 13, fontWeight: 600 }}>R$</span>
+                  <input type="number" step="0.01" min="0" {...inp} style={{...inp.style, background: C.bg2, paddingLeft: 32, borderColor: 'rgba(250, 204, 21, 0.3)'}} value={ar.consumption_cents || ''} onChange={e => setArtist(i, { consumption_cents: parseFloat(e.target.value) || 0 })} placeholder="0,00" />
                 </div>
-              )}
-              {ar.fee_type === 'tbd' && (
-                <div style={{ ...inp.style, display: 'flex', alignItems: 'center', color: C.gold, fontSize: 11 }}>A combinar</div>
-              )}
-              {/* Consumação */}
-              <input type="number" step="0.01" min="0" {...inp} value={ar.consumption_cents} onChange={e => setArtist(i, { consumption_cents: parseFloat(e.target.value) || 0 })} placeholder="R$" />
-              <button onClick={() => removeArtist(i)} style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 8, padding: '6px 8px', color: C.red, cursor: 'pointer', fontSize: 14 }}>✕</button>
-            </div>
-          ))}
+                <button onClick={() => removeArtist(i)} title="Remover" style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 8, height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.red, cursor: 'pointer', fontSize: 16, transition: 'all 0.2s' }}>✕</button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Save buttons */}
