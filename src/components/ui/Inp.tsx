@@ -17,7 +17,6 @@ interface InpProps {
   rows?: number
 }
 
-const inputStyle: CSSProperties = {}
 
 export function Inp({ label, value, onChange, placeholder, mask, type = 'text', required, disabled, style, rows }: InpProps) {
   function handleChange(ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {

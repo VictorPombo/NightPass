@@ -4,9 +4,18 @@
 -- ==========================================
 
 -- 1. ENUMS E TIPOS
-CREATE TYPE fee_type AS ENUM ('fixed', 'percent', 'mixed', 'tbd');
-CREATE TYPE work_type AS ENUM ('limpeza', 'cozinha', 'servicos_gerais', 'garcom', 'cumim', 'recepcao', 'atendente', 'seguranca');
-CREATE TYPE gender_type AS ENUM ('male', 'female', 'both');
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'fee_type') THEN
+        CREATE TYPE fee_type AS ENUM ('fixed', 'percent', 'mixed', 'tbd');
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'work_type') THEN
+        CREATE TYPE work_type AS ENUM ('limpeza', 'cozinha', 'servicos_gerais', 'garcom', 'cumim', 'recepcao', 'atendente', 'seguranca');
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'gender_type') THEN
+        CREATE TYPE gender_type AS ENUM ('male', 'female', 'both');
+    END IF;
+END$$;
 
 -- 2. TABELAS CORE
 
