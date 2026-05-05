@@ -56,20 +56,21 @@ export function UsersPage({ house, user }: Props) {
             <div style={{ color: C.txt, fontWeight: 700 }}>{(editing.profiles as { full_name?: string })?.full_name ?? 'Usuário'}</div>
             <div>
               <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 6 }}>PAPEL</label>
-              <select value={editRole} onChange={e => setEditRole(e.target.value)}
-                style={{ width: '100%', background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '10px 12px', color: C.txt, fontSize: 14, minHeight: 44, fontFamily: 'inherit' }}>
+              <select className="inp-glass" value={editRole} onChange={e => setEditRole(e.target.value)}>
                 {ROLES.map(r => <option key={r} value={r}>{RL[r] ?? r}</option>)}
               </select>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
-              <Btn onClick={saveRole} style={{ flex: 1 }}>✅ Salvar</Btn>
+              <Btn onClick={saveRole} style={{ flex: 1 }}><i className="bi bi-check2-circle" /> Salvar</Btn>
               <Btn onClick={() => setEditing(null)} variant="ghost">Cancelar</Btn>
             </div>
           </div>
         )}
       </Modal>
 
-      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>⚙️ Usuários</h1>
+      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <i className="bi bi-people" style={{ color: C.acc }} /> Usuários
+      </h1>
       <p style={{ color: C.mut, fontSize: 14, marginBottom: 20 }}>{users.length} membros da equipe</p>
 
       <Card>
@@ -78,8 +79,8 @@ export function UsersPage({ house, user }: Props) {
           const isSelf = hu.user_id === user.id
           return (
             <div key={hu.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i < users.length - 1 ? `1px solid ${C.brd}` : 'none', opacity: hu.is_active ? 1 : 0.5 }}>
-              <div style={{ width: 38, height: 38, borderRadius: 19, background: (RC[hu.role] ?? C.mut) + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                👤
+              <div style={{ width: 38, height: 38, borderRadius: 19, background: (RC[hu.role] ?? C.mut) + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0, color: RC[hu.role] ?? C.mut }}>
+                <i className="bi bi-person-fill" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -90,10 +91,10 @@ export function UsersPage({ house, user }: Props) {
               </div>
               <Pill color={RC[hu.role] ?? C.mut} small>{RL[hu.role] ?? hu.role}</Pill>
               <div style={{ display: 'flex', gap: 6 }}>
-                {!isSelf && <Btn onClick={() => { setEditing(hu); setEditRole(hu.role) }} variant="ghost" small>✏️ Papel</Btn>}
+                {!isSelf && <Btn onClick={() => { setEditing(hu); setEditRole(hu.role) }} variant="ghost" small><i className="bi bi-pencil" /> Papel</Btn>}
                 {!isSelf && (
                   <Btn onClick={() => toggleActive(hu)} variant={hu.is_active ? 'danger' : 'secondary'} small>
-                    {hu.is_active ? '🔒 Desativar' : '🔓 Ativar'}
+                    <i className={hu.is_active ? "bi bi-lock" : "bi bi-unlock"} /> {hu.is_active ? 'Desativar' : 'Ativar'}
                   </Btn>
                 )}
               </div>

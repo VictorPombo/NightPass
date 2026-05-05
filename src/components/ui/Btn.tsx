@@ -28,10 +28,10 @@ export function Btn({
 }: BtnProps) {
   const isPri = !variant || variant === 'primary'
   const bg =
-    variant === 'danger' ? 'linear-gradient(135deg,#7f1d1d,#991b1b)' :
+    variant === 'danger' ? 'linear-gradient(135deg,#be123c,#e11d48)' :
     variant === 'ghost'  ? 'transparent' :
     variant === 'secondary' ? C.card :
-    `linear-gradient(135deg,${C.acd},${C.acc})`
+    `linear-gradient(135deg, ${C.mag}, ${C.acc})`;
 
   const col = variant === 'ghost' ? C.mut : C.txt
   const bd =
@@ -40,7 +40,7 @@ export function Btn({
     variant === 'ghost'     ? 'transparent' : 'transparent'
 
   const sh = isPri && !disabled
-    ? '0 4px 20px rgba(59,130,246,0.35), 0 0 40px rgba(59,130,246,0.1)'
+    ? `0 4px 20px rgba(236,72,153,0.35), 0 0 30px rgba(6,182,212,0.2)`
     : 'none'
 
   return (

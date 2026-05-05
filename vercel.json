@@ -1,15 +1,15 @@
 {
   "rewrites": [
-    { "source": "/e/:id*", "destination": "/index-src.html" },
-    { "source": "/reserva/:token*", "destination": "/index-src.html" },
-    { "source": "/lista/:token*", "destination": "/index-src.html" },
-    { "source": "/p/:token*", "destination": "/index-src.html" },
-    { "source": "/niver/:token*", "destination": "/index-src.html" },
-    { "source": "/niver-guest/:token*", "destination": "/index-src.html" },
-    { "source": "/v2", "destination": "/index-src.html" },
-    { "source": "/", "destination": "/index-src.html" },
-    { "source": "/app", "destination": "/index-src.html" },
-    { "source": "/legacy", "destination": "/nightpass.html" },
+    { "source": "/e/:id*", "destination": "/index.html" },
+    { "source": "/reserva/:token*", "destination": "/index.html" },
+    { "source": "/lista/:token*", "destination": "/index.html" },
+    { "source": "/p/:token*", "destination": "/index.html" },
+    { "source": "/niver/:token*", "destination": "/index.html" },
+    { "source": "/niver-guest/:token*", "destination": "/index.html" },
+    { "source": "/v2", "destination": "/index.html" },
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/app", "destination": "/index.html" },
+    { "source": "/legacy", "destination": "/index.html" },
     { "source": "/lista", "destination": "/lista.html" }
   ],
   "headers": [
@@ -51,18 +51,12 @@
       ]
     },
     {
-      "source": "/index-src.html",
+      "source": "/index.html",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
     },
-    {
-      "source": "/nightpass.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Pragma", "value": "no-cache" }
-      ]
-    },
+
     {
       "source": "/lista",
       "headers": [

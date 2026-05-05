@@ -17,19 +17,7 @@ interface InpProps {
   rows?: number
 }
 
-const inputStyle: CSSProperties = {
-  width: '100%',
-  background: '#0f172a',
-  border: `1px solid ${C.brd}`,
-  borderRadius: 8,
-  padding: '10px 12px',
-  color: C.txt,
-  fontSize: 14,
-  minHeight: 44,
-  fontFamily: 'inherit',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
+const inputStyle: CSSProperties = {}
 
 export function Inp({ label, value, onChange, placeholder, mask, type = 'text', required, disabled, style, rows }: InpProps) {
   function handleChange(ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -52,22 +40,24 @@ export function Inp({ label, value, onChange, placeholder, mask, type = 'text', 
       )}
       {rows ? (
         <textarea
+          className="inp-glass"
           value={displayValue}
           onChange={handleChange}
           placeholder={placeholder}
           disabled={disabled}
           rows={rows}
-          style={{ ...inputStyle, resize: 'vertical', minHeight: rows * 24, ...style }}
+          style={{ resize: 'vertical', minHeight: rows * 24, ...style }}
         />
       ) : (
         <input
+          className="inp-glass"
           type={type}
           value={displayValue}
           onChange={handleChange}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
-          style={{ ...inputStyle, ...style }}
+          style={style}
         />
       )}
     </div>
@@ -87,9 +77,10 @@ export function Sel({ label, value, onChange, options, style }: SelProps) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {label && <label style={{ fontSize: 12, color: C.mut, fontWeight: 600 }}>{label}</label>}
       <select
+        className="inp-glass"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{ ...inputStyle, ...style }}
+        style={style}
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>

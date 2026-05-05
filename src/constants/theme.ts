@@ -1,17 +1,18 @@
 export const C = {
-  bg: '#0a0e1a',
-  bg2: '#111827',
-  card: '#111827',
-  brd: '#1e2736',
-  acc: '#3b82f6',
-  acd: '#1d4ed8',
-  gold: '#60a5fa',
+  bg: '#030305',
+  bg2: '#0b0d14',
+  card: 'rgba(15, 20, 35, 0.6)',
+  brd: 'rgba(255, 255, 255, 0.08)',
+  acc: '#06b6d4', // Cyan Neon
+  acd: '#0891b2',
+  mag: '#ec4899', // Magenta Neon
+  gold: '#facc15',
   grn: '#10b981',
   red: '#f87171',
   txt: '#f9fafb',
-  mut: '#6b7280',
-  sub: '#9ca3af',
-  inp: '#0f172a',
+  mut: '#94a3b8',
+  sub: '#64748b',
+  inp: 'rgba(0, 0, 0, 0.3)',
 } as const
 
 export const RC: Record<string, string> = {

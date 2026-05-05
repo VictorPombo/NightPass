@@ -58,7 +58,7 @@ export function LoginPage({ onLogin }: { onLogin: (s: any) => void }) {
       }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{ fontSize: 44, marginBottom: 8 }}>🎭</div>
+          <div style={{ fontSize: 44, marginBottom: 8, color: C.acc }}><i className="bi bi-moon-stars" /></div>
           <h1 style={{ color: C.txt, fontWeight: 900, fontSize: 26, margin: 0 }}>NightPass</h1>
           <p style={{ color: C.mut, fontSize: 13, marginTop: 6 }}>Gestão inteligente para sua casa noturna</p>
         </div>
@@ -107,7 +107,7 @@ export function LoginPage({ onLogin }: { onLogin: (s: any) => void }) {
               fontFamily: 'inherit', marginTop: 4,
             }}
           >
-            {loading ? 'Entrando...' : '🔑 Entrar'}
+            {loading ? 'Entrando...' : <><i className="bi bi-box-arrow-in-right" /> Entrar</>}
           </button>
         </div>
 

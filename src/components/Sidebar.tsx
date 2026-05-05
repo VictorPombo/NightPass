@@ -60,13 +60,13 @@ export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, on
         className={`np-sb${mOpen ? ' open' : ''}`}
         style={{
           width: 240, minWidth: 240,
-          background: 'rgba(10,14,26,0.97)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          borderRight: '1px solid rgba(59,130,246,0.12)',
+          background: 'rgba(5, 5, 8, 0.75)',
+          backdropFilter: 'blur(30px) saturate(200%)',
+          WebkitBackdropFilter: 'blur(30px) saturate(200%)',
+          borderRight: '1px solid rgba(255, 255, 255, 0.05)',
           display: 'flex', flexDirection: 'column',
           height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100,
-          boxShadow: '4px 0 24px rgba(0,0,0,0.4)',
+          boxShadow: '4px 0 30px rgba(0,0,0,0.6), inset -1px 0 0 rgba(236,72,153,0.1)',
         }}
       >
         {/* Logo */}
@@ -77,11 +77,11 @@ export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, on
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
             <div style={{
               width: 34, height: 34,
-              background: `linear-gradient(135deg,${C.acd},${C.acc})`,
+              background: `linear-gradient(135deg, ${C.mag}, ${C.acc})`,
               borderRadius: 10, display: 'flex', alignItems: 'center',
               justifyContent: 'center', fontSize: 16,
-              boxShadow: `0 0 14px ${C.acd}55`,
-            }}>🎭</div>
+              boxShadow: `0 0 14px rgba(236,72,153,0.5)`,
+            }}><i className="bi bi-moon-stars" style={{ color: '#fff' }} /></div>
             <div style={{ color: C.txt, fontWeight: 700, fontSize: 14, lineHeight: 1.3 }}>
               {session.house.name || 'NightPass'}
             </div>
@@ -102,8 +102,8 @@ export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, on
                 onClick={() => { setActive(n.id); setMOpen(false) }}
                 style={{
                   width: '100%',
-                  background: isActive ? 'rgba(59,130,246,0.15)' : 'transparent',
-                  border: `1px solid ${isActive ? 'rgba(59,130,246,0.3)' : 'transparent'}`,
+                  background: isActive ? 'rgba(6,182,212,0.1)' : 'transparent',
+                  border: `1px solid ${isActive ? 'rgba(6,182,212,0.3)' : 'transparent'}`,
                   borderRadius: 12,
                   padding: '11px 14px',
                   display: 'flex', alignItems: 'center', gap: 12,
@@ -113,8 +113,9 @@ export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, on
                   cursor: 'pointer',
                   marginBottom: 4,
                   textAlign: 'left',
-                  boxShadow: isActive ? '0 0 20px rgba(59,130,246,0.08)' : 'none',
+                  boxShadow: isActive ? '0 0 20px rgba(6,182,212,0.15)' : 'none',
                   fontFamily: 'inherit',
+                  textShadow: isActive ? '0 0 10px rgba(6,182,212,0.5)' : 'none',
                 }}
               >
                 <i

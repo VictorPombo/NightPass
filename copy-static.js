@@ -5,7 +5,6 @@ const root = process.cwd()
 const dist = join(root, 'dist')
 
 const files = [
-  'nightpass.html',
   'lista.html',
   'convite.html',
   'tarefa.html',

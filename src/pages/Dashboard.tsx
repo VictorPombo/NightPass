@@ -43,11 +43,11 @@ interface DashRes {
 }
 
 const KPIS = (s: Stats) => [
-  { icon: '👥', label: 'Clientes', value: s.clients.toLocaleString('pt-BR'), color: C.acc },
-  { icon: '🎉', label: 'Eventos Ativos', value: s.events.toLocaleString('pt-BR'), color: C.mut },
-  { icon: '✅', label: 'Check-ins Hoje', value: s.todayCount.toLocaleString('pt-BR'), color: C.grn },
-  { icon: '💰', label: 'Receita Hoje', value: fmtCurrency(s.todayRev), color: C.gold },
-  { icon: '🪑', label: 'Reservas Hoje', value: s.reservations.toLocaleString('pt-BR'), color: '#a78bfa' },
+  { icon: <i className="bi bi-people" />, label: 'Clientes', value: s.clients.toLocaleString('pt-BR'), color: C.acc },
+  { icon: <i className="bi bi-calendar2-event" />, label: 'Eventos Ativos', value: s.events.toLocaleString('pt-BR'), color: C.mut },
+  { icon: <i className="bi bi-check-circle" />, label: 'Check-ins Hoje', value: s.todayCount.toLocaleString('pt-BR'), color: C.grn },
+  { icon: <i className="bi bi-cash-stack" />, label: 'Receita Hoje', value: fmtCurrency(s.todayRev), color: C.gold },
+  { icon: <i className="bi bi-bookmark-check" />, label: 'Reservas Hoje', value: s.reservations.toLocaleString('pt-BR'), color: '#a78bfa' },
 ]
 
 const PAY_METHODS = ['pix', 'cartao', 'dinheiro', 'cortesia', 'credito', 'debito']
@@ -236,8 +236,8 @@ export function DashboardPage({ house, user }: Props) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: C.txt, letterSpacing: '-0.02em', marginBottom: 4 }}>
-            📊 Dashboard
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.txt, letterSpacing: '-0.02em', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <i className="bi bi-speedometer2" style={{ color: C.acc }} /> Dashboard
           </h1>
           <p style={{ color: C.mut, fontSize: 14 }}>
             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -253,21 +253,21 @@ export function DashboardPage({ house, user }: Props) {
             backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
             border: '1px solid rgba(59,130,246,0.12)', borderTop: `3px solid ${kpi.color}`,
             borderRadius: 16, padding: '20px 22px',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 8px rgba(0,0,0,0.35), 0 16px 32px rgba(0,0,0,0.5)',
+            display: 'flex', flexDirection: 'column', gap: 12,
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 8px 16px rgba(0,0,0,0.6), 0 0 15px rgba(0,0,0,0.2)',
             transform: 'translateY(-3px)',
-            transition: 'transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s cubic-bezier(.4,0,.2,1)',
+            transition: 'transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1)',
           }}>
-            <div>
-              <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ color: C.mut, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {kpi.label}
               </div>
-              <div style={{ color: kpi.color, fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
-                {kpi.value}
+              <div style={{ fontSize: 20, color: kpi.color, opacity: 0.8, filter: `drop-shadow(0 0 10px ${kpi.color}aa)` }}>
+                {kpi.icon}
               </div>
             </div>
-            <div style={{ fontSize: 42, opacity: 0.85, filter: `drop-shadow(0 0 10px ${kpi.color}55)` }}>
-              {kpi.icon}
+            <div style={{ color: kpi.color, fontSize: 34, fontWeight: 700, lineHeight: 1, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums', textShadow: `0 0 15px ${kpi.color}88` }}>
+              {kpi.value}
             </div>
           </div>
         ))}
@@ -277,7 +277,9 @@ export function DashboardPage({ house, user }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
         {/* 30-day chart */}
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 16 }}>📈 Check-ins — 30 dias</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <i className="bi bi-graph-up-arrow" style={{ color: C.mut }} /> Check-ins — 30 dias
+          </div>
           <canvas ref={chartRef} style={{ width: '100%', height: 80 }} />
           <div style={{ display: 'flex', gap: 4, marginTop: 8, overflowX: 'auto' }}>
             {weekData.slice(-7).map((d, i) => (
@@ -292,7 +294,9 @@ export function DashboardPage({ house, user }: Props) {
 
         {/* Payment breakdown */}
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 16 }}>💳 Formas de pagamento</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <i className="bi bi-credit-card" style={{ color: C.mut }} /> Formas de pagamento
+          </div>
           {payStats.slice(0, 5).map((ps, i) => (
             <div key={i} style={{ marginBottom: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -320,7 +324,9 @@ export function DashboardPage({ house, user }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
         {/* Recent check-ins */}
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 14 }}>🔵 Últimos Check-ins</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <i className="bi bi-door-open" style={{ color: C.acc }} /> Últimos Check-ins
+          </div>
           {recent.length === 0
             ? <div style={{ color: C.mut, fontSize: 13 }}>Nenhum check-in hoje</div>
             : recent.map((ci, i) => (
@@ -343,7 +349,9 @@ export function DashboardPage({ house, user }: Props) {
 
         {/* Today's reservations */}
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 14 }}>🪑 Reservas do dia</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <i className="bi bi-bookmark-check" style={{ color: '#a78bfa' }} /> Reservas do dia
+          </div>
           {dashRes.length === 0
             ? <div style={{ color: C.mut, fontSize: 13 }}>Sem reservas hoje</div>
             : dashRes.slice(0, 4).map((r, i) => (
@@ -369,16 +377,19 @@ export function DashboardPage({ house, user }: Props) {
 
         {/* Quick check-in */}
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 14 }}>⚡ Check-in Rápido</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <i className="bi bi-lightning-charge" style={{ color: C.gold }} /> Check-in Rápido
+          </div>
           <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
             <input
+              className="inp-glass"
               value={ciSrch}
               onChange={e => setCiSrch(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && doCI()}
               placeholder="CPF, celular ou nome"
-              style={{ flex: 1, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 12px', color: C.txt, fontSize: 13, minHeight: 40, fontFamily: 'inherit' }}
+              style={{ flex: 1 }}
             />
-            <Btn onClick={doCI} disabled={ciLoad} small>🔍</Btn>
+            <Btn onClick={doCI} disabled={ciLoad} small><i className="bi bi-search" /></Btn>
           </div>
           {ciRes && (() => {
             const c = ciRes as { id: string; full_name: string; phone?: string }
@@ -387,19 +398,17 @@ export function DashboardPage({ house, user }: Props) {
                 <div style={{ background: C.bg, borderRadius: 10, padding: '10px 14px', marginBottom: 10 }}>
                   <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>{c.full_name}</div>
                 </div>
-                <select value={ciSelEv} onChange={e => setCiSelEv(e.target.value)}
-                  style={{ width: '100%', background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 10px', color: C.txt, fontSize: 13, marginBottom: 8, minHeight: 40, fontFamily: 'inherit' }}>
+                <select className="inp-glass" value={ciSelEv} onChange={e => setCiSelEv(e.target.value)}
+                  style={{ width: '100%', marginBottom: 8 }}>
                   {ciEvs.map(ev => <option key={ev.id} value={ev.id}>{ev.name}</option>)}
                 </select>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-                  <input value={ciPay} onChange={e => setCiPay(e.target.value)} placeholder="R$ valor"
-                    style={{ flex: 1, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 10px', color: C.txt, fontSize: 13, minHeight: 40, fontFamily: 'inherit' }} />
-                  <select value={ciPayMethod} onChange={e => setCiPayMethod(e.target.value)}
-                    style={{ background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 10px', color: C.txt, fontSize: 13, minHeight: 40, fontFamily: 'inherit' }}>
+                  <input className="inp-glass" value={ciPay} onChange={e => setCiPay(e.target.value)} placeholder="R$ valor" style={{ flex: 1 }} />
+                  <select className="inp-glass" value={ciPayMethod} onChange={e => setCiPayMethod(e.target.value)}>
                     {PAY_METHODS.map(m => <option key={m} value={m}>{payLabel(m)}</option>)}
                   </select>
                 </div>
-                <Btn onClick={confirmCI} style={{ width: '100%' }}>✅ Confirmar Check-in</Btn>
+                <Btn onClick={confirmCI} style={{ width: '100%' }}><i className="bi bi-check2-circle" /> Confirmar Check-in</Btn>
               </div>
             )
           })()}
