@@ -31,3 +31,4 @@ meta-ads-mcp/
 dash-preview.html
 nightpass.html
 design-preview.html
+.env*.local
