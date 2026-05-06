@@ -39,11 +39,11 @@ export type LoyalTier = { icon: string; label: string; color: string }
 
 /** Loyalty tier based on checkin count */
 export function loyalTier(n: number): LoyalTier {
-  if (n >= 50) return { icon: '👑', label: 'VIP', color: '#c084fc' }
-  if (n >= 20) return { icon: '🥇', label: 'Ouro', color: '#60a5fa' }
-  if (n >= 8)  return { icon: '🥈', label: 'Prata', color: '#9ca3af' }
-  if (n >= 3)  return { icon: '🥉', label: 'Bronze', color: '#b45309' }
-  return { icon: '🆔', label: 'Novo', color: '#6b7280' }
+  if (n >= 50) return { icon: '', label: 'VIP', color: '#c084fc' }
+  if (n >= 20) return { icon: '', label: 'Ouro', color: '#60a5fa' }
+  if (n >= 8)  return { icon: '', label: 'Prata', color: '#9ca3af' }
+  if (n >= 3)  return { icon: '', label: 'Bronze', color: '#b45309' }
+  return { icon: '', label: 'Novo', color: '#6b7280' }
 }
 
 export const PAY_COLORS: Record<string, string> = {

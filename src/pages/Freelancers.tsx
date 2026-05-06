@@ -9,14 +9,14 @@ import type { House, Freelancer, WorkType } from '../types'
 interface Props { house: House }
 
 const WORK_TYPES: { value: WorkType; label: string; icon: string; color: string }[] = [
-  { value: 'limpeza',         label: 'Limpeza',          icon: '🧹', color: '#60a5fa' },
-  { value: 'cozinha',         label: 'Cozinha',          icon: '👨‍🍳', color: '#f59e0b' },
-  { value: 'servicos_gerais', label: 'Serv. Gerais',     icon: '🔧', color: '#8b5cf6' },
-  { value: 'garcom',          label: 'Garçom',           icon: '🍽️', color: '#10b981' },
-  { value: 'cumim',           label: 'Cumim',            icon: '🥄', color: '#06b6d4' },
-  { value: 'recepcao',        label: 'Recepção',         icon: '💁', color: '#ec4899' },
-  { value: 'atendente',       label: 'Atendente',        icon: '🎟️', color: '#f87171' },
-  { value: 'seguranca',       label: 'Segurança',        icon: '🛡️', color: '#64748b' },
+  { value: 'limpeza',         label: 'Limpeza',          icon: '', color: '#60a5fa' },
+  { value: 'cozinha',         label: 'Cozinha',          icon: '‍', color: '#f59e0b' },
+  { value: 'servicos_gerais', label: 'Serv. Gerais',     icon: '', color: '#8b5cf6' },
+  { value: 'garcom',          label: 'Garçom',           icon: '️', color: '#10b981' },
+  { value: 'cumim',           label: 'Cumim',            icon: '', color: '#06b6d4' },
+  { value: 'recepcao',        label: 'Recepção',         icon: '', color: '#ec4899' },
+  { value: 'atendente',       label: 'Atendente',        icon: '️', color: '#f87171' },
+  { value: 'seguranca',       label: 'Segurança',        icon: '️', color: '#64748b' },
 ]
 
 const WORK_MAP = Object.fromEntries(WORK_TYPES.map(w => [w.value, w]))
@@ -195,7 +195,7 @@ export function FreelancersPage({ house }: Props) {
           )}
 
           <div style={{ display: 'flex', gap: 10 }}>
-            <Btn onClick={save} style={{ flex: 1 }}>💾 Salvar</Btn>
+            <Btn onClick={save} style={{ flex: 1 }}> Salvar</Btn>
             <Btn onClick={() => { setModal(false); setEditing(null) }} variant="ghost">Cancelar</Btn>
           </div>
         </div>
@@ -204,17 +204,17 @@ export function FreelancersPage({ house }: Props) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <div>
-          <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}>👷 Freelancers</h1>
+          <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}> Freelancers</h1>
           <div style={{ color: C.mut, fontSize: 13, marginTop: 4 }}>{freelancers.filter(f => f.status === 'ativo').length} ativos</div>
         </div>
-        <Btn onClick={openNew} icon="➕">Novo Freelancer</Btn>
+        <Btn onClick={openNew} icon="">Novo Freelancer</Btn>
       </div>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
         <input
           style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 10, padding: '8px 14px', color: C.txt, fontSize: 13, flex: '1 1 200px', fontFamily: 'inherit' }}
-          placeholder="🔍 Buscar por nome ou telefone..."
+          placeholder=" Buscar por nome ou telefone..."
           value={search} onChange={e => setSearch(e.target.value)}
         />
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -239,15 +239,15 @@ export function FreelancersPage({ house }: Props) {
             <div key={fr.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i < filtered.length - 1 ? `1px solid ${C.brd}` : 'none', opacity: fr.status === 'inativo' ? 0.55 : 1 }}>
               {/* Avatar */}
               <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.acc + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                👷
+                
               </div>
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>{fr.full_name}</div>
                 <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                  {fr.phone ? `📱 ${fr.phone}` : ''}
+                  {fr.phone ? ` ${fr.phone}` : ''}
                   {fr.phone && fr.pix_key ? ' · ' : ''}
-                  {fr.pix_key ? `💳 PIX: ${fr.pix_key}` : ''}
+                  {fr.pix_key ? ` PIX: ${fr.pix_key}` : ''}
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 4 }}>
                   {(fr.work_types ?? []).map(wt => {
@@ -273,21 +273,21 @@ export function FreelancersPage({ house }: Props) {
                 {fr.phone && (
                   <a href={`https://wa.me/55${cn(fr.phone)}`} target="_blank" rel="noreferrer"
                     style={{ display: 'inline-flex', alignItems: 'center', background: '#25D36622', color: '#25D366', border: '1px solid #25D36644', borderRadius: 8, padding: '6px 10px', fontSize: 12, textDecoration: 'none', fontWeight: 700 }}>
-                    💬
+                    
                   </a>
                 )}
-                <Btn onClick={() => openEdit(fr)} small variant="ghost">✏️</Btn>
+                <Btn onClick={() => openEdit(fr)} small variant="ghost">️</Btn>
                 <Btn onClick={() => toggleStatus(fr)} small variant="ghost">
-                  {fr.status === 'ativo' ? '⏸' : '▶'}
+                  {fr.status === 'ativo' ? '' : ''}
                 </Btn>
-                <Btn onClick={() => del(fr.id)} small variant="danger">🗑</Btn>
+                <Btn onClick={() => del(fr.id)} small variant="danger"></Btn>
               </div>
             </div>
           ))
         }
       </Card>
 
-      <FAB onClick={openNew} icon="➕" title="Novo freelancer" />
+      <FAB onClick={openNew} icon="" title="Novo freelancer" />
     </div>
   )
 }

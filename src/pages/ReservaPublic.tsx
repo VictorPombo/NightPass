@@ -24,11 +24,11 @@ interface Reservation {
 }
 
 const VALUE_TYPES = [
-  { value: 'normal', label: '🎟️ Pagamento Normal' },
-  { value: 'antecipado', label: '⚡ Pagamento Antecipado' },
-  { value: 'desconto', label: '🏷️ Com Desconto' },
-  { value: 'vip', label: '👑 VIP' },
-  { value: 'cortesia', label: '🎁 Cortesia' },
+  { value: 'normal', label: '️ Pagamento Normal' },
+  { value: 'antecipado', label: ' Pagamento Antecipado' },
+  { value: 'desconto', label: '️ Com Desconto' },
+  { value: 'vip', label: ' VIP' },
+  { value: 'cortesia', label: ' Cortesia' },
 ]
 
 interface Guest { name: string; phone: string; cpf: string; gender: string; value_type: string }
@@ -120,7 +120,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
   if (notFound) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+        <div style={{ fontSize: 48, marginBottom: 12 }}></div>
         <div style={{ color: C.txt, fontWeight: 700, fontSize: 18 }}>Reserva não encontrada</div>
         <div style={{ color: C.mut, fontSize: 14, marginTop: 8 }}>Verifique o link recebido</div>
       </div>
@@ -130,7 +130,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
   if (done) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
-        <div style={{ fontSize: 64, marginBottom: 16 }}>✅</div>
+        <div style={{ fontSize: 64, marginBottom: 16 }}></div>
         <div style={{ color: C.grn, fontWeight: 900, fontSize: 22, marginBottom: 8 }}>Tudo certo!</div>
         <div style={{ color: C.sub, fontSize: 14, marginBottom: 24 }}>
           {saved.length} convidado{saved.length !== 1 ? 's' : ''} cadastrado{saved.length !== 1 ? 's' : ''} para a reserva de <strong style={{ color: C.txt }}>{reserva?.name}</strong>.
@@ -138,7 +138,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
         <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 16, padding: 16, textAlign: 'left' }}>
           {saved.map((g, i) => (
             <div key={g.id} style={{ padding: '8px 0', borderBottom: i < saved.length - 1 ? `1px solid ${C.brd}` : 'none', color: C.txt, fontSize: 14 }}>
-              👤 {g.name}{g.phone ? ` · ${fmtPhone(g.phone)}` : ''}
+               {g.name}{g.phone ? ` · ${fmtPhone(g.phone)}` : ''}
             </div>
           ))}
         </div>
@@ -178,17 +178,17 @@ export function ReservaPublicPage({ token }: { token: string }) {
           </h1>
           {ev && (
             <div style={{ color: C.sub, fontSize: 14 }}>
-              🎉 {ev.name} · {fdate(ev.event_date)}
+               {ev.name} · {fdate(ev.event_date)}
             </div>
           )}
           {reserva!.location && (
             <div style={{ color: C.gold, fontSize: 13, marginTop: 6, fontWeight: 600 }}>
-              📍 {reserva!.location}
+               {reserva!.location}
             </div>
           )}
           {reserva!.expected_arrival && (
             <div style={{ color: C.sub, fontSize: 12, marginTop: 4 }}>
-              🕐 Chegada prevista: {reserva!.expected_arrival}
+               Chegada prevista: {reserva!.expected_arrival}
             </div>
           )}
         </div>
@@ -204,8 +204,8 @@ export function ReservaPublicPage({ token }: { token: string }) {
           </div>
           <div style={{ textAlign: 'right' }}>
             {spotsLeft > 0
-              ? <div style={{ color: C.grn, fontWeight: 700, fontSize: 14 }}>✅ {spotsLeft} vaga{spotsLeft !== 1 ? 's' : ''} restante{spotsLeft !== 1 ? 's' : ''}</div>
-              : <div style={{ color: C.gold, fontWeight: 700, fontSize: 14 }}>🔒 Lista completa</div>
+              ? <div style={{ color: C.grn, fontWeight: 700, fontSize: 14 }}> {spotsLeft} vaga{spotsLeft !== 1 ? 's' : ''} restante{spotsLeft !== 1 ? 's' : ''}</div>
+              : <div style={{ color: C.gold, fontWeight: 700, fontSize: 14 }}> Lista completa</div>
             }
           </div>
         </div>
@@ -219,10 +219,10 @@ export function ReservaPublicPage({ token }: { token: string }) {
                 <div>
                   <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>
                     {i + 1}. {g.name}
-                    {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 12, marginLeft: 6 }}>{g.gender === 'feminino' ? '♀' : '♂'}</span>}
+                    {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 12, marginLeft: 6 }}>{g.gender === 'feminino' ? '' : ''}</span>}
                   </div>
                   <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                    {g.phone ? `📱 ${fmtPhone(g.phone)}` : ''}{g.phone && g.cpf ? '  ·  ' : ''}{g.cpf ? `📄 ${fmtCPF(g.cpf)}` : ''}
+                    {g.phone ? ` ${fmtPhone(g.phone)}` : ''}{g.phone && g.cpf ? '  ·  ' : ''}{g.cpf ? ` ${fmtCPF(g.cpf)}` : ''}
                     {g.value_type && (
                       <span style={{ marginLeft: g.phone || g.cpf ? 8 : 0, background: C.acc + '22', color: C.acc, borderRadius: 6, padding: '1px 7px', fontSize: 11, fontWeight: 600 }}>
                         {VALUE_TYPES.find(vt => vt.value === g.value_type)?.label ?? g.value_type}
@@ -232,7 +232,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
                 </div>
                 <button onClick={() => removeGuest(g.id)}
                   style={{ background: 'none', border: 'none', color: C.mut, fontSize: 18, cursor: 'pointer', padding: '4px 8px', lineHeight: 1 }}>
-                  ✕
+                  
                 </button>
               </div>
             ))}
@@ -270,7 +270,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
                   {['masculino', 'feminino'].map(g => (
                     <button key={g} onClick={() => setForm(p => ({ ...p, gender: p.gender === g ? '' : g }))}
                       style={{ flex: 1, padding: '10px', borderRadius: 10, border: `2px solid ${form.gender === g ? C.acc : C.brd}`, background: form.gender === g ? C.acc + '22' : 'transparent', color: form.gender === g ? C.acc : C.mut, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      {g === 'masculino' ? '♂ Masculino' : '♀ Feminino'}
+                      {g === 'masculino' ? ' Masculino' : ' Feminino'}
                     </button>
                   ))}
                 </div>
@@ -296,7 +296,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
 
             <button onClick={addGuest} disabled={submitting}
               style={{ width: '100%', background: `linear-gradient(135deg,#1d4ed8,${C.acc})`, color: '#fff', border: 'none', borderRadius: 14, padding: 16, fontSize: 16, fontWeight: 800, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, fontFamily: 'inherit', marginBottom: 12 }}>
-              {submitting ? 'Salvando...' : '➕ Adicionar Convidado'}
+              {submitting ? 'Salvando...' : ' Adicionar Convidado'}
             </button>
           </>
         ) : null}
@@ -305,7 +305,7 @@ export function ReservaPublicPage({ token }: { token: string }) {
         {saved.length > 0 && (
           <button onClick={finish}
             style={{ width: '100%', background: C.grn + '22', border: `1px solid ${C.grn}44`, color: C.grn, borderRadius: 14, padding: 14, fontSize: 15, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit' }}>
-            ✅ Finalizar lista ({saved.length} convidado{saved.length !== 1 ? 's' : ''})
+             Finalizar lista ({saved.length} convidado{saved.length !== 1 ? 's' : ''})
           </button>
         )}
 

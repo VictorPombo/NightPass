@@ -11,12 +11,12 @@ const C = {
 }
 
 const STATUS_ORDER: Record<TicketOrder['payment_status'], { label: string; color: string }> = {
-  pending:   { label: '⏳ Aguardando pagamento', color: C.gold },
-  paid:      { label: '✅ Pago e confirmado!',   color: C.grn },
-  cancelled: { label: '❌ Cancelado',            color: C.red },
+  pending:   { label: ' Aguardando pagamento', color: C.gold },
+  paid:      { label: ' Pago e confirmado!',   color: C.grn },
+  cancelled: { label: ' Cancelado',            color: C.red },
 }
 
-const GENDER_LABEL: Record<string, string> = { male: '♂ Masculino', female: '♀ Feminino', both: 'Misto' }
+const GENDER_LABEL: Record<string, string> = { male: ' Masculino', female: ' Feminino', both: 'Misto' }
 
 interface EventWithHouse extends Event {
   houses?: { name: string; pix_key?: string; pix_holder?: string }
@@ -147,7 +147,7 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
   if (notFound || !event) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', color: C.mut }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🎭</div>
+        <div style={{ fontSize: 48, marginBottom: 12 }}></div>
         <div style={{ fontSize: 18, color: C.txt, fontWeight: 700 }}>Evento não encontrado</div>
       </div>
     </div>
@@ -172,10 +172,10 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
             {event.houses?.name ?? ''}
           </div>
           <h1 style={{ color: C.txt, fontSize: 32, fontWeight: 900, margin: '0 0 10px', letterSpacing: '-0.02em' }}>{event.name}</h1>
-          <div style={{ color: C.sub, fontSize: 14, marginBottom: 4 }}>📅 {fdate(event.event_date)}</div>
-          {event.start_time && <div style={{ color: C.sub, fontSize: 14, marginBottom: 4 }}>🕙 {event.start_time.slice(0, 5)}{event.end_time ? ` — ${event.end_time.slice(0, 5)}` : ''}</div>}
-          {event.genre && <div style={{ color: C.acc, fontSize: 13, fontWeight: 600, marginTop: 8 }}>🎵 {event.genre}</div>}
-          {event.attractions && <div style={{ color: C.sub, fontSize: 13, marginTop: 6 }}>🎤 {event.attractions}</div>}
+          <div style={{ color: C.sub, fontSize: 14, marginBottom: 4 }}> {fdate(event.event_date)}</div>
+          {event.start_time && <div style={{ color: C.sub, fontSize: 14, marginBottom: 4 }}> {event.start_time.slice(0, 5)}{event.end_time ? ` — ${event.end_time.slice(0, 5)}` : ''}</div>}
+          {event.genre && <div style={{ color: C.acc, fontSize: 13, fontWeight: 600, marginTop: 8 }}> {event.genre}</div>}
+          {event.attractions && <div style={{ color: C.sub, fontSize: 13, marginTop: 6 }}> {event.attractions}</div>}
         </div>
       </div>
 
@@ -186,13 +186,13 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
           <>
             {event.promotions && (
               <div style={{ background: C.gold + '18', border: `1px solid ${C.gold}44`, borderRadius: 12, padding: '12px 16px', marginBottom: 20, color: C.gold, fontSize: 13, fontWeight: 600 }}>
-                🎉 {event.promotions}
+                 {event.promotions}
               </div>
             )}
             <h2 style={{ color: C.txt, fontSize: 18, fontWeight: 800, marginBottom: 16 }}>Escolha seu ingresso</h2>
             {batches.length === 0
               ? <div style={{ background: C.card, borderRadius: 16, padding: 32, textAlign: 'center', border: `1px solid ${C.brd}` }}>
-                  <div style={{ fontSize: 36, marginBottom: 12 }}>🎟️</div>
+                  <div style={{ fontSize: 36, marginBottom: 12 }}>️</div>
                   <div style={{ color: C.mut, fontSize: 14 }}>Vendas encerradas ou em breve</div>
                 </div>
               : batches.map(b => (
@@ -276,7 +276,7 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
 
             <button onClick={submit} disabled={submitting}
               style={{ width: '100%', background: `linear-gradient(135deg,#1d4ed8,${C.acc})`, color: '#fff', border: 'none', borderRadius: 14, padding: 16, fontSize: 16, fontWeight: 800, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, fontFamily: 'inherit' }}>
-              {submitting ? 'Processando...' : `🎟️ Garantir Ingresso${qty > 1 ? `s (${qty})` : ''}`}
+              {submitting ? 'Processando...' : `️ Garantir Ingresso${qty > 1 ? `s (${qty})` : ''}`}
             </button>
           </>
         )}
@@ -284,7 +284,7 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
         {/* STEP: PIX payment */}
         {step === 'pix' && payResult && order && (payResult.mode === 'mp' || payResult.mode === 'manual') && (
           <div style={{ textAlign: 'center' }}>
-            <h2 style={{ color: C.txt, fontSize: 20, fontWeight: 900, marginBottom: 6 }}>💳 Pague via PIX</h2>
+            <h2 style={{ color: C.txt, fontSize: 20, fontWeight: 900, marginBottom: 6 }}> Pague via PIX</h2>
             <p style={{ color: C.sub, fontSize: 13, marginBottom: 24 }}>
               {payResult.mode === 'mp' ? 'Escaneie o QR code ou copie o código PIX' : 'Use a chave PIX abaixo para pagar'}
             </p>
@@ -306,7 +306,7 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
                 </div>
                 <button onClick={() => copyPix(payResult.qr_code!)}
                   style={{ background: copied ? C.grn + '22' : C.acc + '22', border: `1px solid ${copied ? C.grn : C.acc}44`, color: copied ? C.grn : C.acc, borderRadius: 10, padding: '8px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  {copied ? '✅ Copiado!' : '📋 Copiar código PIX'}
+                  {copied ? ' Copiado!' : ' Copiar código PIX'}
                 </button>
               </div>
             )}
@@ -321,14 +321,14 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
                 {payResult.pix_holder && <div style={{ color: C.mut, fontSize: 12, marginBottom: 12 }}>Favorecido: {payResult.pix_holder}</div>}
                 <button onClick={() => copyPix(payResult.pix_key!)}
                   style={{ background: copied ? C.grn + '22' : C.acc + '22', border: `1px solid ${copied ? C.grn : C.acc}44`, color: copied ? C.grn : C.acc, borderRadius: 10, padding: '8px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', width: '100%' }}>
-                  {copied ? '✅ Copiado!' : '📋 Copiar chave PIX'}
+                  {copied ? ' Copiado!' : ' Copiar chave PIX'}
                 </button>
               </div>
             )}
 
             <div style={{ background: C.gold + '12', border: `1px solid ${C.gold}33`, borderRadius: 12, padding: '12px 16px', marginBottom: 20, textAlign: 'left' }}>
               <div style={{ color: C.gold, fontWeight: 700, fontSize: 13, marginBottom: 4 }}>
-                💰 Total: {fmtCurrency(payResult.amount_cents)}
+                 Total: {fmtCurrency(payResult.amount_cents)}
               </div>
               <div style={{ color: C.sub, fontSize: 12 }}>
                 {payResult.mode === 'mp'
@@ -351,7 +351,7 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
         {/* STEP: Done — show tickets */}
         {step === 'done' && order && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 64, marginBottom: 12 }}>🎉</div>
+            <div style={{ fontSize: 64, marginBottom: 12 }}></div>
             <h2 style={{ color: C.grn, fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Ingresso confirmado!</h2>
             <p style={{ color: C.sub, fontSize: 14, marginBottom: 24 }}>
               Apresente o QR code na entrada. Salve essa tela!
@@ -360,7 +360,7 @@ export function EventPublicPage({ eventId }: { eventId: string }) {
             {tickets.map((tk, i) => (
               <div key={tk.id} style={{ background: C.card, border: `1px solid ${C.grn}44`, borderRadius: 20, padding: 24, marginBottom: 16, textAlign: 'center' }}>
                 <div style={{ color: C.grn, fontWeight: 700, fontSize: 13, marginBottom: 4 }}>
-                  🎟️ Ingresso {tickets.length > 1 ? `${i + 1}/${tickets.length}` : ''}
+                  ️ Ingresso {tickets.length > 1 ? `${i + 1}/${tickets.length}` : ''}
                 </div>
                 <div style={{ color: C.txt, fontWeight: 800, fontSize: 16, marginBottom: 16 }}>{event.name}</div>
                 <div style={{ background: '#fff', borderRadius: 12, padding: 12, display: 'inline-block', marginBottom: 12 }}>

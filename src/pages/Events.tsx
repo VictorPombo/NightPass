@@ -7,9 +7,9 @@ import { sT, _err, type ToastState } from '../utils/toast'
 import type { House, Event, ArtistEntry, Freelancer, EventFreelancer, TicketBatch, TicketOrder } from '../types'
 
 const WORK_LABELS: Record<string, string> = {
-  limpeza: '🧹 Limpeza', cozinha: '👨‍🍳 Cozinha', servicos_gerais: '🔧 Serv. Gerais',
-  garcom: '🍽️ Garçom', cumim: '🥄 Cumim', recepcao: '💁 Recepção', atendente: '🎟️ Atendente',
-  seguranca: '🛡️ Segurança',
+  limpeza: ' Limpeza', cozinha: '‍ Cozinha', servicos_gerais: ' Serv. Gerais',
+  garcom: '️ Garçom', cumim: ' Cumim', recepcao: ' Recepção', atendente: '️ Atendente',
+  seguranca: '️ Segurança',
 }
 
 interface Props { house: House; onGoToReservas?: (date: string, eventId: string) => void }
@@ -122,7 +122,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
   const [prodTab, setProdTab] = useState<'tasks' | 'freelancers' | 'budget' | 'layout'>('tasks')
   const [prodFr, setProdFr] = useState<EventFreelancer[]>([])
   const [addingArea, setAddingArea] = useState(false)
-  const [newAreaIcon, setNewAreaIcon] = useState('📋')
+  const [newAreaIcon, setNewAreaIcon] = useState('')
   const [newAreaName, setNewAreaName] = useState('')
   const [taskFormArea, setTaskFormArea] = useState<string | null>(null)
   const [taskForm, setTaskForm] = useState({ title: '', deadline: '', assignee_name: '', assignee_phone: '', estimated_cost_cents: '', description: '' })
@@ -167,7 +167,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
 
   async function addProdArea() {
     if (!newAreaName.trim() || !prodEv) return
-    setAddingArea(false); setNewAreaName(''); setNewAreaIcon('📋')
+    setAddingArea(false); setNewAreaName(''); setNewAreaIcon('')
     // Just opens the task form for this new area
     setTaskFormArea(newAreaName.trim() + '|||' + newAreaIcon)
     setTaskForm({ title: '', deadline: '', assignee_name: '', assignee_phone: '', estimated_cost_cents: '', description: '' })
@@ -214,12 +214,12 @@ export function EventsPage({ house, onGoToReservas }: Props) {
     const url = `https://nightpass-app.vercel.app/tarefa.html?t=${task.token}`
     const deadline = task.deadline ? new Date(task.deadline).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : ''
     const lines = [
-      `📋 *${task.area}* — ${task.title}`,
-      prodEv ? `🎭 Evento: ${prodEv.name}` : '',
+      ` *${task.area}* — ${task.title}`,
+      prodEv ? ` Evento: ${prodEv.name}` : '',
       deadline ? `⏰ Prazo: ${deadline}` : '',
-      task.description ? `📝 ${task.description}` : '',
+      task.description ? ` ${task.description}` : '',
       '',
-      '👇 Acesse para marcar como concluído:',
+      ' Acesse para marcar como concluído:',
       url,
     ].filter(Boolean).join('\n')
     const ph = (task.assignee_phone ?? '').replace(/\D/g, '')
@@ -238,7 +238,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
     const ph = (frData?.phone ?? '').replace(/\D/g, '')
     if (!ph) { alert('Freelancer sem telefone cadastrado'); return }
     const lines = [
-      `Olá ${frData?.full_name ?? ''}! 👋`,
+      `Olá ${frData?.full_name ?? ''}! `,
       prodEv ? `Temos uma vaga para você no evento *${prodEv.name}* — ${new Date(prodEv.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}` : '',
       `Confirme sua disponibilidade respondendo esta mensagem.`,
     ].filter(Boolean).join('\n')
@@ -290,12 +290,12 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       .footer { margin-top: 32px; font-size: 12px; color: #999; text-align: center; }
       @media print { body { padding: 16px; } }
     </style></head><body>
-    <h1>📋 ${ev.name}</h1>
-    <div class="sub">📅 ${new Date(ev.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })} &nbsp;·&nbsp; ${done}/${total} itens concluídos</div>
+    <h1> ${ev.name}</h1>
+    <div class="sub"> ${new Date(ev.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })} &nbsp;·&nbsp; ${done}/${total} itens concluídos</div>
     <div class="progress"><div class="progress-bar"></div></div>
     ${Object.entries(grouped).map(([cat, items]) => `
       <h2>${cat}</h2>
-      ${items.map(i => `<div class="item"><div class="box ${i.done ? 'done' : ''}">${i.done ? '✓' : ''}</div><span class="label ${i.done ? 'done' : ''}">${i.title}</span></div>`).join('')}
+      ${items.map(i => `<div class="item"><div class="box ${i.done ? 'done' : ''}">${i.done ? '' : ''}</div><span class="label ${i.done ? 'done' : ''}">${i.title}</span></div>`).join('')}
     `).join('')}
     <div class="footer">Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
     <script>window.onload = () => window.print()</script>
@@ -638,11 +638,11 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               <label style={{ display: 'flex', alignItems: 'center', gap: 8, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '7px 12px', cursor: 'pointer', fontSize: 12, color: C.mut }}>
                 {form.flyer_url as string
                   ? <img src={String(form.flyer_url)} alt="flyer" style={{ width: 36, height: 36, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
-                  : <span>📁</span>
+                  : <span></span>
                 }
                 <span style={{ flex: 1 }}>{form.flyer_url ? 'Trocar imagem' : 'Selecionar imagem (JPG, PNG, WEBP)'}</span>
                 {form.flyer_url as string && (
-                  <button onClick={e => { e.preventDefault(); setF('flyer_url', '') }} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 4, color: C.mut, cursor: 'pointer', fontSize: 11, padding: '2px 6px' }}>✕</button>
+                  <button onClick={e => { e.preventDefault(); setF('flyer_url', '') }} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 4, color: C.mut, cursor: 'pointer', fontSize: 11, padding: '2px 6px' }}></button>
                 )}
                 <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => {
                   const file = e.target.files?.[0]
@@ -687,7 +687,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               </div>
             </div>
             <div>
-              <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🔧 Produção (R$)</label>
+              <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> Produção (R$)</label>
               <input type="number" step="0.01" min="0" {...inp} value={String(form.production_cost_cents ?? 0)} onChange={e => setF('production_cost_cents', e.target.value)} placeholder="0,00" />
             </div>
             {editing && (
@@ -706,7 +706,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
         {/* ── Artists section (full width) ── */}
         <div style={{ marginTop: 14, background: C.card, border: `1px solid ${C.brd}`, borderRadius: 12, padding: '16px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <span style={{ fontSize: 14, fontWeight: 800, color: C.txt, display: 'flex', alignItems: 'center', gap: 6 }}><span style={{fontSize: 16}}>🎤</span> Artistas do Evento</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: C.txt, display: 'flex', alignItems: 'center', gap: 6 }}><span style={{fontSize: 16}}></span> Artistas do Evento</span>
             <button onClick={addArtist} style={{ background: 'rgba(6, 182, 212, 0.15)', border: `1px solid rgba(6, 182, 212, 0.3)`, borderRadius: 8, padding: '6px 14px', color: C.acc, fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
               + Adicionar Artista
             </button>
@@ -720,7 +720,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               <label style={{ fontSize: 11, color: C.txt, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nome do Artista</label>
               <label style={{ fontSize: 11, color: C.txt, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tipo de Cachê</label>
               <label style={{ fontSize: 11, color: C.txt, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Valor do Cachê</label>
-              <label style={{ fontSize: 11, color: C.gold, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>🍺 Consumação</label>
+              <label style={{ fontSize: 11, color: C.gold, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}> Consumação</label>
               <span />
             </div>
           )}
@@ -767,7 +767,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   <span style={{ position: 'absolute', left: 10, top: 11, color: C.gold, fontSize: 13, fontWeight: 600 }}>R$</span>
                   <input type="number" step="0.01" min="0" {...inp} style={{...inp.style, background: C.bg2, paddingLeft: 32, borderColor: 'rgba(250, 204, 21, 0.3)'}} value={ar.consumption_cents || ''} onChange={e => setArtist(i, { consumption_cents: parseFloat(e.target.value) || 0 })} placeholder="0,00" />
                 </div>
-                <button onClick={() => removeArtist(i)} title="Remover" style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 8, height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.red, cursor: 'pointer', fontSize: 16, transition: 'all 0.2s' }}>✕</button>
+                <button onClick={() => removeArtist(i)} title="Remover" style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 8, height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.red, cursor: 'pointer', fontSize: 16, transition: 'all 0.2s' }}></button>
               </div>
             ))}
           </div>
@@ -775,7 +775,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
 
         {/* Save buttons */}
         <div style={{ marginTop: 12, display: 'flex', gap: 10 }}>
-          <Btn onClick={save} style={{ flex: 1 }}>💾 Salvar</Btn>
+          <Btn onClick={save} style={{ flex: 1 }}> Salvar</Btn>
           <Btn onClick={() => { setModal(false); setEditing(null) }} variant="ghost">Cancelar</Btn>
         </div>
         </div>{/* end LEFT */}
@@ -784,14 +784,14 @@ export function EventsPage({ house, onGoToReservas }: Props) {
         <div style={{ flex: '0 0 35%', overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column' }}>
           {!editing
             ? <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12, color: C.mut }}>
-                <div style={{ fontSize: 32 }}>🏭</div>
+                <div style={{ fontSize: 32 }}></div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.sub }}>Produção</div>
                 <div style={{ fontSize: 12, textAlign: 'center', maxWidth: 200 }}>Salve o evento para começar a organizar tarefas, freelancers e orçamento.</div>
               </div>
             : <>
             {/* Header */}
             <div style={{ marginBottom: 10, paddingBottom: 10, borderBottom: `1px solid ${C.brd}`, flexShrink: 0 }}>
-              <div style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 2 }}>🏭 PRODUÇÃO</div>
+              <div style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 2 }}> PRODUÇÃO</div>
               {prodTasks.length > 0 && (() => {
                 const done = prodTasks.filter(t => t.status === 'done').length
                 const pct = Math.round(done / prodTasks.length * 100)
@@ -810,7 +810,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               {/* Tabs */}
               <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
                 {(['tasks', 'layout', 'budget'] as const).map(tab => {
-                  const labels = { tasks: `📋 Tarefas (${prodTasks.length})`, layout: `🪑 Layout (${prodRes.length})`, budget: '💰 Budget' }
+                  const labels = { tasks: ` Tarefas (${prodTasks.length})`, layout: `🪑 Layout (${prodRes.length})`, budget: ' Budget' }
                   return (
                     <button key={tab} onClick={() => setProdTab(tab as typeof prodTab)} style={{ padding: '4px 10px', borderRadius: 6, border: `1px solid ${prodTab === tab ? '#f59e0b' : C.brd}`, background: prodTab === tab ? '#f59e0b22' : 'transparent', color: prodTab === tab ? '#f59e0b' : C.mut, fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                       {labels[tab]}
@@ -835,16 +835,16 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                       {tasks.map(t => (
                         <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: `1px solid ${C.brd}22` }}>
                           <button onClick={() => toggleProdTask(t)} style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${t.status === 'done' ? '#10b981' : C.brd}`, background: t.status === 'done' ? '#10b981' : 'transparent', color: '#fff', fontSize: 10, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            {t.status === 'done' ? '✓' : ''}
+                            {t.status === 'done' ? '' : ''}
                           </button>
                           <span style={{ flex: 1, fontSize: 12, color: t.status === 'done' ? C.mut : C.txt, textDecoration: t.status === 'done' ? 'line-through' : 'none' }}>{t.title}</span>
                           {t.deadline && <span style={{ fontSize: 10, color: C.mut }}>{new Date(t.deadline).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</span>}
-                          {t.assignee_phone && <button onClick={() => sendTaskWA(t)} style={{ background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', padding: 0 }}>📲</button>}
+                          {t.assignee_phone && <button onClick={() => sendTaskWA(t)} style={{ background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', padding: 0 }}></button>}
                         </div>
                       ))}
                     </div>
                   ))}
-                  {prodTasks.length === 0 && <div style={{ color: C.mut, fontSize: 12, textAlign: 'center', padding: '20px 0' }}>Nenhuma tarefa. Abra o painel 🏭 Produção para criar áreas e tarefas.</div>}
+                  {prodTasks.length === 0 && <div style={{ color: C.mut, fontSize: 12, textAlign: 'center', padding: '20px 0' }}>Nenhuma tarefa. Abra o painel  Produção para criar áreas e tarefas.</div>}
                 </div>
               )
             })()}
@@ -872,8 +872,8 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: 13, fontWeight: 700, color: C.txt, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name}</div>
                           <div style={{ fontSize: 11, color: C.mut, display: 'flex', gap: 8, marginTop: 1 }}>
-                            {r.location && <span>📍 {r.location}</span>}
-                            {r.people_count && <span>👥 {r.people_count}px</span>}
+                            {r.location && <span> {r.location}</span>}
+                            {r.people_count && <span> {r.people_count}px</span>}
                           </div>
                           {/* Special items */}
                           {(r.reservation_items ?? []).length > 0 && (
@@ -887,7 +887,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                           )}
                         </div>
                         <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 6, background: r.status === 'arrived' ? '#10b98122' : '#f59e0b22', color: r.status === 'arrived' ? '#10b981' : '#f59e0b', fontWeight: 700, flexShrink: 0 }}>
-                          {r.status === 'arrived' ? '✅' : '⏳'}
+                          {r.status === 'arrived' ? '' : ''}
                         </span>
                       </div>
                     </div>
@@ -907,9 +907,9 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               return (
                 <div style={{ flex: 1 }}>
                   {[
-                    { label: '📥 Receita (reservas)', val: totalRevenue, color: '#10b981' },
-                    { label: '📤 Despesas estimadas', val: totalEst, color: '#f59e0b' },
-                    { label: '📊 Margem', val: margin, color: margin >= 0 ? '#10b981' : '#f87171' },
+                    { label: ' Receita (reservas)', val: totalRevenue, color: '#10b981' },
+                    { label: ' Despesas estimadas', val: totalEst, color: '#f59e0b' },
+                    { label: ' Margem', val: margin, color: margin >= 0 ? '#10b981' : '#f87171' },
                   ].map(({ label, val, color }) => (
                     <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${C.brd}22`, fontSize: 13 }}>
                       <span style={{ color: C.mut }}>{label}</span>
@@ -918,14 +918,14 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   ))}
                   {tasksReal > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${C.brd}22`, fontSize: 13 }}>
-                      <span style={{ color: C.mut }}>💸 Margem real</span>
+                      <span style={{ color: C.mut }}> Margem real</span>
                       <span style={{ color: totalRevenue - tasksReal - frTotal >= 0 ? '#3b82f6' : '#f87171', fontWeight: 700 }}>R$ {((totalRevenue - tasksReal - frTotal) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                     </div>
                   )}
                   {prodFr.length > 0 && (
                     <div style={{ marginTop: 10 }}>
-                      <div style={{ fontSize: 10, color: C.mut, marginBottom: 4 }}>👷 Freelancers: R$ {(frTotal / 100).toFixed(2)}</div>
-                      <div style={{ fontSize: 10, color: C.mut }}>📋 Tarefas: R$ {(tasksEst / 100).toFixed(2)}</div>
+                      <div style={{ fontSize: 10, color: C.mut, marginBottom: 4 }}> Freelancers: R$ {(frTotal / 100).toFixed(2)}</div>
+                      <div style={{ fontSize: 10, color: C.mut }}> Tarefas: R$ {(tasksEst / 100).toFixed(2)}</div>
                     </div>
                   )}
                 </div>
@@ -939,23 +939,23 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       )}{/* end overlay */}
 
       {/* Guest list modal */}
-      <Modal open={!!guestEv} title={`👥 Lista — ${guestEv?.name ?? ''}`} onClose={() => { setGuestEv(null); setGuests([]) }}>
+      <Modal open={!!guestEv} title={` Lista — ${guestEv?.name ?? ''}`} onClose={() => { setGuestEv(null); setGuests([]) }}>
         <div style={{ display: 'flex', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
           {['all', 'present', 'pending'].map(f => (
             <Btn key={f} onClick={() => setGuestFilter(f)} variant={guestFilter === f ? 'primary' : 'ghost'} small>
-              {f === 'all' ? `Todos (${guests.length})` : f === 'present' ? `✅ Presentes (${guests.filter(g => g.checked_in).length})` : `⏳ Pendentes (${guests.filter(g => !g.checked_in).length})`}
+              {f === 'all' ? `Todos (${guests.length})` : f === 'present' ? ` Presentes (${guests.filter(g => g.checked_in).length})` : ` Pendentes (${guests.filter(g => !g.checked_in).length})`}
             </Btn>
           ))}
-          <Btn onClick={doExport} small variant="secondary">📥 CSV</Btn>
+          <Btn onClick={doExport} small variant="secondary"> CSV</Btn>
         </div>
         {guests.length === 0
           ? <div style={{ color: C.mut, textAlign: 'center', padding: 24 }}>Nenhum convidado na lista</div>
           : guests.filter(g => guestFilter === 'all' ? true : guestFilter === 'present' ? g.checked_in : !g.checked_in).map((g, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: `1px solid ${C.brd}` }}>
               <span style={{ color: g.checked_in ? C.grn : C.txt, fontSize: 13, flex: 1, fontWeight: g.checked_in ? 700 : 400 }}>{g.full_name}</span>
-              <span style={{ color: C.mut, fontSize: 12, width: 20, textAlign: 'center' }}>{g.gender === 'M' ? '♂' : g.gender === 'F' ? '♀' : ''}</span>
+              <span style={{ color: C.mut, fontSize: 12, width: 20, textAlign: 'center' }}>{g.gender === 'M' ? '' : g.gender === 'F' ? '' : ''}</span>
               {g.phone && <span style={{ color: C.mut, fontSize: 12 }}>{g.phone}</span>}
-              <span style={{ color: g.checked_in ? C.grn : C.mut, fontSize: 13, width: 20, textAlign: 'center' }}>{g.checked_in ? '✓' : '—'}</span>
+              <span style={{ color: g.checked_in ? C.grn : C.mut, fontSize: 13, width: 20, textAlign: 'center' }}>{g.checked_in ? '' : '—'}</span>
             </div>
           ))
         }
@@ -965,7 +965,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       <Modal open={!!resEv} title={`🪑 Reservas — ${resEv?.name ?? ''}`} onClose={() => { setResEv(null); setResList([]) }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ color: C.mut, fontSize: 13 }}>{resList.length} reservas</span>
-          <Btn onClick={() => { setResAddOpen(true); setResEdit(null); setResForm(RDEF2) }} small>➕ Nova</Btn>
+          <Btn onClick={() => { setResAddOpen(true); setResEdit(null); setResForm(RDEF2) }} small> Nova</Btn>
         </div>
         {resAddOpen && (
           <div style={{ background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 10, padding: 12, marginBottom: 14 }}>
@@ -992,7 +992,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <Btn onClick={saveRes} small>💾 Salvar</Btn>
+              <Btn onClick={saveRes} small> Salvar</Btn>
               <Btn onClick={() => { setResAddOpen(false); setResEdit(null) }} small variant="ghost">Cancelar</Btn>
             </div>
           </div>
@@ -1005,20 +1005,20 @@ export function EventsPage({ house, onGoToReservas }: Props) {
             <div style={{ flex: 1 }}>
               <div style={{ color: C.txt, fontSize: 13, fontWeight: 600 }}>{res.name}</div>
               <div style={{ color: C.mut, fontSize: 11 }}>
-                {res.people_count && `👥 ${res.people_count}`}
-                {res.location && ` · 📍 ${res.location}`}
+                {res.people_count && ` ${res.people_count}`}
+                {res.location && ` ·  ${res.location}`}
                 {res.amount_cents ? ` · ${fmtCurrency(res.amount_cents)}` : ''}
-                {res.expected_arrival && ` · 🕐 ${res.expected_arrival.slice(0, 5)}`}
+                {res.expected_arrival && ` ·  ${res.expected_arrival.slice(0, 5)}`}
               </div>
             </div>
-            {res.status === 'pending' && <Btn onClick={() => markArrived(res.id)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}>✅</Btn>}
-            <Btn onClick={() => delRes(res.id)} small variant="danger">🗑</Btn>
+            {res.status === 'pending' && <Btn onClick={() => markArrived(res.id)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}></Btn>}
+            <Btn onClick={() => delRes(res.id)} small variant="danger"></Btn>
           </div>
         ))}
       </Modal>
 
       {/* Freelancers modal */}
-      <Modal open={!!frModal} title={`👷 Freelancers — ${frModal?.name ?? ''}`} onClose={() => { setFrModal(null); setEvFreelancers([]) }}>
+      <Modal open={!!frModal} title={` Freelancers — ${frModal?.name ?? ''}`} onClose={() => { setFrModal(null); setEvFreelancers([]) }}>
         {/* Budget summary */}
         {(() => {
           const artistFee = frModal?.artist_fee_cents ?? 0
@@ -1027,15 +1027,15 @@ export function EventsPage({ house, onGoToReservas }: Props) {
           return (
             <div style={{ background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, textAlign: 'center' }}>
               <div>
-                <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, marginBottom: 4 }}>🎤 CACHÊ</div>
+                <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, marginBottom: 4 }}> CACHÊ</div>
                 <div style={{ color: C.gold, fontWeight: 700, fontSize: 15 }}>{fmtCurrency(artistFee)}</div>
               </div>
               <div>
-                <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, marginBottom: 4 }}>👷 FREELANCERS</div>
+                <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, marginBottom: 4 }}> FREELANCERS</div>
                 <div style={{ color: C.acc, fontWeight: 700, fontSize: 15 }}>{fmtCurrency(freelancerTotal)}</div>
               </div>
               <div style={{ borderLeft: `1px solid ${C.brd}`, paddingLeft: 10 }}>
-                <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, marginBottom: 4 }}>💰 TOTAL</div>
+                <div style={{ color: C.mut, fontSize: 11, fontWeight: 600, marginBottom: 4 }}> TOTAL</div>
                 <div style={{ color: C.grn, fontWeight: 900, fontSize: 16 }}>{fmtCurrency(total)}</div>
               </div>
             </div>
@@ -1059,9 +1059,9 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   </div>
                   <Btn onClick={() => toggleConfirmed(ef)} small
                     style={{ background: ef.confirmed ? C.grn + '22' : C.mut + '22', color: ef.confirmed ? C.grn : C.mut, border: `1px solid ${ef.confirmed ? C.grn : C.brd}44` }}>
-                    {ef.confirmed ? '✅ Confirmado' : '⏳ Pendente'}
+                    {ef.confirmed ? ' Confirmado' : ' Pendente'}
                   </Btn>
-                  <Btn onClick={() => toggleFreelancer(ef.freelancer_id)} small variant="danger">✕</Btn>
+                  <Btn onClick={() => toggleFreelancer(ef.freelancer_id)} small variant="danger"></Btn>
                 </div>
               )
             })}
@@ -1082,14 +1082,14 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   {fr.daily_rate_cents ? ` · ${fmtCurrency(fr.daily_rate_cents)}/dia` : ''}
                 </div>
               </div>
-              <Btn onClick={() => toggleFreelancer(fr.id)} small>➕ Adicionar</Btn>
+              <Btn onClick={() => toggleFreelancer(fr.id)} small> Adicionar</Btn>
             </div>
           ))
         }
       </Modal>
 
       {/* Tickets modal */}
-      <Modal open={!!ticketEv} title={`🎟️ Ingressos — ${ticketEv?.name ?? ''}`} onClose={() => { setTicketEv(null); setBatches([]) }}>
+      <Modal open={!!ticketEv} title={`️ Ingressos — ${ticketEv?.name ?? ''}`} onClose={() => { setTicketEv(null); setBatches([]) }}>
         {ticketEv && (
           <div>
             {/* Share link */}
@@ -1098,7 +1098,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                 {window.location.origin}/e/{ticketEv.id}
               </span>
               <Btn onClick={() => copyLink(ticketEv)} small variant={copied ? 'secondary' : 'ghost'}>
-                {copied ? '✅ Copiado' : '📋 Copiar'}
+                {copied ? ' Copiado' : ' Copiar'}
               </Btn>
             </div>
 
@@ -1126,7 +1126,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
             {/* Batches */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
               <span style={{ color: C.txt, fontSize: 13, fontWeight: 700 }}>Lotes</span>
-              <Btn onClick={() => setAddingBatch(true)} small>➕ Novo lote</Btn>
+              <Btn onClick={() => setAddingBatch(true)} small> Novo lote</Btn>
             </div>
 
             {addingBatch && (
@@ -1152,7 +1152,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <Btn onClick={saveBatch} small>💾 Salvar</Btn>
+                  <Btn onClick={saveBatch} small> Salvar</Btn>
                   <Btn onClick={() => setAddingBatch(false)} small variant="ghost">Cancelar</Btn>
                 </div>
               </div>
@@ -1169,9 +1169,9 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                     </div>
                   </div>
                   <Btn onClick={() => toggleBatch(b.id, b.active)} small variant={b.active ? 'secondary' : 'ghost'}>
-                    {b.active ? '✅ Ativo' : '⏸ Inativo'}
+                    {b.active ? ' Ativo' : ' Inativo'}
                   </Btn>
-                  <Btn onClick={() => deleteBatch(b.id)} small variant="danger">🗑</Btn>
+                  <Btn onClick={() => deleteBatch(b.id)} small variant="danger"></Btn>
                 </div>
               )
             })}
@@ -1191,11 +1191,11 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
                         {o.payment_status === 'pending' && <>
-                          <Btn onClick={() => confirmOrder(o.id, 'paid')} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}>✅</Btn>
-                          <Btn onClick={() => confirmOrder(o.id, 'cancelled')} small variant="danger">✕</Btn>
+                          <Btn onClick={() => confirmOrder(o.id, 'paid')} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}></Btn>
+                          <Btn onClick={() => confirmOrder(o.id, 'cancelled')} small variant="danger"></Btn>
                         </>}
-                        {o.payment_status === 'paid' && <span style={{ color: C.grn, fontSize: 12, fontWeight: 700 }}>✅ Pago</span>}
-                        {o.payment_status === 'cancelled' && <span style={{ color: C.red, fontSize: 12, fontWeight: 700 }}>❌</span>}
+                        {o.payment_status === 'paid' && <span style={{ color: C.grn, fontSize: 12, fontWeight: 700 }}> Pago</span>}
+                        {o.payment_status === 'cancelled' && <span style={{ color: C.red, fontSize: 12, fontWeight: 700 }}></span>}
                       </div>
                     </div>
                   </div>
@@ -1207,7 +1207,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       </Modal>
 
       {/* Budget modal */}
-      <Modal open={!!budgetEv} title={`💰 Budget — ${budgetEv?.name ?? ''}`} onClose={() => { setBudgetEv(null); setBudgetFreelancers([]); setBudgetPromoters([]); setBudgetResItems([]) }} wide>
+      <Modal open={!!budgetEv} title={` Budget — ${budgetEv?.name ?? ''}`} onClose={() => { setBudgetEv(null); setBudgetFreelancers([]); setBudgetPromoters([]); setBudgetResItems([]) }} wide>
         {budgetEv && (() => {
           const cache = budgetEv.artist_fee_cents ?? 0
           const consumacao = budgetEv.consumption_cents ?? 0
@@ -1235,18 +1235,18 @@ export function EventsPage({ house, onGoToReservas }: Props) {
             <div>
               {/* Artista */}
               {(budgetEv as any)?.artist_fee_type === 'percent'
-                ? row('🎤', `Cachê Variável — ${(budgetEv as any).artist_fee_percent}% da portaria`, cache, C.gold, cache > 0 ? `Mínimo garantido: ${fmtCurrency(cache)}` : 'A calcular após o evento')
+                ? row('', `Cachê Variável — ${(budgetEv as any).artist_fee_percent}% da portaria`, cache, C.gold, cache > 0 ? `Mínimo garantido: ${fmtCurrency(cache)}` : 'A calcular após o evento')
                 : (budgetEv as any)?.artist_fee_type === 'tbd'
-                  ? row('🎤', 'Cachê — A combinar', 0, C.gold, 'Valor não definido')
-                  : row('🎤', 'Cachê do Artista', cache, C.gold)}
+                  ? row('', 'Cachê — A combinar', 0, C.gold, 'Valor não definido')
+                  : row('', 'Cachê do Artista', cache, C.gold)}
 
-              {row('🍺', 'Consumação', consumacao, '#f59e0b')}
-              {row('🔧', 'Gastos de Produção', producao, '#8b5cf6')}
+              {row('', 'Consumação', consumacao, '#f59e0b')}
+              {row('', 'Gastos de Produção', producao, '#8b5cf6')}
 
               {/* Freelancers */}
               <div style={{ borderBottom: `1px solid ${C.brd}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '11px 0 6px' }}>
-                  <div style={{ fontSize: 20, width: 34 }}>👷</div>
+                  <div style={{ fontSize: 20, width: 34 }}></div>
                   <div style={{ flex: 1, color: C.txt, fontSize: 14, fontWeight: 600 }}>Freelancers ({budgetFreelancers.length})</div>
                   <div style={{ color: C.acc, fontWeight: 700, fontSize: 15 }}>{fmtCurrency(freelancerTotal)}</div>
                 </div>
@@ -1264,7 +1264,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               {/* Promoters */}
               <div style={{ borderBottom: `1px solid ${C.brd}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '11px 0 6px' }}>
-                  <div style={{ fontSize: 20, width: 34 }}>📋</div>
+                  <div style={{ fontSize: 20, width: 34 }}></div>
                   <div style={{ flex: 1, color: C.txt, fontSize: 14, fontWeight: 600 }}>Promoters ({budgetPromoters.length} listas)</div>
                   <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: 15 }}>{fmtCurrency(promoterTotal)}</div>
                 </div>
@@ -1310,7 +1310,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
 
               {/* Total */}
               <div style={{ display: 'flex', alignItems: 'center', padding: '16px 0 4px', background: `linear-gradient(135deg,${C.grn}08,transparent)`, borderRadius: 8, marginTop: 4 }}>
-                <div style={{ fontSize: 22, width: 34 }}>💰</div>
+                <div style={{ fontSize: 22, width: 34 }}></div>
                 <div style={{ flex: 1, color: C.txt, fontSize: 16, fontWeight: 900 }}>TOTAL DO EVENTO</div>
                 <div style={{ color: C.grn, fontWeight: 900, fontSize: 22 }}>{fmtCurrency(total)}</div>
               </div>
@@ -1320,8 +1320,8 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       </Modal>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-        <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}>🎉 Eventos</h1>
-        <Btn onClick={openNew} icon="➕">Novo Evento</Btn>
+        <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}> Eventos</h1>
+        <Btn onClick={openNew} icon="">Novo Evento</Btn>
       </div>
 
       {/* Calendar strip */}
@@ -1376,34 +1376,34 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3, flexShrink: 0, marginLeft: 8 }}>
                   <Pill color={evStatusColor(ev.status ?? 'ativo')} small>{ev.status ?? 'ativo'}</Pill>
                   <div style={{ display: 'flex', gap: 4 }}>
-                    {!!ev.checkinCount && <span style={{ background: C.grn + '22', color: C.grn, borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.checkinCount} ✓</span>}
+                    {!!ev.checkinCount && <span style={{ background: C.grn + '22', color: C.grn, borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.checkinCount} </span>}
                     {!!ev.resCount && <span style={{ background: '#a78bfa22', color: '#a78bfa', borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.resCount} 🪑</span>}
                   </div>
                 </div>
               </div>
-              {ev.genre && <div style={{ color: C.acc, fontSize: 11, fontWeight: 600, marginBottom: 6 }}>🎵 {ev.genre}</div>}
+              {ev.genre && <div style={{ color: C.acc, fontSize: 11, fontWeight: 600, marginBottom: 6 }}> {ev.genre}</div>}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, fontSize: 11, color: C.mut, marginBottom: 10 }}>
-                {ev.price_male_cents ? <span>♂ {fmtCurrency(ev.price_male_cents)}</span> : null}
-                {ev.price_female_cents ? <span>♀ {fmtCurrency(ev.price_female_cents)}</span> : null}
-                {ev.capacity ? <span>👥 Cap. {ev.capacity}</span> : null}
+                {ev.price_male_cents ? <span> {fmtCurrency(ev.price_male_cents)}</span> : null}
+                {ev.price_female_cents ? <span> {fmtCurrency(ev.price_female_cents)}</span> : null}
+                {ev.capacity ? <span> Cap. {ev.capacity}</span> : null}
                 {(ev as any).artist_fee_type === 'percent'
-                  ? <span style={{ color: C.gold }}>🎤 {(ev as any).artist_fee_percent}% portaria</span>
+                  ? <span style={{ color: C.gold }}> {(ev as any).artist_fee_percent}% portaria</span>
                   : (ev as any).artist_fee_type === 'tbd'
-                    ? <span style={{ color: C.gold }}>🎤 A combinar</span>
-                    : ev.artist_fee_cents ? <span style={{ color: C.gold }}>🎤 {fmtCurrency(ev.artist_fee_cents)}</span> : null}
+                    ? <span style={{ color: C.gold }}> A combinar</span>
+                    : ev.artist_fee_cents ? <span style={{ color: C.gold }}> {fmtCurrency(ev.artist_fee_cents)}</span> : null}
               </div>
               {/* Botões — 2 linhas organizadas */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
-                <Btn onClick={() => openEdit(ev)} small variant="ghost" style={{ justifyContent: 'center' }}>✏️ Editar</Btn>
-                <Btn onClick={() => loadGuests(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>👥 Lista</Btn>
+                <Btn onClick={() => openEdit(ev)} small variant="ghost" style={{ justifyContent: 'center' }}>️ Editar</Btn>
+                <Btn onClick={() => loadGuests(ev)} small variant="secondary" style={{ justifyContent: 'center' }}> Lista</Btn>
                 <Btn onClick={() => onGoToReservas ? onGoToReservas(ev.event_date, ev.id) : openRes(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>🪑 Reservas</Btn>
-                <Btn onClick={() => loadEvFreelancers(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>👷 Freelancers</Btn>
-                <Btn onClick={() => openTickets(ev)} small style={{ background: C.acc + '22', color: C.acc, border: `1px solid ${C.acc}44`, justifyContent: 'center' }}>🎟️ Ingressos</Btn>
-                <Btn onClick={() => openBudget(ev)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44`, justifyContent: 'center' }}>💰 Budget</Btn>
-                <Btn onClick={() => openProd(ev)} small style={{ background: '#f59e0b22', color: '#f59e0b', border: '1px solid #f59e0b44', justifyContent: 'center' }}>🏭 Produção</Btn>
-                <Btn onClick={() => openChecklist(ev)} small style={{ background: '#7c3aed22', color: '#a78bfa', border: '1px solid #7c3aed44', justifyContent: 'center' }}>📋 Checklist</Btn>
+                <Btn onClick={() => loadEvFreelancers(ev)} small variant="secondary" style={{ justifyContent: 'center' }}> Freelancers</Btn>
+                <Btn onClick={() => openTickets(ev)} small style={{ background: C.acc + '22', color: C.acc, border: `1px solid ${C.acc}44`, justifyContent: 'center' }}>️ Ingressos</Btn>
+                <Btn onClick={() => openBudget(ev)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44`, justifyContent: 'center' }}> Budget</Btn>
+                <Btn onClick={() => openProd(ev)} small style={{ background: '#f59e0b22', color: '#f59e0b', border: '1px solid #f59e0b44', justifyContent: 'center' }}> Produção</Btn>
+                <Btn onClick={() => openChecklist(ev)} small style={{ background: '#7c3aed22', color: '#a78bfa', border: '1px solid #7c3aed44', justifyContent: 'center' }}> Checklist</Btn>
                 <Btn onClick={() => cancelEv(ev)} small variant={ev.status === 'cancelado' ? 'secondary' : 'danger'} style={{ justifyContent: 'center' }}>
-                  {ev.status === 'cancelado' ? '✅ Reativar' : '❌ Cancelar'}
+                  {ev.status === 'cancelado' ? ' Reativar' : ' Cancelar'}
                 </Btn>
               </div>
             </Card>
@@ -1421,14 +1421,14 @@ export function EventsPage({ house, onGoToReservas }: Props) {
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.brd}`, flexShrink: 0 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <div style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 2 }}>🏭 PRODUÇÃO</div>
+                  <div style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 2 }}> PRODUÇÃO</div>
                   <div style={{ fontSize: 17, fontWeight: 900, color: C.txt }}>{prodEv.name}</div>
                   <div style={{ fontSize: 12, color: C.mut, marginTop: 2 }}>
                     {new Date(prodEv.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}
                     {prodEv.start_time ? ` · ${prodEv.start_time.slice(0,5)}` : ''}
                   </div>
                 </div>
-                <button onClick={() => setProdEv(null)} style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 18, cursor: 'pointer' }}>✕</button>
+                <button onClick={() => setProdEv(null)} style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 18, cursor: 'pointer' }}></button>
               </div>
               {/* Progress bar */}
               {prodTasks.length > 0 && (() => {
@@ -1449,7 +1449,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               {/* Tabs */}
               <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
                 {(['tasks', 'freelancers', 'budget'] as const).map(tab => {
-                  const labels = { tasks: '📋 Tarefas', freelancers: `👷 Freelancers (${prodFr.length})`, budget: '💰 Budget' }
+                  const labels = { tasks: ' Tarefas', freelancers: ` Freelancers (${prodFr.length})`, budget: ' Budget' }
                   return (
                     <button key={tab} onClick={() => setProdTab(tab)} style={{ padding: '6px 14px', borderRadius: 8, border: `1px solid ${prodTab === tab ? '#f59e0b' : C.brd}`, background: prodTab === tab ? '#f59e0b22' : 'transparent', color: prodTab === tab ? '#f59e0b' : C.mut, fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                       {labels[tab]}
@@ -1483,11 +1483,11 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <div>
                                 <span style={{ fontWeight: 700, fontSize: 13, color: C.txt }}>{r.name}</span>
-                                {r.location && <span style={{ color: C.mut, fontSize: 12 }}> · 📍 {r.location}</span>}
-                                {r.people_count && <span style={{ color: C.mut, fontSize: 12 }}> · 👥 {r.people_count}px</span>}
+                                {r.location && <span style={{ color: C.mut, fontSize: 12 }}> ·  {r.location}</span>}
+                                {r.people_count && <span style={{ color: C.mut, fontSize: 12 }}> ·  {r.people_count}px</span>}
                               </div>
                               <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: r.status === 'arrived' ? '#10b98122' : '#f59e0b22', color: r.status === 'arrived' ? '#10b981' : '#f59e0b', fontWeight: 700 }}>
-                                {r.status === 'arrived' ? '✅ Chegou' : '⏳ Aguardando'}
+                                {r.status === 'arrived' ? ' Chegou' : ' Aguardando'}
                               </span>
                             </div>
                             {(r.reservation_items ?? []).length > 0 && (
@@ -1523,23 +1523,23 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                             <div key={task.id} style={{ background: task.status === 'done' ? '#10b98108' : '#ffffff06', border: `1px solid ${task.status === 'done' ? '#10b98122' : C.brd}`, borderRadius: 10, padding: '8px 10px', marginBottom: 5 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <button onClick={() => toggleProdTask(task)} style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${task.status === 'done' ? '#10b981' : C.brd}`, background: task.status === 'done' ? '#10b981' : 'transparent', color: '#fff', fontSize: 12, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                  {task.status === 'done' ? '✓' : ''}
+                                  {task.status === 'done' ? '' : ''}
                                 </button>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                   <div style={{ fontSize: 13, fontWeight: 600, color: task.status === 'done' ? C.mut : C.txt, textDecoration: task.status === 'done' ? 'line-through' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.title}</div>
                                   <div style={{ display: 'flex', gap: 8, marginTop: 2, flexWrap: 'wrap' }}>
                                     {task.deadline && <span style={{ color: C.mut, fontSize: 11 }}>⏰ {new Date(task.deadline).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</span>}
-                                    {task.assignee_name && <span style={{ color: C.mut, fontSize: 11 }}>👤 {task.assignee_name}</span>}
+                                    {task.assignee_name && <span style={{ color: C.mut, fontSize: 11 }}> {task.assignee_name}</span>}
                                     {task.estimated_cost_cents && <span style={{ color: '#f59e0b', fontSize: 11 }}>R$ {(task.estimated_cost_cents / 100).toFixed(2)}</span>}
-                                    {task.actual_cost_cents && <span style={{ color: '#10b981', fontSize: 11, fontWeight: 700 }}>✅ R$ {(task.actual_cost_cents / 100).toFixed(2)}</span>}
+                                    {task.actual_cost_cents && <span style={{ color: '#10b981', fontSize: 11, fontWeight: 700 }}> R$ {(task.actual_cost_cents / 100).toFixed(2)}</span>}
                                   </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
                                   {task.assignee_phone && (
-                                    <button onClick={() => sendTaskWA(task)} title="Enviar por WhatsApp" style={{ background: '#25d36622', border: '1px solid #25d36644', borderRadius: 6, width: 28, height: 28, color: '#25d366', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📲</button>
+                                    <button onClick={() => sendTaskWA(task)} title="Enviar por WhatsApp" style={{ background: '#25d36622', border: '1px solid #25d36644', borderRadius: 6, width: 28, height: 28, color: '#25d366', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></button>
                                   )}
                                   <button onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)} style={{ background: '#ffffff08', border: `1px solid ${C.brd}`, borderRadius: 6, width: 28, height: 28, color: C.mut, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>⋯</button>
-                                  <button onClick={() => deleteProdTask(task.id)} style={{ background: 'none', border: `1px solid ${C.red}33`, borderRadius: 6, width: 28, height: 28, color: C.red, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗑</button>
+                                  <button onClick={() => deleteProdTask(task.id)} style={{ background: 'none', border: `1px solid ${C.red}33`, borderRadius: 6, width: 28, height: 28, color: C.red, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></button>
                                 </div>
                               </div>
                               {expandedTask === task.id && (
@@ -1551,7 +1551,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                                       {actualCostEdit?.id === task.id
                                         ? <>
                                             <input value={actualCostEdit.val} onChange={e => setActualCostEdit({ id: task.id, val: e.target.value })} placeholder="R$" style={{ background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 6, padding: '3px 8px', color: C.txt, fontSize: 12, width: 80, fontFamily: 'inherit' }} autoFocus />
-                                            <button onClick={() => saveProdActualCost(task.id, actualCostEdit.val)} style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 6, padding: '3px 8px', color: '#10b981', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>✓</button>
+                                            <button onClick={() => saveProdActualCost(task.id, actualCostEdit.val)} style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 6, padding: '3px 8px', color: '#10b981', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}></button>
                                           </>
                                         : <button onClick={() => setActualCostEdit({ id: task.id, val: task.actual_cost_cents ? String(task.actual_cost_cents / 100) : '' })} style={{ background: '#ffffff08', border: `1px solid ${C.brd}`, borderRadius: 6, padding: '3px 8px', color: C.mut, fontSize: 11, cursor: 'pointer', fontFamily: 'inherit' }}>
                                             {task.actual_cost_cents ? `R$ ${(task.actual_cost_cents / 100).toFixed(2)}` : '+ Informar'}
@@ -1560,7 +1560,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                                     </div>
                                   )}
                                   <div style={{ fontSize: 11, color: C.mut }}>
-                                    🔗 Link: <span style={{ color: '#a78bfa', cursor: 'pointer' }} onClick={() => navigator.clipboard.writeText(`https://nightpass-app.vercel.app/tarefa.html?t=${task.token}`)}>Copiar</span>
+                                     Link: <span style={{ color: '#a78bfa', cursor: 'pointer' }} onClick={() => navigator.clipboard.writeText(`https://nightpass-app.vercel.app/tarefa.html?t=${task.token}`)}>Copiar</span>
                                   </div>
                                 </div>
                               )}
@@ -1603,7 +1603,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                       )
                       : (
                         <button onClick={() => setAddingArea(true)} style={{ width: '100%', background: '#ffffff06', border: `1px dashed ${C.brd}`, borderRadius: 10, padding: '10px', color: C.mut, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', marginTop: Object.keys(areas).length > 0 ? 0 : 8 }}>
-                          ➕ Nova Área
+                           Nova Área
                         </button>
                       )
                     }
@@ -1633,7 +1633,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                               {frFeeEdit?.id === fr.id
                                 ? <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                                     <input value={frFeeEdit.val} onChange={e => setFrFeeEdit({ id: fr.id, val: e.target.value })} placeholder="R$" style={{ background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 6, padding: '3px 8px', color: C.txt, fontSize: 12, width: 80, fontFamily: 'inherit' }} autoFocus />
-                                    <button onClick={() => saveFrFee(fr.id, frFeeEdit.val)} style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 6, padding: '3px 8px', color: '#10b981', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>✓</button>
+                                    <button onClick={() => saveFrFee(fr.id, frFeeEdit.val)} style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 6, padding: '3px 8px', color: '#10b981', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}></button>
                                   </div>
                                 : <div>
                                     <div style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>R$ {(effectiveFee / 100).toFixed(2)}</div>
@@ -1642,14 +1642,14 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                                   </div>
                               }
                             </div>
-                            <button onClick={() => convocateFrWA(fr)} style={{ background: '#25d36622', border: '1px solid #25d36644', borderRadius: 8, padding: '5px 10px', color: '#25d366', fontSize: 13, cursor: 'pointer' }} title="Convocar via WhatsApp">📲</button>
+                            <button onClick={() => convocateFrWA(fr)} style={{ background: '#25d36622', border: '1px solid #25d36644', borderRadius: 8, padding: '5px 10px', color: '#25d366', fontSize: 13, cursor: 'pointer' }} title="Convocar via WhatsApp"></button>
                           </div>
                         </div>
                       )
                     })
                   }
                   <div style={{ marginTop: 12, padding: '10px 0', borderTop: `1px solid ${C.brd}`, fontSize: 12, color: C.mut }}>
-                    Gerencie a escala completa no botão <strong style={{ color: C.txt }}>👷 Freelancers</strong> do evento.
+                    Gerencie a escala completa no botão <strong style={{ color: C.txt }}> Freelancers</strong> do evento.
                   </div>
                 </div>
               )}
@@ -1696,7 +1696,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
 
                     {/* Receita breakdown */}
                     <div style={{ marginBottom: 14 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>📥 Receita — Reservas</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}> Receita — Reservas</div>
                       {prodRes.length === 0
                         ? <div style={{ color: C.mut, fontSize: 12 }}>Nenhuma reserva para este evento.</div>
                         : prodRes.map(r => (
@@ -1710,11 +1710,11 @@ export function EventsPage({ house, onGoToReservas }: Props) {
 
                     {/* Despesas breakdown */}
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>📤 Despesas</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}> Despesas</div>
                       {/* Freelancers */}
                       {prodFr.length > 0 && (
                         <div style={{ marginBottom: 8 }}>
-                          <div style={{ fontSize: 11, color: C.mut, marginBottom: 4 }}>👷 Freelancers</div>
+                          <div style={{ fontSize: 11, color: C.mut, marginBottom: 4 }}> Freelancers</div>
                           {prodFr.map(fr => {
                             const frData = (fr as any).freelancers
                             const fee = (fr as any).custom_fee_cents ?? frData?.daily_rate_cents ?? 0
@@ -1763,7 +1763,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px 16px', borderBottom: `1px solid ${C.brd}` }}>
               <div>
-                <h2 style={{ color: C.txt, fontWeight: 900, fontSize: 18, margin: 0 }}>📋 Checklist — {checklistEv.name}</h2>
+                <h2 style={{ color: C.txt, fontWeight: 900, fontSize: 18, margin: 0 }}> Checklist — {checklistEv.name}</h2>
                 <div style={{ color: C.mut, fontSize: 12, marginTop: 4 }}>
                   {checklist.filter(i => i.done).length}/{checklist.length} itens concluídos
                   {checklist.length > 0 && (
@@ -1778,10 +1778,10 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => printChecklist(checklistEv)}
                   style={{ padding: '8px 16px', borderRadius: 10, border: `1px solid #7c3aed44`, background: '#7c3aed22', color: '#a78bfa', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  🖨️ Imprimir
+                  ️ Imprimir
                 </button>
                 <button onClick={() => { setChecklistEv(null); setChecklist([]) }}
-                  style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer', lineHeight: 1 }}>✕</button>
+                  style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer', lineHeight: 1 }}></button>
               </div>
             </div>
 
@@ -1797,7 +1797,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                 style={{ flex: 1, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 12px', color: C.txt, fontSize: 13, fontFamily: 'inherit' }} />
               <button onClick={addClItem}
                 style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: C.acc, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
-                ➕
+                
               </button>
             </div>
 
@@ -1817,13 +1817,13 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                         <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: `1px solid ${C.brd}22` }}>
                           <button onClick={() => toggleClItem(item.id, !item.done)}
                             style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${item.done ? '#10b981' : C.brd}`, background: item.done ? '#10b981' : 'transparent', color: '#fff', fontSize: 13, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            {item.done ? '✓' : ''}
+                            {item.done ? '' : ''}
                           </button>
                           <span style={{ flex: 1, color: item.done ? C.mut : C.txt, fontSize: 14, textDecoration: item.done ? 'line-through' : 'none' }}>
                             {item.title}
                           </span>
                           <button onClick={() => deleteClItem(item.id)}
-                            style={{ background: 'none', border: 'none', color: C.mut, fontSize: 16, cursor: 'pointer', padding: '2px 6px', opacity: 0.5 }}>✕</button>
+                            style={{ background: 'none', border: 'none', color: C.mut, fontSize: 16, cursor: 'pointer', padding: '2px 6px', opacity: 0.5 }}></button>
                         </div>
                       ))}
                     </div>
@@ -1835,7 +1835,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
         </div>
       )}
 
-      <FAB onClick={openNew} icon="➕" title="Novo evento" />
+      <FAB onClick={openNew} icon="" title="Novo evento" />
     </div>
   )
 }

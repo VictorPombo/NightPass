@@ -39,7 +39,7 @@ export function UsersPage({ house, user }: Props) {
     if (!editing) return
     supabase.from('house_users').update({ role: editRole }).eq('id', editing.id)
       .then(r => {
-        if (!r.error) { setEditing(null); load(); sT(setToast, '✅ Papel atualizado!', 'success') }
+        if (!r.error) { setEditing(null); load(); sT(setToast, ' Papel atualizado!', 'success') }
         else _err(r.error.message)
       })
   }

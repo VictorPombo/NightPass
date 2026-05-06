@@ -9,10 +9,9 @@ interface BottomNavItem {
 }
 
 const BOTTOM_NAV: BottomNavItem[] = [
-  { id: 'checkin',   icon: 'door-open',      emoji: '🚪', label: 'Check-in' },
-  { id: 'dashboard', icon: 'speedometer2',   emoji: '📊', label: 'Dashboard' },
-  { id: 'reservas',  icon: 'bookmark-check', emoji: '🎫', label: 'Reservas' },
-  { id: 'events',    icon: 'calendar-event', emoji: '📅', label: 'Eventos' },
+  { id: 'checkin',   icon: 'door-open',      emoji: '', label: 'Check-in' },
+  { id: 'dashboard', icon: 'speedometer2',   emoji: '', label: 'Dashboard' },
+  { id: 'events',    icon: 'calendar-event', emoji: '', label: 'Eventos' },
 ]
 
 interface Props {

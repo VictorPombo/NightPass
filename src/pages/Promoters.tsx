@@ -182,7 +182,7 @@ export function PromotersPage({ house }: Props) {
 
   if (noTable) return (
     <div style={{ padding: 40, textAlign: 'center' }}>
-      <div style={{ fontSize: 48, marginBottom: 16 }}>📋</div>
+      <div style={{ fontSize: 48, marginBottom: 16 }}></div>
       <div style={{ color: C.txt, fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Tabela de Promoters não encontrada</div>
       <div style={{ color: C.mut, fontSize: 13 }}>Crie a tabela <code>promoters</code> no Supabase para ativar este módulo.</div>
     </div>
@@ -218,19 +218,19 @@ export function PromotersPage({ house }: Props) {
             <div style={{ color: C.sub, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>TERMOS COMERCIAIS</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <div>
-                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>💰 VALOR FIXO (R$)</label>
+                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> VALOR FIXO (R$)</label>
                 <input type="number" step="0.01" min="0" {...inp} value={String(form.fixed_fee_cents ?? '')} onChange={e => setF('fixed_fee_cents', e.target.value)} placeholder="0,00" />
               </div>
               <div>
-                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🎟️ QTD MÍN. ENTRADAS</label>
+                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>️ QTD MÍN. ENTRADAS</label>
                 <input type="number" min="0" {...inp} value={String(form.min_entries ?? '')} onChange={e => setF('min_entries', e.target.value)} placeholder="0" />
               </div>
               <div>
-                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🚪 VALOR POR ENTRADA (R$)</label>
+                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> VALOR POR ENTRADA (R$)</label>
                 <input type="number" step="0.01" min="0" {...inp} value={String(form.entry_fee_cents ?? '')} onChange={e => setF('entry_fee_cents', e.target.value)} placeholder="0,00" />
               </div>
               <div>
-                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🍺 CONSUMAÇÃO (R$/pessoa)</label>
+                <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> CONSUMAÇÃO (R$/pessoa)</label>
                 <input type="number" step="0.01" min="0" {...inp} value={String(form.consumacao_cents ?? '')} onChange={e => setF('consumacao_cents', e.target.value)} placeholder="0,00" />
               </div>
             </div>
@@ -241,14 +241,14 @@ export function PromotersPage({ house }: Props) {
             <textarea {...inp} style={{ ...inp.style, height: 70, resize: 'vertical' }} value={String(form.notes ?? '')} onChange={e => setF('notes', e.target.value)} />
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
-            <Btn onClick={save} style={{ flex: 1 }}>💾 Salvar</Btn>
+            <Btn onClick={save} style={{ flex: 1 }}> Salvar</Btn>
             <Btn onClick={() => { setModal(false); setEditing(null) }} variant="ghost">Cancelar</Btn>
           </div>
         </div>
       </Modal>
 
       {/* ── Modal Listas do Promoter ── */}
-      <Modal open={!!selPr && !viewGuests} title={`📋 Listas — ${selPr?.full_name ?? ''}`} onClose={() => { setSelPr(null); setPrLists([]); setEditTermsId(null) }} wide>
+      <Modal open={!!selPr && !viewGuests} title={` Listas — ${selPr?.full_name ?? ''}`} onClose={() => { setSelPr(null); setPrLists([]); setEditTermsId(null) }} wide>
         {loadingLists
           ? <div style={{ color: C.mut, textAlign: 'center', padding: 24 }}>Carregando...</div>
           : prLists.length === 0
@@ -265,14 +265,14 @@ export function PromotersPage({ house }: Props) {
                     <div>
                       <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>{ev?.name ?? 'Evento'}</div>
                       <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                        {ev?.event_date ? `📅 ${fdateShort(ev.event_date)}` : ''}
-                        <span style={{ marginLeft: 10 }}>👥 {l.guest_count} convidados · ✅ {l.checked_count} presentes</span>
+                        {ev?.event_date ? ` ${fdateShort(ev.event_date)}` : ''}
+                        <span style={{ marginLeft: 10 }}> {l.guest_count} convidados ·  {l.checked_count} presentes</span>
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: 6 }}>
-                      <Btn onClick={() => loadGuests(l)} small variant="secondary">👥 Ver lista</Btn>
+                      <Btn onClick={() => loadGuests(l)} small variant="secondary"> Ver lista</Btn>
                       <Btn onClick={() => isEditing ? setEditTermsId(null) : openEditTerms(l)} small variant="ghost">
-                        {isEditing ? 'Cancelar' : '✏️ Termos'}
+                        {isEditing ? 'Cancelar' : '️ Termos'}
                       </Btn>
                     </div>
                   </div>
@@ -281,10 +281,10 @@ export function PromotersPage({ house }: Props) {
                   {!isEditing && (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                       {[
-                        { icon: '💰', label: 'Valor Fixo', val: l.fixed_fee_cents },
-                        { icon: '🎟️', label: 'Mín. Entradas', val: null, raw: l.min_entries > 0 ? `${l.min_entries} pessoas` : '—' },
-                        { icon: '🚪', label: 'Valor/Entrada', val: l.entry_fee_cents },
-                        { icon: '🍺', label: 'Consumação', val: l.consumacao_cents },
+                        { icon: '', label: 'Valor Fixo', val: l.fixed_fee_cents },
+                        { icon: '️', label: 'Mín. Entradas', val: null, raw: l.min_entries > 0 ? `${l.min_entries} pessoas` : '—' },
+                        { icon: '', label: 'Valor/Entrada', val: l.entry_fee_cents },
+                        { icon: '', label: 'Consumação', val: l.consumacao_cents },
                       ].map(item => (
                         <div key={item.label} style={{ background: C.bg, borderRadius: 10, padding: '10px 12px', textAlign: 'center' }}>
                           <div style={{ fontSize: 18, marginBottom: 4 }}>{item.icon}</div>
@@ -300,7 +300,7 @@ export function PromotersPage({ house }: Props) {
                   {/* Total estimado */}
                   {!isEditing && totalBudget > 0 && (
                     <div style={{ marginTop: 10, background: C.gold + '12', border: `1px solid ${C.gold}33`, borderRadius: 10, padding: '8px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ color: C.gold, fontSize: 12, fontWeight: 600 }}>💼 Custo estimado (base mín. entradas)</span>
+                      <span style={{ color: C.gold, fontSize: 12, fontWeight: 600 }}> Custo estimado (base mín. entradas)</span>
                       <span style={{ color: C.gold, fontWeight: 800, fontSize: 14 }}>{fmtCurrency(totalBudget)}</span>
                     </div>
                   )}
@@ -311,25 +311,25 @@ export function PromotersPage({ house }: Props) {
                       <div style={{ color: C.sub, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>TERMOS COMERCIAIS</div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
                         <div>
-                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>💰 VALOR FIXO (R$)</label>
+                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> VALOR FIXO (R$)</label>
                           <input type="number" step="0.01" min="0" value={termsForm.fixed_fee_cents}
                             onChange={e => setTermsForm(p => ({ ...p, fixed_fee_cents: e.target.value }))}
                             placeholder="0,00" style={SL} />
                         </div>
                         <div>
-                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🎟️ QTD MÍNIMA DE ENTRADAS</label>
+                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>️ QTD MÍNIMA DE ENTRADAS</label>
                           <input type="number" min="0" value={termsForm.min_entries}
                             onChange={e => setTermsForm(p => ({ ...p, min_entries: e.target.value }))}
                             placeholder="0" style={SL} />
                         </div>
                         <div>
-                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🚪 VALOR POR ENTRADA (R$)</label>
+                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> VALOR POR ENTRADA (R$)</label>
                           <input type="number" step="0.01" min="0" value={termsForm.entry_fee_cents}
                             onChange={e => setTermsForm(p => ({ ...p, entry_fee_cents: e.target.value }))}
                             placeholder="0,00" style={SL} />
                         </div>
                         <div>
-                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🍺 CONSUMAÇÃO (R$/pessoa)</label>
+                          <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> CONSUMAÇÃO (R$/pessoa)</label>
                           <input type="number" step="0.01" min="0" value={termsForm.consumacao_cents}
                             onChange={e => setTermsForm(p => ({ ...p, consumacao_cents: e.target.value }))}
                             placeholder="0,00" style={SL} />
@@ -355,7 +355,7 @@ export function PromotersPage({ house }: Props) {
                           </div>
                         )
                       })()}
-                      <Btn onClick={() => saveTerms(l.id)} style={{ width: '100%' }}>💾 Salvar termos</Btn>
+                      <Btn onClick={() => saveTerms(l.id)} style={{ width: '100%' }}> Salvar termos</Btn>
                     </div>
                   )}
                 </div>
@@ -365,7 +365,7 @@ export function PromotersPage({ house }: Props) {
       </Modal>
 
       {/* ── Modal Convidados de uma lista ── */}
-      <Modal open={!!viewGuests} title={`👥 ${viewGuests?.events ? (viewGuests.events as { name: string }).name : 'Lista'}`} onClose={() => { setViewGuests(null); setGuestList([]) }}>
+      <Modal open={!!viewGuests} title={` ${viewGuests?.events ? (viewGuests.events as { name: string }).name : 'Lista'}`} onClose={() => { setViewGuests(null); setGuestList([]) }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
           <span style={{ color: C.mut, fontSize: 12 }}>{guestList.length} convidados</span>
           <div style={{ display: 'flex', gap: 12 }}>
@@ -378,9 +378,9 @@ export function PromotersPage({ house }: Props) {
           : guestList.map((g, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: `1px solid ${C.brd}` }}>
               <span style={{ color: g.checked_in ? C.grn : C.txt, fontSize: 13, flex: 1 }}>{g.full_name}</span>
-              <span style={{ color: C.mut, fontSize: 12, width: 20, textAlign: 'center' }}>{g.gender === 'M' ? '♂' : g.gender === 'F' ? '♀' : ''}</span>
+              <span style={{ color: C.mut, fontSize: 12, width: 20, textAlign: 'center' }}>{g.gender === 'M' ? '' : g.gender === 'F' ? '' : ''}</span>
               {g.phone && <span style={{ color: C.mut, fontSize: 12 }}>{g.phone}</span>}
-              <span style={{ color: g.checked_in ? C.grn : C.mut, fontSize: 13, width: 20, textAlign: 'center' }}>{g.checked_in ? '✓' : '—'}</span>
+              <span style={{ color: g.checked_in ? C.grn : C.mut, fontSize: 13, width: 20, textAlign: 'center' }}>{g.checked_in ? '' : '—'}</span>
             </div>
           ))
         }
@@ -391,8 +391,8 @@ export function PromotersPage({ house }: Props) {
 
       {/* ── Header ── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-        <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}>📋 Promoters</h1>
-        <Btn onClick={openNew} icon="➕">Novo Promoter</Btn>
+        <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}> Promoters</h1>
+        <Btn onClick={openNew} icon="">Novo Promoter</Btn>
       </div>
 
       <Card>
@@ -402,22 +402,22 @@ export function PromotersPage({ house }: Props) {
             <div key={pr.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i < promos.length - 1 ? `1px solid ${C.brd}` : 'none' }}>
               {/* Avatar */}
               <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.acc + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                📋
+                
               </div>
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>{pr.full_name}</div>
                 <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                  {pr.phone ? `📱 ${pr.phone}` : ''}
+                  {pr.phone ? ` ${pr.phone}` : ''}
                   {pr.phone && pr.email ? ' · ' : ''}
-                  {pr.email ? `✉️ ${pr.email}` : ''}
+                  {pr.email ? `️ ${pr.email}` : ''}
                 </div>
                 {(pr.fixed_fee_cents > 0 || pr.min_entries > 0 || pr.entry_fee_cents > 0 || pr.consumacao_cents > 0) && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 4 }}>
-                    {pr.fixed_fee_cents > 0 && <span style={{ background: C.gold+'18', color: C.gold, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}>💰 {fmtCurrency(pr.fixed_fee_cents)}</span>}
-                    {pr.min_entries > 0 && <span style={{ background: C.acc+'18', color: C.acc, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}>🎟️ {pr.min_entries} mín.</span>}
-                    {pr.entry_fee_cents > 0 && <span style={{ background: C.acc+'18', color: C.acc, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}>🚪 {fmtCurrency(pr.entry_fee_cents)}/ent.</span>}
-                    {pr.consumacao_cents > 0 && <span style={{ background: C.grn+'18', color: C.grn, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}>🍺 {fmtCurrency(pr.consumacao_cents)}/pess.</span>}
+                    {pr.fixed_fee_cents > 0 && <span style={{ background: C.gold+'18', color: C.gold, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}> {fmtCurrency(pr.fixed_fee_cents)}</span>}
+                    {pr.min_entries > 0 && <span style={{ background: C.acc+'18', color: C.acc, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}>️ {pr.min_entries} mín.</span>}
+                    {pr.entry_fee_cents > 0 && <span style={{ background: C.acc+'18', color: C.acc, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}> {fmtCurrency(pr.entry_fee_cents)}/ent.</span>}
+                    {pr.consumacao_cents > 0 && <span style={{ background: C.grn+'18', color: C.grn, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}> {fmtCurrency(pr.consumacao_cents)}/pess.</span>}
                   </div>
                 )}
               </div>
@@ -432,12 +432,12 @@ export function PromotersPage({ house }: Props) {
                 {pr.phone && (
                   <a href={`https://wa.me/55${cn(pr.phone)}`} target="_blank" rel="noreferrer"
                     style={{ display: 'inline-flex', alignItems: 'center', background: '#25D36622', color: '#25D366', border: '1px solid #25D36644', borderRadius: 8, padding: '6px 10px', fontSize: 12, textDecoration: 'none', fontWeight: 700 }}>
-                    💬
+                    
                   </a>
                 )}
-                <Btn onClick={() => openEdit(pr)} small variant="ghost">✏️</Btn>
-                <Btn onClick={() => loadPromoterLists(pr)} small variant="secondary">📋 Listas</Btn>
-                <Btn onClick={() => del(pr.id)} small variant="danger">🗑️</Btn>
+                <Btn onClick={() => openEdit(pr)} small variant="ghost">️</Btn>
+                <Btn onClick={() => loadPromoterLists(pr)} small variant="secondary"> Listas</Btn>
+                <Btn onClick={() => del(pr.id)} small variant="danger">️</Btn>
               </div>
             </div>
           ))

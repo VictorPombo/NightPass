@@ -3,7 +3,6 @@ import { useSession } from './hooks/useSession'
 import { supabase } from './lib/supabase'
 import { C } from './constants/theme'
 import { Sidebar, type PageId } from './components/Sidebar'
-import { BottomNav } from './components/BottomNav'
 import { DashboardPage } from './pages/Dashboard'
 import { CheckinPage } from './pages/Checkin'
 import { ClientsPage } from './pages/Clients'
@@ -121,12 +120,6 @@ export default function App() {
           {pages[active]}
         </div>
       </main>
-      <BottomNav
-        active={active}
-        setActive={setActive}
-        setMOpen={setMOpen}
-        newCI={newCI}
-      />
     </div>
   )
 }

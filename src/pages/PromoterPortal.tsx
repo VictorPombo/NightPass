@@ -175,13 +175,13 @@ export function PromoterPortal({ token }: { token: string }) {
     const evTime = event.start_time ? event.start_time.slice(0, 5) : ''
     const houseName = house?.name ?? ''
 
-    const msg = `🎭 *${event.name}*\n` +
-      `📅 ${evDate}${evTime ? ` às ${evTime}` : ''}\n` +
-      (houseName ? `📍 ${houseName}\n` : '') +
-      `\nOlá! Você está na minha lista VIP 🌟\n\n` +
+    const msg = ` *${event.name}*\n` +
+      ` ${evDate}${evTime ? ` às ${evTime}` : ''}\n` +
+      (houseName ? ` ${houseName}\n` : '') +
+      `\nOlá! Você está na minha lista VIP \n\n` +
       `Preencha seus dados pelo link abaixo para garantir sua entrada:\n` +
-      `👉 ${url}\n\n` +
-      `_Apresente seu nome na portaria. Entrada garantida!_ ✅`
+      ` ${url}\n\n` +
+      `_Apresente seu nome na portaria. Entrada garantida!_ `
 
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank')
   }
@@ -203,7 +203,7 @@ export function PromoterPortal({ token }: { token: string }) {
   if (notFound) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+        <div style={{ fontSize: 48, marginBottom: 12 }}></div>
         <div style={{ color: C.txt, fontWeight: 700, fontSize: 18 }}>Portal não encontrado</div>
         <div style={{ color: C.mut, fontSize: 14, marginTop: 8 }}>Link inválido ou promoter inativo</div>
       </div>
@@ -234,7 +234,7 @@ export function PromoterPortal({ token }: { token: string }) {
             {promoter?.photo_url
               ? <img src={promoter.photo_url} alt={promoter.full_name}
                   style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover', border: `3px solid ${C.purpL}` }} />
-              : <div style={{ width: 72, height: 72, borderRadius: '50%', background: C.purp, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, border: `3px solid ${C.purpL}` }}>👤</div>
+              : <div style={{ width: 72, height: 72, borderRadius: '50%', background: C.purp, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, border: `3px solid ${C.purpL}` }}></div>
             }
           </div>
 
@@ -270,7 +270,7 @@ export function PromoterPortal({ token }: { token: string }) {
         {/* Success message */}
         {successMsg && (
           <div style={{ background: C.grn + '22', border: `1px solid ${C.grn}44`, borderRadius: 12, padding: '12px 16px', color: C.grn, fontSize: 13, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>
-            ✅ {successMsg}
+             {successMsg}
           </div>
         )}
 
@@ -278,7 +278,7 @@ export function PromoterPortal({ token }: { token: string }) {
         {events.length > 0 && (
           <>
             <div style={{ color: C.grn, fontSize: 11, fontWeight: 700, marginBottom: 12, letterSpacing: '0.06em' }}>
-              🔥 PRÓXIMOS EVENTOS
+               PRÓXIMOS EVENTOS
             </div>
             {events.map(event => {
               const list = lists.find(l => l.event_id === event.id)
@@ -305,7 +305,7 @@ export function PromoterPortal({ token }: { token: string }) {
                       <div style={{ position: 'absolute', bottom: 12, left: 16, right: 16 }}>
                         <div style={{ color: C.txt, fontWeight: 900, fontSize: 16 }}>{event.name}</div>
                         <div style={{ color: C.sub, fontSize: 12, marginTop: 2 }}>
-                          📅 {fdate(event.event_date)}{event.start_time ? ` · 🕙 ${event.start_time.slice(0, 5)}` : ''}
+                           {fdate(event.event_date)}{event.start_time ? ` ·  ${event.start_time.slice(0, 5)}` : ''}
                         </div>
                       </div>
                       <div style={{
@@ -319,7 +319,7 @@ export function PromoterPortal({ token }: { token: string }) {
                     <div style={{ padding: '16px 16px 0' }}>
                       <div style={{ color: C.txt, fontWeight: 800, fontSize: 16 }}>{event.name}</div>
                       <div style={{ color: C.sub, fontSize: 13, marginTop: 4 }}>
-                        📅 {fdate(event.event_date)}{event.start_time ? ` · 🕙 ${event.start_time.slice(0, 5)}` : ''}
+                         {fdate(event.event_date)}{event.start_time ? ` ·  ${event.start_time.slice(0, 5)}` : ''}
                       </div>
                     </div>
                   )}
@@ -341,7 +341,7 @@ export function PromoterPortal({ token }: { token: string }) {
                               color: copied === list.token ? C.grn : C.mut,
                               fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                             }}>
-                            {copied === list.token ? '✅' : '🔗'}
+                            {copied === list.token ? '' : ''}
                           </button>
                           <button onClick={() => shareWhatsApp(list, event)}
                             style={{
@@ -351,7 +351,7 @@ export function PromoterPortal({ token }: { token: string }) {
                               color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer',
                               fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                             }}>
-                            <span style={{ fontSize: 16 }}>📲</span> Compartilhar
+                            <span style={{ fontSize: 16 }}></span> Compartilhar
                           </button>
                           <button
                             onClick={() => setViewingList(isViewingGuests ? null : event.id)}
@@ -362,7 +362,7 @@ export function PromoterPortal({ token }: { token: string }) {
                               color: isViewingGuests ? C.purpL : C.mut,
                               fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                             }}>
-                            👥 Ver lista
+                             Ver lista
                           </button>
                         </div>
                         {isViewingGuests && (
@@ -381,7 +381,7 @@ export function PromoterPortal({ token }: { token: string }) {
                           cursor: isCreating ? 'not-allowed' : 'pointer',
                           fontFamily: 'inherit', opacity: isCreating ? 0.7 : 1,
                         }}>
-                        {isCreating ? 'Criando...' : '➕ Criar minha lista'}
+                        {isCreating ? 'Criando...' : ' Criar minha lista'}
                       </button>
                     )}
                   </div>
@@ -393,7 +393,7 @@ export function PromoterPortal({ token }: { token: string }) {
 
         {events.length === 0 && (
           <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🎭</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}></div>
             <div style={{ color: C.mut, fontSize: 14 }}>Nenhum evento disponível no momento</div>
           </div>
         )}
@@ -426,7 +426,7 @@ function GuestList({ listId }: { listId: string }) {
     <div style={{ marginTop: 12, borderTop: `1px solid ${C.brd}`, paddingTop: 12 }}>
       {guests.map((g, i) => (
         <div key={g.id} style={{ color: C.txt, fontSize: 13, padding: '4px 0', borderBottom: i < guests.length - 1 ? `1px solid ${C.brd}` : 'none' }}>
-          {i + 1}. {g.gender === 'feminino' ? '♀ ' : g.gender === 'masculino' ? '♂ ' : ''}{g.full_name}
+          {i + 1}. {g.gender === 'feminino' ? ' ' : g.gender === 'masculino' ? ' ' : ''}{g.full_name}
           {g.phone ? <span style={{ color: C.mut, fontSize: 12 }}> · {g.phone}</span> : ''}
         </div>
       ))}

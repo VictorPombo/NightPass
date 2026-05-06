@@ -219,7 +219,7 @@ export function DashboardPage({ house, user }: Props) {
       operator_user_id: user.id, source: 'door', checkin_type: 'portaria',
     }).then(r => {
       if (r.error) { sT(setToast, 'Erro: ' + r.error.message, 'error'); return }
-      sT(setToast, `✓ Check-in: ${client.full_name}`, 'success')
+      sT(setToast, ` Check-in: ${client.full_name}`, 'success')
       sendWA(house.id, 'checkin_confirm', client.phone ?? '', client.full_name, {}, client.id, ciSelEv)
       setCiRes(null); setCiSrch(''); setCiPay(''); load()
     })

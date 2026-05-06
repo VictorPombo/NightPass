@@ -130,7 +130,7 @@ export function SettingsPage({ house }: Props) {
     if (upErr) { sT(setToast, 'Erro no upload: ' + upErr.message, 'error'); setUploading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path)
     setConfig(p => ({ ...p, logo_url: publicUrl + '?t=' + Date.now() }))
-    sT(setToast, '✅ Logo enviado!', 'success')
+    sT(setToast, ' Logo enviado!', 'success')
     setUploading(false)
   }
 
@@ -152,7 +152,7 @@ export function SettingsPage({ house }: Props) {
     }).eq('id', house.id)
     setSaving(false)
     if (error) { sT(setToast, 'Erro: ' + error.message, 'error'); return }
-    sT(setToast, '✅ Configurações salvas!', 'success')
+    sT(setToast, ' Configurações salvas!', 'success')
     setMpStatus('idle')
   }
 
@@ -167,7 +167,7 @@ export function SettingsPage({ house }: Props) {
     if (r.error) { sT(setToast, 'Erro: ' + r.error.message, 'error') }
     else {
       if (!waConfig.id && 'data' in r && r.data) setWaConfig(r.data as WhatsAppConfig)
-      sT(setToast, '✅ WhatsApp salvo!', 'success')
+      sT(setToast, ' WhatsApp salvo!', 'success')
       setWaStatus('idle')
     }
     setSavingWa(false)
@@ -180,9 +180,9 @@ export function SettingsPage({ house }: Props) {
       const res = await fetch('https://api.mercadopago.com/users/me', {
         headers: { Authorization: `Bearer ${config.mp_access_token.trim()}` },
       })
-      if (res.ok) { const d = await res.json(); setMpStatus('ok'); sT(setToast, `✅ Conta: ${d.nickname ?? d.email}`, 'success') }
-      else { setMpStatus('error'); sT(setToast, '❌ Token inválido', 'error') }
-    } catch { setMpStatus('error'); sT(setToast, '❌ Erro de conexão', 'error') }
+      if (res.ok) { const d = await res.json(); setMpStatus('ok'); sT(setToast, ` Conta: ${d.nickname ?? d.email}`, 'success') }
+      else { setMpStatus('error'); sT(setToast, ' Token inválido', 'error') }
+    } catch { setMpStatus('error'); sT(setToast, ' Erro de conexão', 'error') }
     setTestingMp(false)
   }
 
@@ -195,11 +195,11 @@ export function SettingsPage({ house }: Props) {
     try {
       const res = await fetch(`${waConfig.api_url}/message/sendText/${waConfig.instance_name}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: waConfig.api_key },
-        body: JSON.stringify({ number: fph, text: '✅ NightPass conectado! Sua integração WhatsApp está funcionando.' }),
+        body: JSON.stringify({ number: fph, text: ' NightPass conectado! Sua integração WhatsApp está funcionando.' }),
       }).then(r => r.json())
-      if (res?.key) { setWaStatus('ok'); sT(setToast, '✅ WhatsApp conectado!', 'success') }
-      else { setWaStatus('error'); sT(setToast, '❌ Falha: ' + JSON.stringify(res), 'error') }
-    } catch (e: unknown) { setWaStatus('error'); sT(setToast, '❌ Erro: ' + (e instanceof Error ? e.message : 'desconhecido'), 'error') }
+      if (res?.key) { setWaStatus('ok'); sT(setToast, ' WhatsApp conectado!', 'success') }
+      else { setWaStatus('error'); sT(setToast, ' Falha: ' + JSON.stringify(res), 'error') }
+    } catch (e: unknown) { setWaStatus('error'); sT(setToast, ' Erro: ' + (e instanceof Error ? e.message : 'desconhecido'), 'error') }
     setTestingWa(false)
   }
 
@@ -218,17 +218,17 @@ export function SettingsPage({ house }: Props) {
       borderRadius: 10, padding: '8px 18px', fontSize: 13, fontWeight: 700,
       cursor: testing ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
     } as React.CSSProperties,
-    children: testing ? label : status === 'ok' ? '✅ Conectado' : status === 'error' ? '❌ Inválido' : idle,
+    children: testing ? label : status === 'ok' ? ' Conectado' : status === 'error' ? ' Inválido' : idle,
   })
 
   return (
     <div style={{ maxWidth: 700, paddingBottom: 80 }}>
       <Toast toast={toast} />
-      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>⚙️ Configurações</h1>
+      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>️ Configurações</h1>
       <p style={{ color: C.mut, fontSize: 14, marginBottom: 28 }}>Dados e integrações do estabelecimento</p>
 
       {/* ── EMPRESA ── */}
-      <Section title="Dados da Empresa" icon="🏢">
+      <Section title="Dados da Empresa" icon="">
         {/* Logo */}
         <Field label="LOGOTIPO">
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
@@ -238,13 +238,13 @@ export function SettingsPage({ house }: Props) {
             }}>
               {config.logo_url
                 ? <img src={config.logo_url} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : <span style={{ fontSize: 28, opacity: 0.3 }}>🏠</span>
+                : <span style={{ fontSize: 28, opacity: 0.3 }}></span>
               }
             </div>
             <div>
               <button onClick={() => logoRef.current?.click()} disabled={uploading}
                 style={{ background: C.acc + '22', border: `1px solid ${C.acc}44`, color: C.acc, borderRadius: 10, padding: '8px 18px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'block', marginBottom: 6 }}>
-                {uploading ? '⏳ Enviando...' : '📤 Enviar logo'}
+                {uploading ? ' Enviando...' : ' Enviar logo'}
               </button>
               <div style={{ color: C.mut, fontSize: 11 }}>JPG, PNG ou WebP · Máx 2MB</div>
             </div>
@@ -289,7 +289,7 @@ export function SettingsPage({ house }: Props) {
       </Section>
 
       {/* ── PIX ── */}
-      <Section title="Pagamento PIX Manual" icon="💳">
+      <Section title="Pagamento PIX Manual" icon="">
         <div style={{ background: C.acc + '10', border: `1px solid ${C.acc}22`, borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontSize: 12, color: C.sub }}>
           Usado quando o Mercado Pago não está configurado. O comprador vê esta chave na página de compra.
         </div>
@@ -304,9 +304,9 @@ export function SettingsPage({ house }: Props) {
       </Section>
 
       {/* ── MERCADO PAGO ── */}
-      <Section title="Mercado Pago" icon="🤖">
+      <Section title="Mercado Pago" icon="">
         <div style={{ background: C.grn + '10', border: `1px solid ${C.grn}22`, borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
-          <div style={{ color: C.grn, fontWeight: 700, fontSize: 13, marginBottom: 4 }}>✅ Ingresso liberado automaticamente após pagamento</div>
+          <div style={{ color: C.grn, fontWeight: 700, fontSize: 13, marginBottom: 4 }}> Ingresso liberado automaticamente após pagamento</div>
           <div style={{ color: C.sub, fontSize: 12, lineHeight: 1.6 }}>
             1. Acesse <span style={{ color: C.acc }}>developers.mercadopago.com.br</span><br />
             2. Crie um app em "Suas integrações"<br />
@@ -320,21 +320,21 @@ export function SettingsPage({ house }: Props) {
               placeholder="APP_USR-..." autoComplete="off" />
             <button onClick={() => setShowMpToken(p => !p)}
               style={{ background: C.bg, border: `1px solid ${C.brd}`, color: C.mut, borderRadius: 10, padding: '0 12px', cursor: 'pointer', fontSize: 15, flexShrink: 0 }}>
-              {showMpToken ? '🙈' : '👁️'}
+              {showMpToken ? '' : '️'}
             </button>
           </div>
         </Field>
-        <button onClick={testMp} disabled={testingMp || !config.mp_access_token.trim()} {...statusBtn(mpStatus, '🔍 Testar token', testingMp)}>
-          {statusBtn(mpStatus, '🔍 Testar token', testingMp).children}
+        <button onClick={testMp} disabled={testingMp || !config.mp_access_token.trim()} {...statusBtn(mpStatus, ' Testar token', testingMp)}>
+          {statusBtn(mpStatus, ' Testar token', testingMp).children}
         </button>
       </Section>
 
       {/* ── WHATSAPP ── */}
-      <Section title="Integração WhatsApp" icon="💬">
+      <Section title="Integração WhatsApp" icon="">
         <div style={{ background: C.acc + '10', border: `1px solid ${C.acc}22`, borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
           <div style={{ color: C.sub, fontSize: 12, lineHeight: 1.6 }}>
             Use <strong style={{ color: C.sub }}>Evolution API</strong> (self-hosted) ou qualquer provedor compatível.<br />
-            Após configurar, os disparos automáticos ficam na aba <span style={{ color: C.acc }}>💬 WhatsApp</span>.
+            Após configurar, os disparos automáticos ficam na aba <span style={{ color: C.acc }}> WhatsApp</span>.
           </div>
         </div>
 
@@ -366,7 +366,7 @@ export function SettingsPage({ house }: Props) {
                     placeholder="••••••••" autoComplete="off" />
                   <button onClick={() => setShowApiKey(p => !p)}
                     style={{ background: C.bg, border: `1px solid ${C.brd}`, color: C.mut, borderRadius: 8, padding: '0 10px', cursor: 'pointer', fontSize: 14, flexShrink: 0 }}>
-                    {showApiKey ? '🙈' : '👁️'}
+                    {showApiKey ? '' : '️'}
                   </button>
                 </div>
               </Field>
@@ -375,14 +375,14 @@ export function SettingsPage({ house }: Props) {
             <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginTop: 4 }}>
               <input style={{ ...INP, flex: 1 }} value={testPhone} onChange={e => setTestPhone(e.target.value)}
                 placeholder="Telefone para teste (ex: 11999999999)" />
-              <button onClick={testWa} disabled={testingWa} {...statusBtn(waStatus, '📲 Testar', testingWa, 'Testando...')}>
-                {statusBtn(waStatus, '📲 Testar', testingWa, 'Testando...').children}
+              <button onClick={testWa} disabled={testingWa} {...statusBtn(waStatus, ' Testar', testingWa, 'Testando...')}>
+                {statusBtn(waStatus, ' Testar', testingWa, 'Testando...').children}
               </button>
             </div>
 
             <div style={{ marginTop: 16 }}>
               <Btn onClick={saveWa} disabled={savingWa} variant="ghost" style={{ fontSize: 13 }}>
-                {savingWa ? 'Salvando...' : '💾 Salvar WhatsApp'}
+                {savingWa ? 'Salvando...' : ' Salvar WhatsApp'}
               </Btn>
             </div>
           </>
@@ -390,7 +390,7 @@ export function SettingsPage({ house }: Props) {
       </Section>
 
       {/* ── LINK DE VENDA ── */}
-      <Section title="Link de Venda de Ingressos" icon="🔗">
+      <Section title="Link de Venda de Ingressos" icon="">
         <div style={{ color: C.sub, fontSize: 13, marginBottom: 12 }}>
           Compartilhe o link do evento com seus clientes. Gerado automaticamente em cada evento.
         </div>
@@ -398,12 +398,12 @@ export function SettingsPage({ house }: Props) {
           {window.location.origin}/e/<span style={{ color: C.acc }}>ID_DO_EVENTO</span>
         </div>
         <div style={{ color: C.mut, fontSize: 11, marginTop: 6 }}>
-          Disponível no botão 🎟️ Ingressos de cada evento.
+          Disponível no botão ️ Ingressos de cada evento.
         </div>
       </Section>
 
       <Btn onClick={saveHouse} disabled={saving} style={{ width: '100%', padding: 14, fontSize: 15 }}>
-        {saving ? 'Salvando...' : '💾 Salvar Configurações'}
+        {saving ? 'Salvando...' : ' Salvar Configurações'}
       </Btn>
     </div>
   )

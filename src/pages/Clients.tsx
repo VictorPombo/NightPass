@@ -90,7 +90,7 @@ export function ClientsPage({ house, user }: Props) {
     const q = editing ? supabase.from('clients').update(data).eq('id', editing.id) : supabase.from('clients').insert(data)
     q.then(r => {
       if (r.error) { sT(setToast, 'Erro: ' + r.error.message, 'error'); return }
-      sT(setToast, editing ? '✅ Cliente atualizado!' : '✅ Cliente cadastrado!', 'success')
+      sT(setToast, editing ? ' Cliente atualizado!' : ' Cliente cadastrado!', 'success')
       setModal(false); load()
     })
   }
@@ -107,7 +107,7 @@ export function ClientsPage({ house, user }: Props) {
     const ph = cn(c.phone ?? '')
     if (!ph) { sT(setToast, 'Sem telefone cadastrado', 'warn'); return }
     const nome = c.full_name.split(' ')[0]
-    const msg = `🎂 Feliz Aniversário, ${nome}! 🎉\n\nQue seu dia seja repleto de alegria e celebração! 🥳\n\nCom carinho, ${house.name || 'NightPass'}`
+    const msg = ` Feliz Aniversário, ${nome}! \n\nQue seu dia seja repleto de alegria e celebração! \n\nCom carinho, ${house.name || 'NightPass'}`
     window.open(`https://wa.me/55${ph}?text=${encodeURIComponent(msg)}`, '_blank')
   }
 
@@ -121,7 +121,7 @@ export function ClientsPage({ house, user }: Props) {
       await new Promise(r => setTimeout(r, 800))
     }
     setSendingAll(false)
-    sT(setToast, `✅ ${withPhone.length} mensagens abertas!`, 'success')
+    sT(setToast, ` ${withPhone.length} mensagens abertas!`, 'success')
   }
 
   const now = new Date()
@@ -141,7 +141,7 @@ export function ClientsPage({ house, user }: Props) {
     return true
   })
 
-  const dayLabel = (d: number) => d === 0 ? '🎂 Hoje!' : d === 1 ? '🎈 Amanhã' : `Em ${d} dias`
+  const dayLabel = (d: number) => d === 0 ? ' Hoje!' : d === 1 ? ' Amanhã' : `Em ${d} dias`
   const dayColor = (d: number) => d === 0 ? C.red : d <= 3 ? C.gold : C.mut
 
   const inp = (style?: React.CSSProperties) => ({ style: { width: '100%', background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '10px 12px', color: C.txt, fontSize: 14, minHeight: 44, fontFamily: 'inherit', boxSizing: 'border-box' as const, ...style } })
@@ -172,7 +172,7 @@ export function ClientsPage({ house, user }: Props) {
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: C.brd, flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>
               {(form as any).photo_url
                 ? <img src={(form as any).photo_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                : '👤'}
+                : ''}
             </div>
             <div style={{ flex: 1 }}>
               <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Foto (URL — opcional)</label>
@@ -192,7 +192,7 @@ export function ClientsPage({ house, user }: Props) {
           <div><label style={{ fontSize: 12, color: C.mut, fontWeight: 600 }}>Nascimento</label>
             <input type="date" {...inp()} value={form.birth_date} onChange={e => setForm(p => ({ ...p, birth_date: e.target.value }))} /></div>
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-            <Btn onClick={save} style={{ flex: 1 }}>💾 Salvar</Btn>
+            <Btn onClick={save} style={{ flex: 1 }}> Salvar</Btn>
             <Btn onClick={() => setModal(false)} variant="ghost">Cancelar</Btn>
           </div>
         </div>
@@ -201,15 +201,15 @@ export function ClientsPage({ house, user }: Props) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>👥 Clientes</h1>
+          <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}> Clientes</h1>
           <p style={{ color: C.mut, fontSize: 14 }}>{total.toLocaleString('pt-BR')} clientes cadastrados</p>
         </div>
-        {tab === 'clientes' && <Btn onClick={openNew} icon="➕">Novo Cliente</Btn>}
+        {tab === 'clientes' && <Btn onClick={openNew} icon="">Novo Cliente</Btn>}
       </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        {([['clientes', '👥 Clientes'], ['aniversarios', '🎂 Aniversários']] as const).map(([id, label]) => (
+        {([['clientes', ' Clientes'], ['aniversarios', ' Aniversários']] as const).map(([id, label]) => (
           <button key={id} onClick={() => setTab(id)}
             style={{ padding: '9px 18px', borderRadius: 10, border: `1px solid ${tab === id ? C.acc : C.brd}`, background: tab === id ? C.acc + '22' : 'transparent', color: tab === id ? C.acc : C.mut, fontSize: 14, fontWeight: tab === id ? 700 : 500, cursor: 'pointer', fontFamily: 'inherit' }}>
             {label}
@@ -246,7 +246,7 @@ export function ClientsPage({ house, user }: Props) {
                         <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>{c.full_name}</div>
                         <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
                           {c.cpf ? fcpf(c.cpf) : ''}{c.cpf && c.phone ? ' · ' : ''}{c.phone ? ftel(c.phone) : ''}
-                          {c.birth_date ? ` · 🎂 ${fd(c.birth_date)}` : ''}
+                          {c.birth_date ? ` ·  ${fd(c.birth_date)}` : ''}
                           {(c as any).email ? ` · ${(c as any).email}` : ''}
                         </div>
                       </div>
@@ -257,12 +257,12 @@ export function ClientsPage({ house, user }: Props) {
                         {c.phone && (
                           <a href={`https://wa.me/55${cn(c.phone ?? '')}`} target="_blank" rel="noreferrer"
                             style={{ display: 'inline-flex', alignItems: 'center', background: '#25D36622', color: '#25D366', border: '1px solid #25D36644', borderRadius: 8, padding: '6px 10px', fontSize: 12, textDecoration: 'none', fontWeight: 700 }}>
-                            💬
+                            
                           </a>
                         )}
-                        <Btn onClick={() => openHistory(c)} variant="ghost" small>📋</Btn>
-                        <Btn onClick={() => openEdit(c)} variant="ghost" small>✏️</Btn>
-                        <Btn onClick={() => del(c)} variant="danger" small>🗑</Btn>
+                        <Btn onClick={() => openHistory(c)} variant="ghost" small></Btn>
+                        <Btn onClick={() => openEdit(c)} variant="ghost" small>️</Btn>
+                        <Btn onClick={() => del(c)} variant="danger" small></Btn>
                       </div>
                     </div>
                   )
@@ -276,7 +276,7 @@ export function ClientsPage({ house, user }: Props) {
               </div>
             )}
           </Card>
-          <FAB onClick={openNew} icon="➕" title="Novo cliente" />
+          <FAB onClick={openNew} icon="" title="Novo cliente" />
         </>
       )}
 
@@ -290,7 +290,7 @@ export function ClientsPage({ house, user }: Props) {
               {['7', '14', '30', '60', '90'].map(d => <option key={d} value={d}>Próximos {d} dias</option>)}
             </select>
             <div style={{ display: 'flex', gap: 6 }}>
-              {([['all', '📅 Todos'], ['week', '📆 Esta Semana'], ['month', '🗓️ Este Mês']] as const).map(([id, label]) => (
+              {([['all', ' Todos'], ['week', ' Esta Semana'], ['month', '️ Este Mês']] as const).map(([id, label]) => (
                 <button key={id} onClick={() => setBdFilter(id)}
                   style={{ padding: '8px 14px', borderRadius: 8, border: `1px solid ${bdFilter === id ? C.gold : C.brd}`, background: bdFilter === id ? C.gold + '22' : 'transparent', color: bdFilter === id ? C.gold : C.mut, fontSize: 12, fontWeight: bdFilter === id ? 700 : 400, cursor: 'pointer', fontFamily: 'inherit' }}>
                   {label}
@@ -300,16 +300,16 @@ export function ClientsPage({ house, user }: Props) {
             <div style={{ flex: 1 }} />
             <Btn onClick={sendAllBdWA} disabled={sendingAll || filteredBd.filter(c => c.phone).length === 0}
               style={{ background: '#25D36622', color: '#25D366', border: '1px solid #25D36644' }}>
-              {sendingAll ? '⏳ Enviando...' : `📲 Enviar para todos (${filteredBd.filter(c => c.phone).length})`}
+              {sendingAll ? ' Enviando...' : ` Enviar para todos (${filteredBd.filter(c => c.phone).length})`}
             </Btn>
           </div>
 
           {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 16 }}>
             {[
-              { label: 'Hoje', value: bdClients.filter(c => c.daysUntil === 0).length, color: C.red, icon: '🎂' },
-              { label: 'Esta semana', value: bdClients.filter(c => c.daysUntil <= 7).length, color: C.gold, icon: '🎈' },
-              { label: `${bdDays} dias`, value: bdClients.length, color: C.acc, icon: '📅' },
+              { label: 'Hoje', value: bdClients.filter(c => c.daysUntil === 0).length, color: C.red, icon: '' },
+              { label: 'Esta semana', value: bdClients.filter(c => c.daysUntil <= 7).length, color: C.gold, icon: '' },
+              { label: `${bdDays} dias`, value: bdClients.length, color: C.acc, icon: '' },
             ].map(s => (
               <div key={s.label} style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 12, padding: '14px 18px', textAlign: 'center' }}>
                 <div style={{ fontSize: 24 }}>{s.icon}</div>
@@ -327,12 +327,12 @@ export function ClientsPage({ house, user }: Props) {
               : <Card>
                 {filteredBd.map((c, i) => (
                   <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i < filteredBd.length - 1 ? `1px solid ${C.brd}` : 'none' }}>
-                    <div style={{ fontSize: 28, flexShrink: 0 }}>{c.daysUntil === 0 ? '🎂' : '🎈'}</div>
+                    <div style={{ fontSize: 28, flexShrink: 0 }}>{c.daysUntil === 0 ? '' : ''}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>{c.full_name}</div>
                       <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                        🎂 {fd(c.birth_date ?? '')}
-                        {c.phone ? ` · 📱 ${ftel(c.phone)}` : ' · Sem telefone'}
+                         {fd(c.birth_date ?? '')}
+                        {c.phone ? ` ·  ${ftel(c.phone)}` : ' · Sem telefone'}
                       </div>
                     </div>
                     <span style={{ color: dayColor(c.daysUntil), fontWeight: 700, fontSize: 13, flexShrink: 0, background: dayColor(c.daysUntil) + '18', padding: '3px 10px', borderRadius: 8 }}>
@@ -342,7 +342,7 @@ export function ClientsPage({ house, user }: Props) {
                       <a href={`https://wa.me/55${cn(c.phone ?? '')}`} target="_blank" rel="noreferrer"
                         onClick={e => { e.preventDefault(); sendBdWA(c) }}
                         style={{ display: 'inline-flex', alignItems: 'center', background: '#25D36622', color: '#25D366', border: '1px solid #25D36644', borderRadius: 8, padding: '6px 12px', fontSize: 12, textDecoration: 'none', fontWeight: 700, flexShrink: 0 }}>
-                        💬 WA
+                         WA
                       </a>
                     )}
                   </div>

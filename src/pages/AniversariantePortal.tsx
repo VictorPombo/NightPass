@@ -155,14 +155,14 @@ export function AniversariantePortal({ token }: { token: string }) {
     const houseName = bdList?.houses?.name ?? ''
     const bdName = bdList?.name ?? 'Aniversariante'
 
-    const msg = `🎂 *Aniversário de ${bdName}*\n` +
-      `🎉 *${evName}*\n` +
-      (evDate ? `📅 ${evDate}${evTime ? ` às ${evTime}` : ''}\n` : '') +
-      (houseName ? `📍 ${houseName}\n` : '') +
-      `\nVocê está convidado(a)! 🥳\n\n` +
+    const msg = ` *Aniversário de ${bdName}*\n` +
+      ` *${evName}*\n` +
+      (evDate ? ` ${evDate}${evTime ? ` às ${evTime}` : ''}\n` : '') +
+      (houseName ? ` ${houseName}\n` : '') +
+      `\nVocê está convidado(a)! \n\n` +
       `Confirme sua presença pelo link abaixo:\n` +
-      `👉 ${url}\n\n` +
-      `_Informe seu nome na portaria. Entrada garantida!_ ✅`
+      ` ${url}\n\n` +
+      `_Informe seu nome na portaria. Entrada garantida!_ `
 
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank')
   }
@@ -184,7 +184,7 @@ export function AniversariantePortal({ token }: { token: string }) {
   if (notFound) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+        <div style={{ fontSize: 48, marginBottom: 12 }}></div>
         <div style={{ color: C.txt, fontWeight: 700, fontSize: 18 }}>Lista não encontrada</div>
         <div style={{ color: C.mut, fontSize: 14, marginTop: 8 }}>Verifique o link recebido</div>
       </div>
@@ -194,7 +194,7 @@ export function AniversariantePortal({ token }: { token: string }) {
   if (done) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
-        <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+        <div style={{ fontSize: 64, marginBottom: 16 }}></div>
         <div style={{ color: C.grn, fontWeight: 900, fontSize: 22, marginBottom: 8 }}>Lista enviada!</div>
         <div style={{ color: C.sub, fontSize: 14, marginBottom: 24 }}>
           {guests.length} convidado{guests.length !== 1 ? 's' : ''} na sua lista de aniversário
@@ -202,14 +202,14 @@ export function AniversariantePortal({ token }: { token: string }) {
         <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 16, padding: 16, textAlign: 'left', marginBottom: 16 }}>
           {guests.map((g, i) => (
             <div key={g.id} style={{ padding: '8px 0', borderBottom: i < guests.length - 1 ? `1px solid ${C.brd}` : 'none', color: C.txt, fontSize: 14 }}>
-              {g.gender === 'feminino' ? '♀ ' : g.gender === 'masculino' ? '♂ ' : '👤 '}
+              {g.gender === 'feminino' ? ' ' : g.gender === 'masculino' ? ' ' : ' '}
               {g.full_name}
               {g.phone ? <span style={{ color: C.mut, fontSize: 12 }}> · {fmtPhone(g.phone)}</span> : ''}
             </div>
           ))}
         </div>
         <div style={{ background: C.gold + '15', border: `1px solid ${C.gold}33`, borderRadius: 12, padding: '12px 16px', color: C.gold, fontSize: 13, fontWeight: 600 }}>
-          📍 Apresente este link ou seu nome na portaria
+           Apresente este link ou seu nome na portaria
         </div>
         <button onClick={() => setDone(false)}
           style={{ marginTop: 16, width: '100%', background: 'transparent', border: `1px solid ${C.brd}`, borderRadius: 12, padding: 12, color: C.mut, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -237,7 +237,7 @@ export function AniversariantePortal({ token }: { token: string }) {
               style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover', marginBottom: 12 }} />
           )}
 
-          <div style={{ fontSize: 48, marginBottom: 8 }}>🎂</div>
+          <div style={{ fontSize: 48, marginBottom: 8 }}></div>
 
           <div style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
             Lista de Aniversário
@@ -249,12 +249,12 @@ export function AniversariantePortal({ token }: { token: string }) {
 
           {ev && (
             <div style={{ color: C.sub, fontSize: 13, marginBottom: 6 }}>
-              🎉 {ev.name}
+               {ev.name}
             </div>
           )}
           {ev && (
             <div style={{ color: C.sub, fontSize: 13 }}>
-              📅 {fdate(ev.event_date)}{ev.start_time ? ` · 🕙 ${ev.start_time.slice(0, 5)}` : ''}
+               {fdate(ev.event_date)}{ev.start_time ? ` ·  ${ev.start_time.slice(0, 5)}` : ''}
             </div>
           )}
         </div>
@@ -273,7 +273,7 @@ export function AniversariantePortal({ token }: { token: string }) {
                 color: tab === t ? C.gold : C.mut,
                 fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
               }}>
-              {t === 'share' ? '📲 Compartilhar' : `👥 Lista (${guests.length})`}
+              {t === 'share' ? ' Compartilhar' : ` Lista (${guests.length})`}
             </button>
           ))}
         </div>
@@ -293,12 +293,12 @@ export function AniversariantePortal({ token }: { token: string }) {
                 </div>
                 {ev && (
                   <div style={{ color: C.sub, fontSize: 13 }}>
-                    📅 {fdate(ev.event_date)}{ev.start_time ? ` · 🕙 ${ev.start_time.slice(0, 5)}` : ''}
+                     {fdate(ev.event_date)}{ev.start_time ? ` ·  ${ev.start_time.slice(0, 5)}` : ''}
                   </div>
                 )}
                 {bdList!.houses?.name && (
                   <div style={{ color: C.mut, fontSize: 12, marginTop: 4 }}>
-                    📍 {bdList!.houses.name}
+                     {bdList!.houses.name}
                   </div>
                 )}
               </div>
@@ -310,7 +310,7 @@ export function AniversariantePortal({ token }: { token: string }) {
                 <div style={{ color: C.txt, fontWeight: 800, fontSize: 20 }}>{guests.length}</div>
                 <div style={{ color: C.mut, fontSize: 12 }}>convidado{guests.length !== 1 ? 's' : ''} confirmado{guests.length !== 1 ? 's' : ''}</div>
               </div>
-              <div style={{ fontSize: 28 }}>🎉</div>
+              <div style={{ fontSize: 28 }}></div>
             </div>
 
             {/* Share instructions */}
@@ -322,7 +322,7 @@ export function AniversariantePortal({ token }: { token: string }) {
                 1. Clique em <strong style={{ color: '#25D366' }}>Compartilhar pelo WhatsApp</strong> para enviar o link para seus convidados<br />
                 2. Cada convidado preenche o nome, telefone e CPF no link<br />
                 3. Sua lista fica atualizada em tempo real aqui<br />
-                4. Na portaria, informe seu nome e a lista é verificada automaticamente ✅
+                4. Na portaria, informe seu nome e a lista é verificada automaticamente 
               </div>
             </div>
 
@@ -333,7 +333,7 @@ export function AniversariantePortal({ token }: { token: string }) {
               </div>
               <button onClick={copyLink}
                 style={{ background: copied ? C.grn + '22' : 'transparent', border: `1px solid ${copied ? C.grn : C.brd}`, borderRadius: 8, padding: '6px 12px', color: copied ? C.grn : C.mut, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
-                {copied ? '✅ Copiado!' : '🔗 Copiar'}
+                {copied ? ' Copiado!' : ' Copiar'}
               </button>
             </div>
 
@@ -347,7 +347,7 @@ export function AniversariantePortal({ token }: { token: string }) {
                 cursor: 'pointer', fontFamily: 'inherit',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               }}>
-              <span style={{ fontSize: 20 }}>📲</span>
+              <span style={{ fontSize: 20 }}></span>
               Compartilhar pelo WhatsApp
             </button>
           </div>
@@ -367,18 +367,18 @@ export function AniversariantePortal({ token }: { token: string }) {
                     <div>
                       <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>
                         {i + 1}.{' '}
-                        {g.gender === 'feminino' ? <span style={{ color: '#f472b6' }}>♀ </span> : g.gender === 'masculino' ? <span style={{ color: C.acc }}>♂ </span> : ''}
+                        {g.gender === 'feminino' ? <span style={{ color: '#f472b6' }}> </span> : g.gender === 'masculino' ? <span style={{ color: C.acc }}> </span> : ''}
                         {g.full_name}
                       </div>
                       <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                        {g.phone ? `📱 ${fmtPhone(g.phone)}` : ''}
+                        {g.phone ? ` ${fmtPhone(g.phone)}` : ''}
                         {g.phone && g.cpf ? '  ·  ' : ''}
-                        {g.cpf ? `📄 ${fmtCPF(g.cpf)}` : ''}
+                        {g.cpf ? ` ${fmtCPF(g.cpf)}` : ''}
                       </div>
                     </div>
                     <button onClick={() => removeGuest(g.id)}
                       style={{ background: 'none', border: 'none', color: C.mut, fontSize: 18, cursor: 'pointer', padding: '4px 8px' }}>
-                      ✕
+                      
                     </button>
                   </div>
                 ))}
@@ -420,7 +420,7 @@ export function AniversariantePortal({ token }: { token: string }) {
                   {['masculino', 'feminino'].map(g => (
                     <button key={g} onClick={() => setForm(p => ({ ...p, gender: p.gender === g ? '' : g }))}
                       style={{ flex: 1, padding: 10, borderRadius: 10, border: `2px solid ${form.gender === g ? C.gold : C.brd}`, background: form.gender === g ? C.gold + '22' : 'transparent', color: form.gender === g ? C.gold : C.mut, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      {g === 'masculino' ? '♂ Masculino' : '♀ Feminino'}
+                      {g === 'masculino' ? ' Masculino' : ' Feminino'}
                     </button>
                   ))}
                 </div>
@@ -435,13 +435,13 @@ export function AniversariantePortal({ token }: { token: string }) {
 
             <button onClick={addGuest} disabled={submitting}
               style={{ width: '100%', background: `linear-gradient(135deg, ${C.gold}, #d97706)`, color: '#000', border: 'none', borderRadius: 14, padding: 16, fontSize: 16, fontWeight: 800, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, fontFamily: 'inherit', marginBottom: 12 }}>
-              {submitting ? 'Salvando...' : '➕ Adicionar à Lista'}
+              {submitting ? 'Salvando...' : ' Adicionar à Lista'}
             </button>
 
             {guests.length > 0 && (
               <button onClick={() => setDone(true)}
                 style={{ width: '100%', background: C.grn + '22', border: `1px solid ${C.grn}44`, color: C.grn, borderRadius: 14, padding: 14, fontSize: 15, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit' }}>
-                ✅ Fechar lista ({guests.length} convidado{guests.length !== 1 ? 's' : ''})
+                 Fechar lista ({guests.length} convidado{guests.length !== 1 ? 's' : ''})
               </button>
             )}
           </div>
@@ -530,7 +530,7 @@ export function NiverGuestPage({ token }: { token: string }) {
   if (notFound) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+        <div style={{ fontSize: 48, marginBottom: 12 }}></div>
         <div style={{ color: C.txt, fontWeight: 700, fontSize: 18 }}>Lista não encontrada</div>
         <div style={{ color: C.mut, fontSize: 14, marginTop: 8 }}>Verifique o link recebido</div>
       </div>
@@ -540,7 +540,7 @@ export function NiverGuestPage({ token }: { token: string }) {
   if (done) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
-        <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+        <div style={{ fontSize: 64, marginBottom: 16 }}></div>
         <div style={{ color: C.grn, fontWeight: 900, fontSize: 24, marginBottom: 8 }}>Presença confirmada!</div>
         <div style={{ color: C.sub, fontSize: 15, marginBottom: 20 }}>
           Você está na lista de aniversário de <strong style={{ color: C.gold }}>{bdList?.name}</strong>
@@ -549,16 +549,16 @@ export function NiverGuestPage({ token }: { token: string }) {
           <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 16, padding: 16, marginBottom: 16 }}>
             <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>{bdList.events.name}</div>
             <div style={{ color: C.sub, fontSize: 13, marginTop: 6 }}>
-              📅 {fdate(bdList.events.event_date)}
-              {bdList.events.start_time ? ` · 🕙 ${bdList.events.start_time.slice(0, 5)}` : ''}
+               {fdate(bdList.events.event_date)}
+              {bdList.events.start_time ? ` ·  ${bdList.events.start_time.slice(0, 5)}` : ''}
             </div>
             {bdList.houses?.name && (
-              <div style={{ color: C.mut, fontSize: 12, marginTop: 4 }}>📍 {bdList.houses.name}</div>
+              <div style={{ color: C.mut, fontSize: 12, marginTop: 4 }}> {bdList.houses.name}</div>
             )}
           </div>
         )}
         <div style={{ background: C.gold + '15', border: `1px solid ${C.gold}33`, borderRadius: 12, padding: '12px 16px', color: C.gold, fontSize: 13, fontWeight: 600 }}>
-          📍 Apresente este link ou seu nome na portaria
+           Apresente este link ou seu nome na portaria
         </div>
       </div>
     </div>
@@ -581,7 +581,7 @@ export function NiverGuestPage({ token }: { token: string }) {
             <img src={bdList!.houses.logo_url} alt="logo"
               style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover', marginBottom: 12 }} />
           )}
-          <div style={{ fontSize: 40, marginBottom: 8 }}>🎂</div>
+          <div style={{ fontSize: 40, marginBottom: 8 }}></div>
           <div style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
             Confirmação de Presença
           </div>
@@ -590,7 +590,7 @@ export function NiverGuestPage({ token }: { token: string }) {
           </h1>
           {ev && (
             <div style={{ color: C.sub, fontSize: 13 }}>
-              🎉 {ev.name} · 📅 {fdateShort(ev.event_date)}{ev.start_time ? ` às ${ev.start_time.slice(0, 5)}` : ''}
+               {ev.name} ·  {fdateShort(ev.event_date)}{ev.start_time ? ` às ${ev.start_time.slice(0, 5)}` : ''}
             </div>
           )}
           <div style={{ marginTop: 10, color: C.sub, fontSize: 12 }}>
@@ -635,7 +635,7 @@ export function NiverGuestPage({ token }: { token: string }) {
               {['masculino', 'feminino'].map(g => (
                 <button key={g} onClick={() => setForm(p => ({ ...p, gender: p.gender === g ? '' : g }))}
                   style={{ flex: 1, padding: 10, borderRadius: 10, border: `2px solid ${form.gender === g ? C.gold : C.brd}`, background: form.gender === g ? C.gold + '22' : 'transparent', color: form.gender === g ? C.gold : C.mut, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  {g === 'masculino' ? '♂ Masculino' : '♀ Feminino'}
+                  {g === 'masculino' ? ' Masculino' : ' Feminino'}
                 </button>
               ))}
             </div>
@@ -650,7 +650,7 @@ export function NiverGuestPage({ token }: { token: string }) {
 
         <button onClick={register} disabled={submitting}
           style={{ width: '100%', background: `linear-gradient(135deg, ${C.gold}, #d97706)`, color: '#000', border: 'none', borderRadius: 14, padding: 16, fontSize: 16, fontWeight: 800, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, fontFamily: 'inherit' }}>
-          {submitting ? 'Confirmando...' : '🎉 Confirmar Presença'}
+          {submitting ? 'Confirmando...' : ' Confirmar Presença'}
         </button>
 
         <div style={{ color: C.mut, fontSize: 11, textAlign: 'center', marginTop: 20 }}>

@@ -11,7 +11,7 @@ interface Template { id?: string; type: string; body: string; active: boolean; h
 interface Log { id: string; status: string; recipient_phone: string; message_type: string; message_body: string; created_at: string }
 
 const WDEF: WhatsAppConfig = { house_id: '', instance_name: '', api_url: '', api_key: '', active: false, send_checkin_confirm: true, send_birthday_wish: true, send_event_invite: false }
-const TMPL_LABELS: Record<string, string> = { checkin_confirm: '✓ Confirmação de Check-in', birthday_wish: '🎂 Mensagem de Aniversário', event_invite: '🎉 Convite de Evento' }
+const TMPL_LABELS: Record<string, string> = { checkin_confirm: ' Confirmação de Check-in', birthday_wish: ' Mensagem de Aniversário', event_invite: ' Convite de Evento' }
 
 export function WhatsAppPage({ house }: Props) {
   const [cfg, setCfg] = useState<WhatsAppConfig | null>(null)
@@ -43,9 +43,9 @@ export function WhatsAppPage({ house }: Props) {
     try {
       const res = await fetch(`${cfg.api_url}/message/sendText/${cfg.instance_name}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: cfg.api_key },
-        body: JSON.stringify({ number: fph, text: '✅ NightPass conectado! Sua integração WhatsApp está funcionando.' }),
+        body: JSON.stringify({ number: fph, text: ' NightPass conectado! Sua integração WhatsApp está funcionando.' }),
       }).then(r => r.json())
-      if (res?.key) _succ('✅ Mensagem enviada! WhatsApp conectado.')
+      if (res?.key) _succ(' Mensagem enviada! WhatsApp conectado.')
       else _err('Falha: ' + JSON.stringify(res))
     } catch (e: unknown) { _err('Erro: ' + (e instanceof Error ? e.message : 'desconhecido')) }
     setTesting(false)
@@ -74,12 +74,12 @@ export function WhatsAppPage({ house }: Props) {
     <div style={{ maxWidth: 800, paddingBottom: 40 }}>
       {toast && <div style={{ position: 'fixed', bottom: 24, right: 24, background: C.grn + '22', color: C.grn, borderRadius: 12, padding: '12px 18px', fontSize: 13, fontWeight: 700, zIndex: 1100 }}>{toast.msg}</div>}
 
-      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 20 }}>💬 WhatsApp</h1>
+      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 20 }}> WhatsApp</h1>
 
       {/* Config */}
       <Card style={{ marginBottom: 16 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>⚙️ Configuração — Evolution API</div>
+          <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>️ Configuração — Evolution API</div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
             <input type="checkbox" checked={!!cfg.active} onChange={e => setCfg(p => p ? { ...p, active: e.target.checked } : p)} style={{ width: 16, height: 16 }} />
             <span style={{ color: cfg.active ? C.grn : C.mut, fontSize: 13, fontWeight: 600 }}>{cfg.active ? 'Ativo' : 'Inativo'}</span>
@@ -109,14 +109,14 @@ export function WhatsAppPage({ house }: Props) {
             <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Telefone para teste</label>
             <input {...inp} type="tel" value={testPhone} onChange={e => setTestPhone(e.target.value)} placeholder="11999999999" />
           </div>
-          <Btn onClick={testConn} disabled={testing} variant="secondary">🔌 {testing ? 'Testando...' : 'Testar Conexão'}</Btn>
-          <Btn onClick={saveCfg} disabled={saving}>💾 {saving ? 'Salvando...' : 'Salvar'}</Btn>
+          <Btn onClick={testConn} disabled={testing} variant="secondary"> {testing ? 'Testando...' : 'Testar Conexão'}</Btn>
+          <Btn onClick={saveCfg} disabled={saving}> {saving ? 'Salvando...' : 'Salvar'}</Btn>
         </div>
       </Card>
 
       {/* Templates */}
       <Card style={{ marginBottom: 16 }}>
-        <div style={{ color: C.txt, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>📝 Templates de Mensagem</div>
+        <div style={{ color: C.txt, fontWeight: 700, fontSize: 15, marginBottom: 4 }}> Templates de Mensagem</div>
         <div style={{ color: C.mut, fontSize: 12, marginBottom: 16 }}>Variáveis: {'{{name}} {{date}} {{event}} {{house}}'}</div>
         {Object.keys(TMPL_LABELS).map(type => {
           const t = tmpls.find(x => x.type === type) ?? { type, body: '', active: true, house_id: house.id }
@@ -125,14 +125,14 @@ export function WhatsAppPage({ house }: Props) {
             <div key={type} style={{ borderBottom: `1px solid ${C.brd}`, paddingBottom: 12, marginBottom: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <span style={{ color: C.acc, fontSize: 12, fontWeight: 600 }}>{TMPL_LABELS[type]}</span>
-                {!isEd && <Btn onClick={() => setEt({ ...t })} small variant="ghost">✏️ Editar</Btn>}
+                {!isEd && <Btn onClick={() => setEt({ ...t })} small variant="ghost">️ Editar</Btn>}
               </div>
               {isEd ? (
                 <div>
                   <textarea value={et.body} rows={4} onChange={e => setEt(p => p ? { ...p, body: e.target.value } : p)}
                     style={{ width: '100%', background: C.bg, border: `1px solid ${C.acc}`, borderRadius: 8, padding: '8px 10px', color: C.txt, fontSize: 13, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }} />
                   <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
-                    <Btn onClick={saveTmpl} small>💾 Salvar</Btn>
+                    <Btn onClick={saveTmpl} small> Salvar</Btn>
                     <Btn onClick={() => setEt(null)} small variant="ghost">Cancelar</Btn>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ export function WhatsAppPage({ house }: Props) {
       {/* Logs */}
       {logs.length > 0 && (
         <Card>
-          <div style={{ color: C.txt, fontWeight: 700, fontSize: 15, marginBottom: 12 }}>📋 Mensagens Recentes</div>
+          <div style={{ color: C.txt, fontWeight: 700, fontSize: 15, marginBottom: 12 }}> Mensagens Recentes</div>
           {logs.map((lg, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: `1px solid ${C.brd}` }}>
               <span style={{ color: lg.status === 'sent' ? C.grn : C.red, fontSize: 11, width: 50, flexShrink: 0, fontWeight: 700 }}>{lg.status}</span>

@@ -39,16 +39,16 @@ interface Reservation {
 }
 
 const RDEF = (date: string) => ({ name: '', phone: '', people_count: '', location: '', amount_cents: '', expected_arrival: '', event_id: '', reservation_type: '', flyer_url: '', invite_message: '', reservation_date: date, payment_status: 'unpaid', deposit_cents: '', observations: '', list_type: 'normal', list_custom_value_cents: '', list_male_value_cents: '', list_female_value_cents: '' })
-const EMPTY_TYPE = { name: '', icon: '🎉', color: '#3b82f6', sort_order: '0' }
-const ICON_OPTS = ['🎉','🎂','🍖','🏢','👶','💍','🎓','🎊','🥂','🍽️','🎭','🎪','🎡','🏆','🌟','🎵','🏖️','🏡','🌺','🎈']
+const EMPTY_TYPE = { name: '', icon: '', color: '#3b82f6', sort_order: '0' }
+const ICON_OPTS = ['','','','','','','','','','️','','','','','','','️','','','']
 const STATUS_COLOR: Record<string, string> = { pending: '#f59e0b', confirmed: '#10b981', arrived: '#3b82f6', cancelled: '#f87171' }
 const STATUS_LABEL: Record<string, string> = { pending: 'Pendente', confirmed: 'Confirmado', arrived: 'Chegou', cancelled: 'Cancelado' }
 const PAY_COLOR: Record<string, string> = { unpaid: '#f87171', partial: '#f59e0b', paid: '#10b981' }
 const PAY_LABEL: Record<string, string> = { unpaid: 'A Pagar', partial: 'Sinal Pago', paid: 'Pago' }
-const PAY_ICON: Record<string, string>  = { unpaid: '💸', partial: '💰', paid: '✅' }
+const PAY_ICON: Record<string, string>  = { unpaid: '', partial: '', paid: '' }
 const LIST_COLOR: Record<string, string> = { normal: '#94a3b8', vip: '#f59e0b', custom: '#a78bfa' }
 const LIST_LABEL: Record<string, string> = { normal: 'Normal', vip: 'VIP', custom: 'Valor' }
-const LIST_ICON:  Record<string, string> = { normal: '📋', vip: '⭐', custom: '💲' }
+const LIST_ICON:  Record<string, string> = { normal: '', vip: '', custom: '' }
 const LIST_DESC:  Record<string, string> = { normal: 'Paga entrada normal', vip: 'Entrada gratuita', custom: 'Valor combinado' }
 
 const SL: React.CSSProperties = {
@@ -411,22 +411,22 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
       : ''
     const items = (r.reservation_items ?? []) as Array<{ name: string; quantity: number; unit_cost_cents: number }>
     const itemLines = items.length > 0
-      ? '\n\n📦 *Itens inclusos:*\n' + items.map(i => `• ${i.quantity > 1 ? `${i.quantity}× ` : ''}${i.name}`).join('\n')
+      ? '\n\n *Itens inclusos:*\n' + items.map(i => `• ${i.quantity > 1 ? `${i.quantity}× ` : ''}${i.name}`).join('\n')
       : ''
 
     const lines = [
-      `Olá ${r.name}! 🎉`,
+      `Olá ${r.name}! `,
       typeLabel ? `Sua reserva de *${typeLabel}* está confirmada.` : 'Sua reserva está confirmada!',
       '',
-      dateStr ? `📅 *${dateStr}*` : '',
-      r.expected_arrival ? `🕐 Chegada prevista: *${r.expected_arrival.slice(0, 5)}*` : '',
-      r.location ? `📍 Local: *${r.location}*` : '',
-      r.people_count ? `👥 *${r.people_count} pessoas*` : '',
+      dateStr ? ` *${dateStr}*` : '',
+      r.expected_arrival ? ` Chegada prevista: *${r.expected_arrival.slice(0, 5)}*` : '',
+      r.location ? ` Local: *${r.location}*` : '',
+      r.people_count ? ` *${r.people_count} pessoas*` : '',
       itemLines,
       '',
-      '👇 Acesse o link para cadastrar sua lista de convidados:',
+      ' Acesse o link para cadastrar sua lista de convidados:',
       url,
-      r.flyer_url ? `\n🖼️ Flyer do evento:\n${r.flyer_url}` : '',
+      r.flyer_url ? `\n️ Flyer do evento:\n${r.flyer_url}` : '',
     ].filter(l => l !== '').join('\n')
 
     const ph = (r.phone ?? '').replace(/\D/g, '')
@@ -456,7 +456,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   <span style={{ color: C.mut, fontSize: 13 }}>Nenhum tipo cadastrado.</span>
                   <button onClick={() => { setFormOpen(false); setView('settings') }}
                     style={{ background: C.acc + '22', border: `1px solid ${C.acc}44`, borderRadius: 8, padding: '4px 12px', color: C.acc, fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                    ⚙️ Configurar tipos
+                    ️ Configurar tipos
                   </button>
                 </div>
               )
@@ -475,7 +475,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
 
           {/* ── Tipo de Lista — mesmo modelo do Pagamento ── */}
           <div style={{ gridColumn: 'span 3', background: 'rgba(167,139,250,0.05)', border: `1px solid ${C.brd}`, borderRadius: 14, padding: '14px 16px' }}>
-            <div style={{ color: '#a78bfa', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>🎟️ TIPO DE LISTA</div>
+            <div style={{ color: '#a78bfa', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>️ TIPO DE LISTA</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
 
               {/* Botões de tipo — mesma altura/estilo dos botões de pagamento */}
@@ -508,7 +508,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                     <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Valor por Gênero (R$)</label>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 10, color: '#60a5fa', fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>👨 HOMEM</div>
+                        <div style={{ fontSize: 10, color: '#60a5fa', fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}> HOMEM</div>
                         <input type="number" step="0.01" min="0" autoFocus
                           style={{ ...SL, borderColor: '#60a5fa55' }}
                           value={form.list_male_value_cents}
@@ -516,7 +516,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                           placeholder="Ex: 40,00" />
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 10, color: '#f472b6', fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>👩 MULHER</div>
+                        <div style={{ fontSize: 10, color: '#f472b6', fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}> MULHER</div>
                         <input type="number" step="0.01" min="0"
                           style={{ ...SL, borderColor: '#f472b655' }}
                           value={form.list_female_value_cents}
@@ -575,18 +575,18 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                             return (
                               <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <span style={{ color: isOcc ? '#ef4444' : C.txt, fontWeight: 600 }}>
-                                  {isOcc ? '🔴' : '🟢'} {form.location}
+                                  {isOcc ? '' : '🟢'} {form.location}
                                 </span>
                                 {sp && sp.price_cents > 0 && (
                                   <span style={{ color: C.gold, fontSize: 12, fontWeight: 700 }}>· {fmtCurrency(sp.price_cents)}</span>
                                 )}
                                 {sp && sp.capacity && (
-                                  <span style={{ color: C.mut, fontSize: 11 }}>· 👥 {sp.capacity}</span>
+                                  <span style={{ color: C.mut, fontSize: 11 }}>·  {sp.capacity}</span>
                                 )}
                               </span>
                             )
                           })()
-                        : <span style={{ color: C.mut }}>📍 Selecionar local...</span>
+                        : <span style={{ color: C.mut }}> Selecionar local...</span>
                       }
                     </span>
                     <span style={{ color: C.mut, fontSize: 11, flexShrink: 0 }}>{spaceDropOpen ? '▲' : '▼'}</span>
@@ -605,7 +605,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                           autoFocus
                           value={spaceSearch}
                           onChange={e => setSpaceSearch(e.target.value)}
-                          placeholder="🔍 Buscar espaço..."
+                          placeholder=" Buscar espaço..."
                           style={{ ...SL, minHeight: 34, padding: '6px 10px', fontSize: 13, borderColor: C.acc + '44' }}
                         />
                       </div>
@@ -618,7 +618,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                             type="button"
                             onClick={() => { setForm(p => ({ ...p, location: '' })); setSpaceDropOpen(false); setSpaceSearch('') }}
                             style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'transparent', border: 'none', borderBottom: `1px solid ${C.brd}`, color: C.mut, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left' }}>
-                            <span>✕</span>
+                            <span></span>
                             <span>Nenhum (limpar)</span>
                           </button>
                         )}
@@ -659,15 +659,15 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                                 <span style={{ flex: 1, fontWeight: isSel ? 700 : 400 }}>{sp.name}</span>
                                 <span style={{ fontSize: 11, color: isOccupied ? '#ef4444' : C.mut, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
                                   {isOccupied
-                                    ? <span>🔴 {occupiedSpaces[sp.name]}</span>
+                                    ? <span> {occupiedSpaces[sp.name]}</span>
                                     : <>
-                                        {sp.capacity && <span>👥 {sp.capacity}</span>}
+                                        {sp.capacity && <span> {sp.capacity}</span>}
                                         {sp.price_cents > 0 && <span style={{ color: C.gold, fontWeight: 700 }}>{fmtCurrency(sp.price_cents)}</span>}
-                                        {!sp.capacity && sp.price_cents === 0 && <span>✅ Livre</span>}
+                                        {!sp.capacity && sp.price_cents === 0 && <span> Livre</span>}
                                       </>
                                   }
                                 </span>
-                                {isSel && <span style={{ color: C.acc, fontSize: 14, flexShrink: 0 }}>✓</span>}
+                                {isSel && <span style={{ color: C.acc, fontSize: 14, flexShrink: 0 }}></span>}
                               </button>
                             )
                           })
@@ -685,7 +685,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                             type="button"
                             onClick={() => { setForm(p => ({ ...p, location: spaceSearch.trim() })); setSpaceDropOpen(false); setSpaceSearch('') }}
                             style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: C.acc + '11', border: 'none', borderTop: `1px solid ${C.brd}`, color: C.acc, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', fontWeight: 600 }}>
-                            <span>✏️</span>
+                            <span>️</span>
                             <span>Usar "{spaceSearch.trim()}" como local livre</span>
                           </button>
                         )}
@@ -714,12 +714,12 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#0a0e1a', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '7px 12px', cursor: 'pointer', fontSize: 12, color: C.mut }}>
               {form.flyer_url
                 ? <img src={form.flyer_url} alt="flyer" style={{ width: 36, height: 36, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
-                : <span>📁</span>
+                : <span></span>
               }
               <span style={{ flex: 1 }}>{form.flyer_url ? 'Trocar imagem' : 'Selecionar imagem (JPG, PNG, WEBP)'}</span>
               {form.flyer_url && (
                 <button onClick={e => { e.preventDefault(); setForm(p => ({ ...p, flyer_url: '' })) }}
-                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 4, color: C.mut, cursor: 'pointer', fontSize: 11, padding: '2px 6px' }}>✕</button>
+                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 4, color: C.mut, cursor: 'pointer', fontSize: 11, padding: '2px 6px' }}></button>
               )}
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => {
                 const file = e.target.files?.[0]
@@ -733,7 +733,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
 
           {/* ── Pagamento — full width ── */}
           <div style={{ gridColumn: 'span 3', background: 'rgba(59,130,246,0.05)', border: `1px solid ${C.brd}`, borderRadius: 14, padding: '14px 16px' }}>
-            <div style={{ color: C.sub, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>💳 PAGAMENTO</div>
+            <div style={{ color: C.sub, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}> PAGAMENTO</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Valor Total (R$)</label>
@@ -760,7 +760,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                 return (
                   <>
                     <div>
-                      <label style={{ fontSize: 12, color: '#f59e0b', fontWeight: 600, display: 'block', marginBottom: 4 }}>💰 Valor do Sinal (R$)</label>
+                      <label style={{ fontSize: 12, color: '#f59e0b', fontWeight: 600, display: 'block', marginBottom: 4 }}> Valor do Sinal (R$)</label>
                       <input type="number" step="0.01" min="0" max={String(form.amount_cents)}
                         style={{ ...SL, borderColor: '#f59e0b55' }} value={form.deposit_cents}
                         onChange={e => setForm(p => ({ ...p, deposit_cents: e.target.value }))} placeholder="Ex: 200,00" />
@@ -768,7 +768,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                     <div>
                       <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Saldo Restante</label>
                       <div style={{ ...SL, display: 'flex', alignItems: 'center', gap: 8, background: remaining > 0 ? '#ef444411' : '#10b98111', borderColor: remaining > 0 ? '#ef444433' : '#10b98133' }}>
-                        <span style={{ fontSize: 16 }}>{remaining > 0 ? '💸' : '✅'}</span>
+                        <span style={{ fontSize: 16 }}>{remaining > 0 ? '' : ''}</span>
                         <span style={{ fontWeight: 800, fontSize: 15, color: remaining > 0 ? '#ef4444' : '#10b981' }}>{fmtCurrency(Math.round(remaining * 100))}</span>
                         {remaining <= 0 && <span style={{ fontSize: 11, color: '#10b981' }}>Quitado!</span>}
                       </div>
@@ -779,7 +779,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
               {form.payment_status === 'paid' && parseFloat(String(form.amount_cents)) > 0 && (
                 <div style={{ gridColumn: 'span 2' }}>
                   <div style={{ background: '#10b98111', border: '1px solid #10b98133', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 20 }}>✅</span>
+                    <span style={{ fontSize: 20 }}></span>
                     <span style={{ color: '#10b981', fontWeight: 700, fontSize: 14 }}>Pagamento confirmado · {fmtCurrency(Math.round((parseFloat(String(form.amount_cents)) || 0) * 100))}</span>
                   </div>
                 </div>
@@ -789,7 +789,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
 
           {/* ── Observações — full width ── */}
           <div style={{ gridColumn: 'span 3' }}>
-            <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>📝 Observações</label>
+            <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> Observações</label>
             <textarea
               style={{ ...SL, minHeight: 80, resize: 'vertical', lineHeight: 1.5 }}
               value={form.observations}
@@ -804,7 +804,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
               <label style={{ fontSize: 12, color: C.mut, fontWeight: 600 }}>OPCIONAIS / ITENS INCLUSOS</label>
               <button onClick={addFormItem}
                 style={{ background: C.acc + '22', border: `1px solid ${C.acc}44`, borderRadius: 8, padding: '4px 12px', color: C.acc, fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                ➕ Adicionar item
+                 Adicionar item
               </button>
             </div>
 
@@ -829,7 +829,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                       <input type="number" min="0" step="0.01" value={it.unit_cost_cents} onChange={e => setFormItems(p => p.map((x, idx) => idx === i ? { ...x, unit_cost_cents: e.target.value } : x))}
                         placeholder="Ex: 50,00" style={{ ...SL, minHeight: 38, padding: '8px 10px', fontSize: 13 }} />
                       <button onClick={() => removeFormItem(i)}
-                        style={{ width: 32, height: 38, borderRadius: 8, border: `1px solid ${C.red}44`, background: 'transparent', color: C.red, fontSize: 14, cursor: 'pointer' }}>✕</button>
+                        style={{ width: 32, height: 38, borderRadius: 8, border: `1px solid ${C.red}44`, background: 'transparent', color: C.red, fontSize: 14, cursor: 'pointer' }}></button>
                     </div>
                   ))}
                   {/* Totais */}
@@ -853,9 +853,9 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
           </div>
 
           <div style={{ gridColumn: 'span 3', display: 'flex', gap: 10 }}>
-            <Btn onClick={saveRes} style={{ flex: 1 }}>💾 Salvar</Btn>
+            <Btn onClick={saveRes} style={{ flex: 1 }}> Salvar</Btn>
             {editing?.token && (
-              <Btn onClick={() => sendListLink(editing)} variant="secondary">📲 Enviar Link</Btn>
+              <Btn onClick={() => sendListLink(editing)} variant="secondary"> Enviar Link</Btn>
             )}
             <Btn onClick={() => { setFormOpen(false); setEditing(null); setFormItems([]) }} variant="ghost">Cancelar</Btn>
           </div>
@@ -874,10 +874,10 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             </p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <button style={TAB(view === 'list')} onClick={() => setView('list')}>📋 Reservas</button>
-            <button style={TAB(view === 'settings')} onClick={() => setView('settings')}>⚙️ Tipos</button>
-            <button style={TAB(view === 'spaces')} onClick={() => setView('spaces')}>🗂️ Espaços</button>
-            {view === 'list' && <Btn onClick={openNew} icon="➕">Nova Reserva</Btn>}
+            <button style={TAB(view === 'list')} onClick={() => setView('list')}> Reservas</button>
+            <button style={TAB(view === 'settings')} onClick={() => setView('settings')}>️ Tipos</button>
+            <button style={TAB(view === 'spaces')} onClick={() => setView('spaces')}>️ Espaços</button>
+            {view === 'list' && <Btn onClick={openNew} icon="">Nova Reserva</Btn>}
           </div>
         </div>
 
@@ -888,7 +888,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
               style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 10, padding: '8px 12px', color: C.txt, fontSize: 14, minHeight: 40, fontFamily: 'inherit' }} />
             {(['day', 'week', 'month'] as const).map(p => {
               const { res, people } = periodCounts[p]
-              const label = p === 'day' ? '📅 Dia' : p === 'week' ? '📆 Semana' : '🗓️ Mês'
+              const label = p === 'day' ? ' Dia' : p === 'week' ? ' Semana' : '️ Mês'
               const isActive = viewPeriod === p && !eventFilter
               return (
                 <button key={p} style={TAB(isActive)} onClick={() => { setEventFilter(null); setViewPeriod(p); loadRes(selDate, p, null) }}>
@@ -900,7 +900,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                       </span>
                       {people > 0 && (
                         <span style={{ background: isActive ? '#10b981' : '#10b98122', color: isActive ? '#fff' : '#10b981', borderRadius: 20, padding: '1px 7px', fontSize: 11, fontWeight: 800, lineHeight: 1.6 }}>
-                          👥 {people}
+                           {people}
                         </span>
                       )}
                     </span>
@@ -910,9 +910,9 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             })}
             {eventFilter && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: C.acc + '18', border: `1px solid ${C.acc}44`, borderRadius: 10, padding: '6px 12px' }}>
-                <span style={{ color: C.acc, fontSize: 13, fontWeight: 600 }}>🎉 {eventFilter.name}</span>
+                <span style={{ color: C.acc, fontSize: 13, fontWeight: 600 }}> {eventFilter.name}</span>
                 <button onClick={() => { setEventFilter(null); loadRes(selDate, viewPeriod, null) }}
-                  style={{ background: 'none', border: 'none', color: C.mut, cursor: 'pointer', fontSize: 14, padding: 0 }}>✕</button>
+                  style={{ background: 'none', border: 'none', color: C.mut, cursor: 'pointer', fontSize: 14, padding: 0 }}></button>
               </div>
             )}
           </div>
@@ -978,7 +978,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                             {LIST_ICON[lt]} {LIST_LABEL[lt]}
                             {lt === 'custom' && (m > 0 || f > 0) && (
                               <span style={{ opacity: 0.9 }}>
-                                {m > 0 && ` · 👨 ${fmtCurrency(m)}`}{f > 0 && ` · 👩 ${fmtCurrency(f)}`}
+                                {m > 0 && ` ·  ${fmtCurrency(m)}`}{f > 0 && ` ·  ${fmtCurrency(f)}`}
                               </span>
                             )}
                           </span>
@@ -991,18 +991,18 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                       )}
                     </div>
                     <div style={{ color: C.mut, fontSize: 12, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                      {viewPeriod !== 'day' && <span>📅 {new Date((r.reservation_date ?? selDate) + 'T12:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</span>}
-                      {r.expected_arrival && <span>🕐 {r.expected_arrival.slice(0, 5)}</span>}
-                      {r.people_count && <span>👥 {r.people_count}p</span>}
-                      {r.location && <span style={{ color: C.acc }}>📍 {r.location}</span>}
-                      {r.phone && <span>📱 {ftel(r.phone)}</span>}
-                      {r.events && <span style={{ color: C.acc }}>🎉 {(r.events as { name: string }).name}</span>}
-                      {total > 0 && <span style={{ color: C.gold, fontWeight: 700 }}>💰 {fmtCurrency(total)}</span>}
-                      {items.length > 0 && <span style={{ color: C.sub }}>📦 {items.length} item{items.length > 1 ? 's' : ''}</span>}
+                      {viewPeriod !== 'day' && <span> {new Date((r.reservation_date ?? selDate) + 'T12:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</span>}
+                      {r.expected_arrival && <span> {r.expected_arrival.slice(0, 5)}</span>}
+                      {r.people_count && <span> {r.people_count}p</span>}
+                      {r.location && <span style={{ color: C.acc }}> {r.location}</span>}
+                      {r.phone && <span> {ftel(r.phone)}</span>}
+                      {r.events && <span style={{ color: C.acc }}> {(r.events as { name: string }).name}</span>}
+                      {total > 0 && <span style={{ color: C.gold, fontWeight: 700 }}> {fmtCurrency(total)}</span>}
+                      {items.length > 0 && <span style={{ color: C.sub }}> {items.length} item{items.length > 1 ? 's' : ''}</span>}
                     </div>
                     {r.observations && (
                       <div style={{ marginTop: 4, fontSize: 12, color: C.mut, display: 'flex', alignItems: 'flex-start', gap: 5 }}>
-                        <span style={{ flexShrink: 0 }}>📝</span>
+                        <span style={{ flexShrink: 0 }}></span>
                         <span style={{ fontStyle: 'italic', lineHeight: 1.4 }}>{r.observations}</span>
                       </div>
                     )}
@@ -1011,19 +1011,19 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
                     {r.status === 'pending' && (
-                      <Btn onClick={() => markArrived(r.id)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}>✅</Btn>
+                      <Btn onClick={() => markArrived(r.id)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}></Btn>
                     )}
                     {waHref && (
                       <Btn onClick={() => window.open(waHref, '_blank')} small style={{ background: '#25d36622', color: '#25d366', border: '1px solid #25d36644' }}>
-                        💬 WhatsApp
+                         WhatsApp
                       </Btn>
                     )}
                     {r.token && r.phone && (
-                      <Btn onClick={() => sendListLink(r)} small variant="secondary">📲</Btn>
+                      <Btn onClick={() => sendListLink(r)} small variant="secondary"></Btn>
                     )}
-                    <Btn onClick={() => openGuestPanel(r)} small style={{ background: '#7c3aed22', color: '#a78bfa', border: '1px solid #7c3aed44' }}>👥 Lista</Btn>
-                    <Btn onClick={() => editRes(r)} small variant="ghost">✏️</Btn>
-                    <Btn onClick={() => deleteRes(r.id)} small variant="danger">🗑</Btn>
+                    <Btn onClick={() => openGuestPanel(r)} small style={{ background: '#7c3aed22', color: '#a78bfa', border: '1px solid #7c3aed44' }}> Lista</Btn>
+                    <Btn onClick={() => editRes(r)} small variant="ghost">️</Btn>
+                    <Btn onClick={() => deleteRes(r.id)} small variant="danger"></Btn>
                   </div>
                 </div>
               )
@@ -1045,9 +1045,9 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: t.color + '22', border: `2px solid ${t.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>{t.icon}</div>
                 <span style={{ flex: 1, color: C.txt, fontWeight: 600, fontSize: 14 }}>{t.name}</span>
                 <button onClick={() => { setEditingType(t.id); setTypeForm({ name: t.name, icon: t.icon, color: t.color, sort_order: String(t.sort_order) }) }}
-                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>✏️</button>
+                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>️</button>
                 <button onClick={() => deleteType(t.id)}
-                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>🗑</button>
+                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}></button>
               </div>
             ))}
           </Card>
@@ -1083,7 +1083,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={saveType}
                 style={{ flex: 1, background: `linear-gradient(135deg,${C.acc},#1d4ed8)`, color: '#fff', border: 'none', borderRadius: 10, padding: '10px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                💾 {editingType ? 'Atualizar' : 'Adicionar'}
+                 {editingType ? 'Atualizar' : 'Adicionar'}
               </button>
               {editingType && (
                 <button onClick={() => { setEditingType(null); setTypeForm(EMPTY_TYPE) }}
@@ -1107,22 +1107,22 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             {spaces.map(sp => (
               <div key={sp.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: `1px solid ${C.brd}` }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: sp.price_cents > 0 ? C.gold + '18' : C.acc + '18', border: `1px solid ${sp.price_cents > 0 ? C.gold + '33' : C.acc + '33'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                  {sp.price_cents > 0 ? '💰' : '🗂️'}
+                  {sp.price_cents > 0 ? '' : '️'}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>{sp.name}</div>
                   <div style={{ display: 'flex', gap: 10, marginTop: 2 }}>
-                    {sp.capacity && <span style={{ color: C.mut, fontSize: 12 }}>👥 {sp.capacity} pessoas</span>}
+                    {sp.capacity && <span style={{ color: C.mut, fontSize: 12 }}> {sp.capacity} pessoas</span>}
                     {sp.price_cents > 0
-                      ? <span style={{ color: C.gold, fontSize: 12, fontWeight: 700 }}>💰 {fmtCurrency(sp.price_cents)}</span>
+                      ? <span style={{ color: C.gold, fontSize: 12, fontWeight: 700 }}> {fmtCurrency(sp.price_cents)}</span>
                       : <span style={{ color: C.sub, fontSize: 12 }}>Sem cobrança</span>
                     }
                   </div>
                 </div>
                 <button onClick={() => { setEditingSpace(sp.id); setSpaceForm({ name: sp.name, capacity: sp.capacity ? String(sp.capacity) : '', price_cents: sp.price_cents > 0 ? String(sp.price_cents / 100) : '' }) }}
-                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>✏️</button>
+                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>️</button>
                 <button onClick={() => deleteSpace(sp.id)}
-                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>🗑</button>
+                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}></button>
               </div>
             ))}
           </Card>
@@ -1151,7 +1151,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             {/* Preview */}
             {spaceForm.price_cents && parseFloat(spaceForm.price_cents) > 0 && (
               <div style={{ background: C.gold + '11', border: `1px solid ${C.gold}33`, borderRadius: 10, padding: '8px 14px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span>💡</span>
+                <span></span>
                 <span style={{ color: C.gold, fontSize: 13 }}>
                   Ao selecionar <strong>{spaceForm.name || 'este espaço'}</strong> numa reserva, o valor <strong>{fmtCurrency(Math.round(parseFloat(spaceForm.price_cents) * 100))}</strong> será sugerido automaticamente.
                 </span>
@@ -1160,7 +1160,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={saveSpace}
                 style={{ flex: 1, background: `linear-gradient(135deg,${C.acc},#1d4ed8)`, color: '#fff', border: 'none', borderRadius: 10, padding: '10px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                💾 {editingSpace ? 'Atualizar' : 'Adicionar'}
+                 {editingSpace ? 'Atualizar' : 'Adicionar'}
               </button>
               {editingSpace && (
                 <button onClick={() => { setEditingSpace(null); setSpaceForm({ name: '', capacity: '', price_cents: '' }) }}
@@ -1173,7 +1173,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
         </div>
       )}
 
-      {view === 'list' && <FAB onClick={openNew} icon="➕" title="Nova reserva" />}
+      {view === 'list' && <FAB onClick={openNew} icon="" title="Nova reserva" />}
 
       {/* ── Painel lateral de convidados ── */}
       {guestPanel && (
@@ -1192,17 +1192,17 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.brd}`, flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 20 }}>👥</span>
+                  <span style={{ fontSize: 20 }}></span>
                   <span style={{ color: C.txt, fontWeight: 800, fontSize: 16 }}>Lista de Convidados</span>
                 </div>
                 <button onClick={() => closeGuestPanel()}
-                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 16, cursor: 'pointer' }}>✕</button>
+                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 16, cursor: 'pointer' }}></button>
               </div>
               <div style={{ fontSize: 13, color: C.acc, fontWeight: 700 }}>{guestPanel.name}</div>
               {guestPanel.reservation_date && (
                 <div style={{ fontSize: 12, color: C.mut, marginTop: 2 }}>
-                  📅 {new Date(guestPanel.reservation_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}
-                  {guestPanel.location && <span> · 📍 {guestPanel.location}</span>}
+                   {new Date(guestPanel.reservation_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}
+                  {guestPanel.location && <span> ·  {guestPanel.location}</span>}
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
@@ -1211,12 +1211,12 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                 </span>
                 {guestList.some(g => g.checked_in) && (
                   <span style={{ background: '#10b98122', color: '#10b981', border: '1px solid #10b98144', borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 700 }}>
-                    ✅ {guestList.filter(g => g.checked_in).length} entraram
+                     {guestList.filter(g => g.checked_in).length} entraram
                   </span>
                 )}
                 {guestPanel.people_count && (
                   <span style={{ background: C.card, color: C.mut, borderRadius: 20, padding: '2px 10px', fontSize: 12 }}>
-                    👥 {guestPanel.people_count} esperados
+                     {guestPanel.people_count} esperados
                   </span>
                 )}
               </div>
@@ -1229,7 +1229,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                 : guestList.length === 0
                   ? (
                     <div style={{ color: C.mut, textAlign: 'center', padding: '32px 16px' }}>
-                      <div style={{ fontSize: 32, marginBottom: 8 }}>📋</div>
+                      <div style={{ fontSize: 32, marginBottom: 8 }}></div>
                       <div style={{ fontSize: 14 }}>Nenhum convidado cadastrado ainda.</div>
                       <div style={{ fontSize: 12, marginTop: 4 }}>Adicione abaixo ou compartilhe o link da reserva.</div>
                     </div>
@@ -1243,15 +1243,15 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                       const bg = g.checked_in ? '#3b82f610' : g.confirmed ? '#10b98110' : '#f59e0b08'
                       return (
                       <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 10, marginBottom: 6, background: bg, border: `1px solid ${borderColor}` }}>
-                        <div style={{ fontSize: 18, flexShrink: 0 }}>{g.checked_in ? '✅' : g.confirmed ? '✅' : '⏳'}</div>
+                        <div style={{ fontSize: 18, flexShrink: 0 }}>{g.checked_in ? '' : g.confirmed ? '' : ''}</div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ color: C.txt, fontWeight: 700, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.name}</div>
                           <div style={{ display: 'flex', gap: 6, marginTop: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                             {g.checked_in ? <span style={{ color: '#3b82f6', fontSize: 11, fontWeight: 700 }}>Entrou</span>
                               : g.confirmed ? <span style={{ color: '#10b981', fontSize: 11, fontWeight: 700 }}>Confirmado</span>
                               : <span style={{ color: '#f59e0b', fontSize: 11, fontWeight: 700 }}>Pendente</span>}
-                            {g.phone && <span style={{ color: C.mut, fontSize: 11 }}>· 📱 {ftel(g.phone)}</span>}
-                            {g.birth_date && <span style={{ color: C.mut, fontSize: 11 }}>· 🎂 {new Date(g.birth_date + 'T12:00').toLocaleDateString('pt-BR')}</span>}
+                            {g.phone && <span style={{ color: C.mut, fontSize: 11 }}>·  {ftel(g.phone)}</span>}
+                            {g.birth_date && <span style={{ color: C.mut, fontSize: 11 }}>·  {new Date(g.birth_date + 'T12:00').toLocaleDateString('pt-BR')}</span>}
                             {g.checked_in && g.checked_in_at && <span style={{ color: '#3b82f6', fontSize: 11 }}>· {new Date(g.checked_in_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>}
                           </div>
                         </div>
@@ -1259,11 +1259,11 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                           <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
                             {!g.confirmed
                               ? <button onClick={() => supabase.from('reservation_guests').update({ confirmed: true }).eq('id', g.id).then(() => setGuestList(p => p.map(x => x.id === g.id ? { ...x, confirmed: true } : x)))}
-                                  title="Confirmar" style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 8, padding: '4px 8px', color: '#10b981', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>✓</button>
+                                  title="Confirmar" style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 8, padding: '4px 8px', color: '#10b981', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}></button>
                               : <button onClick={() => supabase.from('reservation_guests').update({ confirmed: false }).eq('id', g.id).then(() => setGuestList(p => p.map(x => x.id === g.id ? { ...x, confirmed: false } : x)))}
                                   title="Remover confirmação" style={{ background: '#f59e0b22', border: '1px solid #f59e0b44', borderRadius: 8, padding: '4px 8px', color: '#f59e0b', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>↩</button>
                             }
-                            <button onClick={() => removeGuest(g.id)} style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, width: 28, height: 28, color: C.red, fontSize: 12, cursor: 'pointer' }}>🗑</button>
+                            <button onClick={() => removeGuest(g.id)} style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, width: 28, height: 28, color: C.red, fontSize: 12, cursor: 'pointer' }}></button>
                           </div>
                         )}
                       </div>
@@ -1273,9 +1273,9 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
 
             {/* Formulário para adicionar convidado */}
             <div style={{ padding: '14px 16px', borderTop: `1px solid ${C.brd}`, flexShrink: 0, background: '#0a0e1a' }}>
-              <div style={{ color: '#a78bfa', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 4 }}>➕ ADICIONAR CONVIDADO</div>
+              <div style={{ color: '#a78bfa', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 4 }}> ADICIONAR CONVIDADO</div>
               <div style={{ fontSize: 11, color: C.mut, marginBottom: 10 }}>
-                💡 Fone + nascimento = check-in automático · sem eles, completa na portaria
+                 Fone + nascimento = check-in automático · sem eles, completa na portaria
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <input
@@ -1301,7 +1301,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                     />
                     {!newGuest.birth_date && (
                       <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, color: C.mut, pointerEvents: 'none' }}>
-                        🎂 Nascimento
+                         Nascimento
                       </span>
                     )}
                   </div>
@@ -1315,14 +1315,14 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                     fontWeight: 700, cursor: newGuest.name.trim() ? 'pointer' : 'not-allowed',
                     fontFamily: 'inherit', opacity: savingGuest ? 0.6 : 1,
                   }}>
-                  {savingGuest ? 'Salvando...' : '➕ Adicionar à lista'}
+                  {savingGuest ? 'Salvando...' : ' Adicionar à lista'}
                 </button>
               </div>
               {guestPanel.token && (
                 <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {/* Link de gestão (aniversariante) */}
                   <div style={{ padding: '7px 12px', background: '#7c3aed11', border: '1px solid #7c3aed33', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                    <span style={{ color: '#a78bfa', fontSize: 11, fontWeight: 600 }}>📋 Gerenciar lista</span>
+                    <span style={{ color: '#a78bfa', fontSize: 11, fontWeight: 600 }}> Gerenciar lista</span>
                     <button onClick={() => { navigator.clipboard.writeText(`https://nightpass-app.vercel.app/lista.html?t=${guestPanel.token}`); sT(setToast, 'Link de gestão copiado!', 'success') }}
                       style={{ background: '#7c3aed22', border: '1px solid #7c3aed44', borderRadius: 6, padding: '3px 10px', color: '#a78bfa', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                       Copiar
@@ -1330,7 +1330,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   </div>
                   {/* Link de convite (convidados) */}
                   <div style={{ padding: '7px 12px', background: '#10b98111', border: '1px solid #10b98133', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                    <span style={{ color: '#10b981', fontSize: 11, fontWeight: 600 }}>📲 Link de convite (convidados)</span>
+                    <span style={{ color: '#10b981', fontSize: 11, fontWeight: 600 }}> Link de convite (convidados)</span>
                     <button onClick={() => { navigator.clipboard.writeText(`https://nightpass-app.vercel.app/convite.html?t=${guestPanel.token}`); sT(setToast, 'Link de convite copiado!', 'success') }}
                       style={{ background: '#10b98122', border: '1px solid #10b98144', borderRadius: 6, padding: '3px 10px', color: '#10b981', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                       Copiar

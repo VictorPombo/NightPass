@@ -186,15 +186,15 @@ export function ReportsPage({ house }: Props) {
 
   return (
     <div style={{ paddingBottom: 40 }}>
-      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>📊 Relatórios</h1>
+      <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}> Relatórios</h1>
       <p style={{ color: C.mut, fontSize: 14, marginBottom: 20 }}>Análise de desempenho</p>
 
       {/* Export buttons */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-        <Btn onClick={exportCSV} disabled={exporting}>{exporting ? 'Exportando...' : '📥 Check-ins CSV'}</Btn>
-        <Btn onClick={exportClients} disabled={exporting}>👥 Clientes CSV</Btn>
-        {evPnL.length > 0 && <Btn onClick={exportPnLCSV} variant="secondary">📊 P&L CSV</Btn>}
-        <Btn onClick={() => window.print()} variant="secondary">🖨️ Imprimir / PDF</Btn>
+        <Btn onClick={exportCSV} disabled={exporting}>{exporting ? 'Exportando...' : ' Check-ins CSV'}</Btn>
+        <Btn onClick={exportClients} disabled={exporting}> Clientes CSV</Btn>
+        {evPnL.length > 0 && <Btn onClick={exportPnLCSV} variant="secondary"> P&L CSV</Btn>}
+        <Btn onClick={() => window.print()} variant="secondary">️ Imprimir / PDF</Btn>
       </div>
 
       {/* Stats */}
@@ -211,11 +211,11 @@ export function ReportsPage({ house }: Props) {
       <Card style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <div style={{ fontWeight: 800, fontSize: 16, color: C.txt }}>💼 DRE por Evento</div>
+            <div style={{ fontWeight: 800, fontSize: 16, color: C.txt }}> DRE por Evento</div>
             <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>Receita vs. Custo vs. Resultado — últimos 20 eventos</div>
           </div>
           <Btn onClick={loadPnL} disabled={pnlLoading} variant="secondary" small>
-            {pnlLoading ? '⏳ Carregando...' : '🔄 Carregar'}
+            {pnlLoading ? ' Carregando...' : ' Carregar'}
           </Btn>
         </div>
 
@@ -279,14 +279,14 @@ export function ReportsPage({ house }: Props) {
                   </div>
                   {/* Cost breakdown sub-row */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: '0 8px 8px', fontSize: 11 }}>
-                    {e.cost_artist > 0 && <span style={{ color: C.gold }}>🎤 {fmtCurrency(e.cost_artist)}</span>}
-                    {e.cost_freelancers > 0 && <span style={{ color: C.acc }}>👷 {fmtCurrency(e.cost_freelancers)}</span>}
-                    {e.cost_promoters > 0 && <span style={{ color: '#a78bfa' }}>📋 {fmtCurrency(e.cost_promoters)}</span>}
+                    {e.cost_artist > 0 && <span style={{ color: C.gold }}> {fmtCurrency(e.cost_artist)}</span>}
+                    {e.cost_freelancers > 0 && <span style={{ color: C.acc }}> {fmtCurrency(e.cost_freelancers)}</span>}
+                    {e.cost_promoters > 0 && <span style={{ color: '#a78bfa' }}> {fmtCurrency(e.cost_promoters)}</span>}
                     {e.cost_res_items > 0 && <span style={{ color: C.gold }}>🪑 {fmtCurrency(e.cost_res_items)}</span>}
-                    {e.cost_production > 0 && <span style={{ color: '#8b5cf6' }}>🔧 {fmtCurrency(e.cost_production)}</span>}
-                    {e.cost_consumacao > 0 && <span style={{ color: '#f59e0b' }}>🍺 {fmtCurrency(e.cost_consumacao)}</span>}
-                    {e.rev_tickets > 0 && <span style={{ color: C.grn }}>🎟️ Ingressos: {fmtCurrency(e.rev_tickets)}</span>}
-                    {e.rev_checkins > 0 && <span style={{ color: C.grn }}>🚪 Portaria: {fmtCurrency(e.rev_checkins)}</span>}
+                    {e.cost_production > 0 && <span style={{ color: '#8b5cf6' }}> {fmtCurrency(e.cost_production)}</span>}
+                    {e.cost_consumacao > 0 && <span style={{ color: '#f59e0b' }}> {fmtCurrency(e.cost_consumacao)}</span>}
+                    {e.rev_tickets > 0 && <span style={{ color: C.grn }}>️ Ingressos: {fmtCurrency(e.rev_tickets)}</span>}
+                    {e.rev_checkins > 0 && <span style={{ color: C.grn }}> Portaria: {fmtCurrency(e.rev_checkins)}</span>}
                   </div>
                 </div>
               )
@@ -298,7 +298,7 @@ export function ReportsPage({ house }: Props) {
       {/* Charts */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 12 }}>💰 Receita por Evento</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 12 }}> Receita por Evento</div>
           {finEvList.length > 0 && <div style={{ marginBottom: 16 }}><canvas ref={chartRef} height={200} /></div>}
           {finEvList.slice(0, 6).map((ev, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${C.brd}` }}>
@@ -312,7 +312,7 @@ export function ReportsPage({ house }: Props) {
         </Card>
 
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 12 }}>🏆 Top Clientes</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: C.txt, marginBottom: 12 }}> Top Clientes</div>
           {topClients.length > 0 && <div style={{ marginBottom: 16 }}><canvas ref={chartRef2} height={200} /></div>}
           {topClients.slice(0, 8).map((c, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderBottom: `1px solid ${C.brd}` }}>

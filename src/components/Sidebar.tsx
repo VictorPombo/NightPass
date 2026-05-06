@@ -53,7 +53,7 @@ export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, on
       )}
 
       {/* Burger button */}
-      <button className="np-burger" onClick={() => setMOpen(!mOpen)}>☰</button>
+      <button className="np-burger" onClick={() => setMOpen(!mOpen)}></button>
 
       {/* Sidebar */}
       <aside

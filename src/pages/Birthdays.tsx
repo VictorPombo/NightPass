@@ -85,17 +85,17 @@ export function AniversariosPage({ house }: Props) {
         : ''
       const evTime = ev?.start_time ? ev.start_time.slice(0, 5) : ''
       const lines = [
-        `🎂 Olá, ${bl.birthday_person_name.split(' ')[0]}!`,
+        ` Olá, ${bl.birthday_person_name.split(' ')[0]}!`,
         ``,
-        `Sua lista de aniversário está pronta! 🎉`,
-        ev ? `🎉 *${ev.name}*` : '',
-        evDateStr ? `📅 *${evDateStr}${evTime ? ` às ${evTime}` : ''}*` : '',
+        `Sua lista de aniversário está pronta! `,
+        ev ? ` *${ev.name}*` : '',
+        evDateStr ? ` *${evDateStr}${evTime ? ` às ${evTime}` : ''}*` : '',
         ``,
-        `👇 Acesse o link para gerenciar sua lista de convidados:`,
+        ` Acesse o link para gerenciar sua lista de convidados:`,
         url,
-        ev?.flyer_url ? `\n🖼️ Flyer do evento:\n${ev.flyer_url}` : '',
+        ev?.flyer_url ? `\n️ Flyer do evento:\n${ev.flyer_url}` : '',
         ``,
-        `_Informe seu nome ou apresente este link na portaria. Entrada garantida!_ ✅`,
+        `_Informe seu nome ou apresente este link na portaria. Entrada garantida!_ `,
       ].filter(l => l !== '').join('\n')
       window.open(`https://wa.me/${ph ? '55' + ph : ''}?text=${encodeURIComponent(lines)}`, '_blank')
     }
@@ -138,11 +138,11 @@ export function AniversariosPage({ house }: Props) {
 
   function sendClientBdLista(c: ClientWithDays) {
     const ph = cn(c.phone ?? '')
-    const msg = `🎂 Feliz Aniversário, ${c.full_name.split(' ')[0]}! Que seu dia seja incrível! 🎉`
+    const msg = ` Feliz Aniversário, ${c.full_name.split(' ')[0]}! Que seu dia seja incrível! `
     window.open(`https://wa.me/${ph ? '55' + ph : ''}?text=${encodeURIComponent(msg)}`, '_blank')
   }
 
-  const dayLabel = (d: number) => d === 0 ? '🎂 Hoje!' : d === 1 ? '🎈 Amanhã!' : `Em ${d} dias`
+  const dayLabel = (d: number) => d === 0 ? ' Hoje!' : d === 1 ? ' Amanhã!' : `Em ${d} dias`
   const dayColor = (d: number) => d === 0 ? C.red : d <= 3 ? C.gold : C.mut
 
   if (ldg) return <div style={{ padding: 60, textAlign: 'center', color: C.mut }}>Carregando...</div>
@@ -180,7 +180,7 @@ export function AniversariosPage({ house }: Props) {
             </select>
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
-            <Btn onClick={saveBd} style={{ flex: 1 }}>💾 Salvar</Btn>
+            <Btn onClick={saveBd} style={{ flex: 1 }}> Salvar</Btn>
             <Btn onClick={() => setBdModal(false)} variant="ghost">Cancelar</Btn>
           </div>
         </div>
@@ -188,7 +188,7 @@ export function AniversariosPage({ house }: Props) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>🎂 Aniversários</h1>
+          <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}> Aniversários</h1>
           <p style={{ color: C.mut, fontSize: 14 }}>{clients.length} aniversariantes nos próximos {days} dias</p>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -196,33 +196,33 @@ export function AniversariosPage({ house }: Props) {
             style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 10, padding: '8px 12px', color: C.txt, fontSize: 14, minHeight: 40, fontFamily: 'inherit' }}>
             {['7', '14', '30', '60', '90'].map(d => <option key={d} value={d}>{d} dias</option>)}
           </select>
-          <Btn onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="➕">Nova Lista</Btn>
+          <Btn onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="">Nova Lista</Btn>
         </div>
       </div>
 
       {/* Birthday Lists */}
       {bdLists.length > 0 && (
         <div style={{ marginBottom: 24 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: C.txt, marginBottom: 12 }}>📋 Listas de Aniversário</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: C.txt, marginBottom: 12 }}> Listas de Aniversário</div>
           <div style={{ display: 'grid', gap: 10 }}>
             {bdLists.map(bl => (
               <Card key={bl.id} style={{ padding: '14px 18px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>🎂 {bl.birthday_person_name}</div>
+                    <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}> {bl.birthday_person_name}</div>
                     {bl.birthday_date && <div style={{ color: C.mut, fontSize: 13, marginTop: 2 }}>{fd(bl.birthday_date)}{bl.phone ? ` · ${ftel(bl.phone)}` : ''}</div>}
                     {bl.events && (
                       <div style={{ marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 4, background: C.gold + '18', border: `1px solid ${C.gold}33`, borderRadius: 6, padding: '2px 8px', fontSize: 11, color: C.gold, fontWeight: 600 }}>
-                        🎉 {bl.events.name} · {fd(bl.events.event_date)}
+                         {bl.events.name} · {fd(bl.events.event_date)}
                       </div>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                    <Btn onClick={() => sendBdLista(bl)} small variant="secondary">📲 WhatsApp</Btn>
-                    <Btn onClick={() => copyBdLink(bl)} small variant="secondary">{copiedToken === bl.token ? '✅ Copiado' : '🔗 Copiar Link'}</Btn>
-                    <Btn onClick={() => openBdPortal(bl)} small variant="secondary">🎂 Portal</Btn>
-                    <Btn onClick={() => { setBdEditing(bl.id); setBdForm({ birthday_person_name: bl.birthday_person_name, birthday_date: bl.birthday_date ?? '', phone: bl.phone ?? '', status: 'pendente', event_id: (bl as any).event_id ?? '' }); setBdModal(true) }} small variant="ghost">✏️</Btn>
-                    <Btn onClick={() => delBd(bl.id)} small variant="danger">🗑</Btn>
+                    <Btn onClick={() => sendBdLista(bl)} small variant="secondary"> WhatsApp</Btn>
+                    <Btn onClick={() => copyBdLink(bl)} small variant="secondary">{copiedToken === bl.token ? ' Copiado' : ' Copiar Link'}</Btn>
+                    <Btn onClick={() => openBdPortal(bl)} small variant="secondary"> Portal</Btn>
+                    <Btn onClick={() => { setBdEditing(bl.id); setBdForm({ birthday_person_name: bl.birthday_person_name, birthday_date: bl.birthday_date ?? '', phone: bl.phone ?? '', status: 'pendente', event_id: (bl as any).event_id ?? '' }); setBdModal(true) }} small variant="ghost">️</Btn>
+                    <Btn onClick={() => delBd(bl.id)} small variant="danger"></Btn>
                   </div>
                 </div>
               </Card>
@@ -232,27 +232,27 @@ export function AniversariosPage({ house }: Props) {
       )}
 
       {/* Upcoming birthdays from clients */}
-      <div style={{ fontSize: 15, fontWeight: 700, color: C.txt, marginBottom: 12 }}>👥 Aniversariantes do Período</div>
+      <div style={{ fontSize: 15, fontWeight: 700, color: C.txt, marginBottom: 12 }}> Aniversariantes do Período</div>
       {clients.length === 0
         ? <Card><div style={{ color: C.mut, textAlign: 'center', padding: 32 }}>Nenhum aniversariante nos próximos {days} dias</div></Card>
         : <div style={{ display: 'grid', gap: 10 }}>
           {clients.map(c => (
             <Card key={c.id} style={{ padding: '12px 18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ fontSize: 28, flexShrink: 0 }}>{c.daysUntil === 0 ? '🎂' : '🎈'}</div>
+                <div style={{ fontSize: 28, flexShrink: 0 }}>{c.daysUntil === 0 ? '' : ''}</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>{c.full_name}</div>
                   <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>{fd(c.birth_date ?? '')} · {c.phone ? ftel(c.phone) : 'Sem celular'}</div>
                 </div>
                 <span style={{ color: dayColor(c.daysUntil), fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{dayLabel(c.daysUntil)}</span>
-                {c.phone && <Btn onClick={() => sendClientBdLista(c)} small variant="secondary">💬 WhatsApp</Btn>}
+                {c.phone && <Btn onClick={() => sendClientBdLista(c)} small variant="secondary"> WhatsApp</Btn>}
               </div>
             </Card>
           ))}
         </div>
       }
 
-      <FAB onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="🎂" title="Nova lista" />
+      <FAB onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="" title="Nova lista" />
     </div>
   )
 }

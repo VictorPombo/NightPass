@@ -95,8 +95,8 @@ interface CheckinType {
   sort_order: number
 }
 
-const EMPTY_TYPE = { name: '', description: '', default_price_cents: '', color: '#3b82f6', icon: '🎟️', sort_order: '0' }
-const ICON_OPTS = ['🎟️','🎭','👑','🏅','⭐','🏆','🎯','🎮','🍽️','☀️','🏊','🎾','⚽','🏀','🏐','🎳','🎰','💼','🎪','🎡']
+const EMPTY_TYPE = { name: '', description: '', default_price_cents: '', color: '#3b82f6', icon: '️', sort_order: '0' }
+const ICON_OPTS = ['️','','','','','','','','️','️','','','','','','','','','','']
 
 type Mode = 'checkin' | 'listas' | 'scanner'
 
@@ -291,7 +291,7 @@ export function CheckinPage({ house, user }: Props) {
 
   async function confirmReservation(id: string) {
     await supabase.from('reservations').update({ status: 'arrived', arrived_at: new Date().toISOString() }).eq('id', id)
-    sT(setToast, '✅ Reserva confirmada!', 'success')
+    sT(setToast, ' Reserva confirmada!', 'success')
     loadLists()
   }
 
@@ -337,7 +337,7 @@ export function CheckinPage({ house, user }: Props) {
     // 4. marca convidado como presente
     await supabase.from('promoter_list_guests').update({ checked_in: true, checked_in_at: now, client_id: clientId }).eq('id', g.id)
 
-    sT(setToast, `✅ ${g.full_name} entrou${clientId ? ' · cliente cadastrado' : ''}!`, 'success')
+    sT(setToast, ` ${g.full_name} entrou${clientId ? ' · cliente cadastrado' : ''}!`, 'success')
     await loadLists()
     await loadRecent()
   }
@@ -395,7 +395,7 @@ export function CheckinPage({ house, user }: Props) {
       .update({ checked_in: true, checked_in_at: now, client_id: clientId })
       .eq('id', g.id)
 
-    sT(setToast, `✅ ${g.name} entrou${clientId ? ' · cliente cadastrado' : ''}!`, 'success')
+    sT(setToast, ` ${g.name} entrou${clientId ? ' · cliente cadastrado' : ''}!`, 'success')
     await loadLists()
     await loadRecent()
   }
@@ -503,7 +503,7 @@ export function CheckinPage({ house, user }: Props) {
       if (!isBar) row.event_id = selEv
       supabase.from('checkins').insert(row).then(r => {
         if (r.error) { sT(setToast, 'Erro: ' + r.error.message, 'error'); return }
-        sT(setToast, `✅ Check-in de ${c.full_name}!${comanda ? ` · Comanda ${comanda}` : ''}`, 'success')
+        sT(setToast, ` Check-in de ${c.full_name}!${comanda ? ` · Comanda ${comanda}` : ''}`, 'success')
         sendWA(house.id, 'checkin_confirm', c.phone ?? '', c.full_name, {}, c.id, isBar ? null : selEv)
         setResult(null); setSearch(''); setPayAmt(''); setComanda(''); setCiCount(0); setSelTypeId(null)
         loadRecent()
@@ -513,7 +513,7 @@ export function CheckinPage({ house, user }: Props) {
     if (isBar) { doInsert(); return }
     supabase.from('checkins').select('id').eq('event_id', selEv).eq('client_id', c.id).maybeSingle()
       .then(ck => {
-        if (ck.data) { sT(setToast, `⚠️ ${c.full_name} já está neste evento!`, 'warn'); return }
+        if (ck.data) { sT(setToast, `️ ${c.full_name} já está neste evento!`, 'warn'); return }
         doInsert()
       })
   }
@@ -538,16 +538,16 @@ export function CheckinPage({ house, user }: Props) {
       .from('tickets')
       .select('*,ticket_orders(buyer_name,quantity,amount_cents),events(name,event_date)')
       .eq('token', token).eq('house_id', house.id).single()
-    if (!tk) { setScanMsg({ text: '❌ Ingresso inválido ou não encontrado', ok: false }); return }
+    if (!tk) { setScanMsg({ text: ' Ingresso inválido ou não encontrado', ok: false }); return }
     setScanned(tk as ScannedTicket)
   }
 
   async function confirmTicketCheckin() {
     if (!scanned) return
-    if (scanned.checked_in) { setScanMsg({ text: '⚠️ Ingresso já utilizado', ok: false }); setScanned(null); return }
+    if (scanned.checked_in) { setScanMsg({ text: '️ Ingresso já utilizado', ok: false }); setScanned(null); return }
     const { error } = await supabase.from('tickets').update({ checked_in: true, checked_in_at: new Date().toISOString() }).eq('id', scanned.id)
-    if (error) { setScanMsg({ text: '❌ Erro ao dar entrada', ok: false }); return }
-    setScanMsg({ text: `✅ Entrada confirmada! — ${scanned.ticket_orders?.buyer_name ?? scanned.holder_name}`, ok: true })
+    if (error) { setScanMsg({ text: ' Erro ao dar entrada', ok: false }); return }
+    setScanMsg({ text: ` Entrada confirmada! — ${scanned.ticket_orders?.buyer_name ?? scanned.holder_name}`, ok: true })
     setScanned(null)
   }
 
@@ -577,9 +577,9 @@ export function CheckinPage({ house, user }: Props) {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 20, width: '100%', maxWidth: 560, maxHeight: '90vh', overflow: 'auto', padding: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <h2 style={{ color: C.txt, fontWeight: 900, fontSize: 18, margin: 0 }}>⚙️ Tipos de Check-in</h2>
+              <h2 style={{ color: C.txt, fontWeight: 900, fontSize: 18, margin: 0 }}>️ Tipos de Check-in</h2>
               <button onClick={() => { setTypesModal(false); setEditingType(null); setTypeForm(EMPTY_TYPE) }}
-                style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer' }}>✕</button>
+                style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer' }}></button>
             </div>
 
             {/* Lista de tipos */}
@@ -602,9 +602,9 @@ export function CheckinPage({ house, user }: Props) {
                     </div>
                   </div>
                   <button onClick={() => { setEditingType(t.id); setTypeForm({ name: t.name, description: t.description ?? '', default_price_cents: t.default_price_cents > 0 ? (t.default_price_cents / 100).toFixed(2) : '', color: t.color, icon: t.icon, sort_order: String(t.sort_order) }) }}
-                    style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>✏️</button>
+                    style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>️</button>
                   <button onClick={() => deleteType(t.id)}
-                    style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>🗑</button>
+                    style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}></button>
                 </div>
               ))}
             </div>
@@ -653,7 +653,7 @@ export function CheckinPage({ house, user }: Props) {
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={saveType}
                   style={{ flex: 1, background: `linear-gradient(135deg,${C.acc},#1d4ed8)`, color: '#fff', border: 'none', borderRadius: 10, padding: '10px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  💾 {editingType ? 'Atualizar' : 'Adicionar'}
+                   {editingType ? 'Atualizar' : 'Adicionar'}
                 </button>
                 {editingType && (
                   <button onClick={() => { setEditingType(null); setTypeForm(EMPTY_TYPE) }}
@@ -670,18 +670,18 @@ export function CheckinPage({ house, user }: Props) {
       {/* Header + tabs */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 2 }}>🚪 Check-in</h1>
+          <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 2 }}> Check-in</h1>
           <p style={{ color: C.mut, fontSize: 13 }}>
-            {evLabel ? `📅 ${evLabel.name}` : 'Entrada Livre'}
+            {evLabel ? ` ${evLabel.name}` : 'Entrada Livre'}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <button style={TAB_BTN(mode === 'checkin')} onClick={() => { setMode('checkin'); setScanMsg(null); setScanned(null) }}>🚪 Portaria</button>
-          <button style={TAB_BTN(mode === 'listas')} onClick={() => setMode('listas')}>📋 Listas do Dia</button>
-          <button style={TAB_BTN(mode === 'scanner')} onClick={() => { setMode('scanner'); setScanMsg(null); setScanned(null) }}>🎟️ Scanner</button>
+          <button style={TAB_BTN(mode === 'checkin')} onClick={() => { setMode('checkin'); setScanMsg(null); setScanned(null) }}> Portaria</button>
+          <button style={TAB_BTN(mode === 'listas')} onClick={() => setMode('listas')}> Listas do Dia</button>
+          <button style={TAB_BTN(mode === 'scanner')} onClick={() => { setMode('scanner'); setScanMsg(null); setScanned(null) }}>️ Scanner</button>
           <button onClick={() => setTypesModal(true)}
             style={{ padding: '8px 12px', borderRadius: 10, border: `1px solid ${C.brd}`, background: 'transparent', color: C.mut, fontSize: 16, cursor: 'pointer' }}
-            title="Configurar tipos de check-in">⚙️</button>
+            title="Configurar tipos de check-in">️</button>
         </div>
       </div>
 
@@ -694,14 +694,14 @@ export function CheckinPage({ house, user }: Props) {
               <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && doSearch()}
                 autoFocus placeholder="CPF, celular ou nome completo"
                 style={{ flex: 1, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 10, padding: '10px 14px', color: C.txt, fontSize: 14, minHeight: 44, fontFamily: 'inherit' }} />
-              <Btn onClick={doSearch} disabled={loading}>{loading ? '...' : '🔍 Buscar'}</Btn>
+              <Btn onClick={doSearch} disabled={loading}>{loading ? '...' : ' Buscar'}</Btn>
             </div>
 
             {/* Evento */}
             <div style={{ marginBottom: 14 }}>
               <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 6 }}>EVENTO / ENTRADA</label>
               <select value={selEv} onChange={e => setSelEv(e.target.value)} style={SL}>
-                <option value="bar">🍺 Entrada Livre (sem evento)</option>
+                <option value="bar"> Entrada Livre (sem evento)</option>
                 {events.map(ev => (
                   <option key={ev.id} value={ev.id}>
                     {ev.name} — {new Date(ev.event_date + 'T12:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
@@ -777,7 +777,7 @@ export function CheckinPage({ house, user }: Props) {
                   </div>
                 )}
                 <Btn onClick={() => doCheckin(result)} style={{ width: '100%' }}>
-                  ✅ Confirmar Check-in — {payAmt ? fmtCurrency(Math.round(parseFloat(payAmt) * 100)) : 'Cortesia'}
+                   Confirmar Check-in — {payAmt ? fmtCurrency(Math.round(parseFloat(payAmt) * 100)) : 'Cortesia'}
                 </Btn>
               </div>
             )}
@@ -785,7 +785,7 @@ export function CheckinPage({ house, user }: Props) {
             {/* New client form */}
             {showForm && (
               <div style={{ background: C.bg, border: `1px solid ${C.gold}33`, borderRadius: 14, padding: 16, marginBottom: 14 }}>
-                <div style={{ color: C.gold, fontWeight: 700, fontSize: 14, marginBottom: 12 }}>➕ Novo Cliente</div>
+                <div style={{ color: C.gold, fontWeight: 700, fontSize: 14, marginBottom: 12 }}> Novo Cliente</div>
                 <div style={{ display: 'grid', gap: 10 }}>
                   <input value={nc.full_name} onChange={e => setNc(p => ({ ...p, full_name: e.target.value }))} placeholder="Nome completo *"
                     style={{ background: C.bg2, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '10px 12px', color: C.txt, fontSize: 14, minHeight: 44, fontFamily: 'inherit', width: '100%' }} />
@@ -798,7 +798,7 @@ export function CheckinPage({ house, user }: Props) {
                   <input type="date" value={nc.birth_date} onChange={e => setNc(p => ({ ...p, birth_date: e.target.value }))}
                     style={{ background: C.bg2, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '10px 12px', color: C.txt, fontSize: 14, minHeight: 44, fontFamily: 'inherit', width: '100%' }} />
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <Btn onClick={saveNew} style={{ flex: 1 }}>💾 Cadastrar e Dar Check-in</Btn>
+                    <Btn onClick={saveNew} style={{ flex: 1 }}> Cadastrar e Dar Check-in</Btn>
                     <Btn onClick={() => setShowForm(false)} variant="ghost">Cancelar</Btn>
                   </div>
                 </div>
@@ -814,7 +814,7 @@ export function CheckinPage({ house, user }: Props) {
                 onClick={() => setPortariaAccordion(p => ({ ...p, reservas: !p.reservas }))}
                 style={{ width: '100%', background: 'none', border: 'none', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontFamily: 'inherit' }}>
                 <span style={{ fontWeight: 700, fontSize: 14, color: C.txt }}>🪑 Reservas ({reservations.length})</span>
-                <span style={{ color: C.mut, fontSize: 16 }}>{portariaAccordion.reservas ? '▼' : '▶'}</span>
+                <span style={{ color: C.mut, fontSize: 16 }}>{portariaAccordion.reservas ? '▼' : ''}</span>
               </button>
               {portariaAccordion.reservas && (
                 <div style={{ padding: '0 16px 16px' }}>
@@ -841,7 +841,7 @@ export function CheckinPage({ house, user }: Props) {
                             })}
                           </select>
                           {ciResId && (
-                            <button onClick={() => setCiResId('')} style={{ background: '#ffffff10', border: `1px solid ${C.brd}`, borderRadius: 8, color: C.mut, cursor: 'pointer', padding: '0 12px', fontSize: 16 }} title="Fechar lista">✕</button>
+                            <button onClick={() => setCiResId('')} style={{ background: '#ffffff10', border: `1px solid ${C.brd}`, borderRadius: 8, color: C.mut, cursor: 'pointer', padding: '0 12px', fontSize: 16 }} title="Fechar lista"></button>
                           )}
                         </div>
 
@@ -856,24 +856,24 @@ export function CheckinPage({ house, user }: Props) {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
                                   <div>
                                     <span style={{ fontWeight: 700, color: C.txt, fontSize: 14 }}>{res.name}</span>
-                                    {res.location && <span style={{ color: C.acc, fontSize: 12, marginLeft: 8 }}>📍 {res.location}</span>}
+                                    {res.location && <span style={{ color: C.acc, fontSize: 12, marginLeft: 8 }}> {res.location}</span>}
                                   </div>
                                   <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                                     <span style={{ background: arrived ? C.grn + '22' : C.gold + '22', color: arrived ? C.grn : C.gold, border: `1px solid ${arrived ? C.grn : C.gold}44`, borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                                      {arrived ? '✅ Chegou' : '⏳ Aguardando'}
+                                      {arrived ? ' Chegou' : ' Aguardando'}
                                     </span>
                                     {!arrived && (
                                       <button onClick={() => confirmReservation(res.id)}
                                         style={{ background: C.grn + '22', border: `1px solid ${C.grn}44`, borderRadius: 8, padding: '4px 10px', color: C.grn, fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                                        ✅ Confirmar
+                                         Confirmar
                                       </button>
                                     )}
                                   </div>
                                 </div>
                                 <div style={{ color: C.mut, fontSize: 12, marginTop: 4, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                                  {res.phone && <span>📱 {ftel(res.phone)}</span>}
-                                  {res.expected_arrival && <span>🕐 {res.expected_arrival.slice(0,5)}</span>}
-                                  {res.people_count > 0 && <span>👥 {res.people_count} pessoas</span>}
+                                  {res.phone && <span> {ftel(res.phone)}</span>}
+                                  {res.expected_arrival && <span> {res.expected_arrival.slice(0,5)}</span>}
+                                  {res.people_count > 0 && <span> {res.people_count} pessoas</span>}
                                 </div>
                               </div>
                               {guests.length === 0
@@ -890,26 +890,26 @@ export function CheckinPage({ house, user }: Props) {
                                         <div style={{ flex: 1, minWidth: 0 }}>
                                           <div style={{ color: g.checked_in ? C.grn : C.txt, fontWeight: 600, fontSize: 13 }}>
                                             {g.name}
-                                            {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, marginLeft: 5 }}>{g.gender === 'feminino' ? '♀' : '♂'}</span>}
+                                            {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, marginLeft: 5 }}>{g.gender === 'feminino' ? '' : ''}</span>}
                                           </div>
                                           <div style={{ color: C.mut, fontSize: 11, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                            {g.phone && <span>📱 {ftel(g.phone)}</span>}
-                                            {hasBirth && <span style={{ color: C.acc }}>🎂 {new Date(g.birth_date! + 'T12:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })}</span>}
-                                            {!hasData && <span style={{ color: C.gold }}>⚠️ dados incompletos</span>}
+                                            {g.phone && <span> {ftel(g.phone)}</span>}
+                                            {hasBirth && <span style={{ color: C.acc }}> {new Date(g.birth_date! + 'T12:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })}</span>}
+                                            {!hasData && <span style={{ color: C.gold }}>️ dados incompletos</span>}
                                           </div>
                                         </div>
                                         {g.checked_in
-                                          ? <span style={{ color: C.grn, fontSize: 11, fontWeight: 700, flexShrink: 0 }}>✅ Entrou</span>
+                                          ? <span style={{ color: C.grn, fontSize: 11, fontWeight: 700, flexShrink: 0 }}> Entrou</span>
                                           : hasData
                                             ? <button
                                                 onClick={() => { setPendingCI({ type: 'reserva', guest: g, reservation: res }); setListComanda(''); setListAmount(prefilledAmount(res, g)) }}
                                                 style={{ background: `linear-gradient(135deg,${C.acc},#1d4ed8)`, border: 'none', borderRadius: 8, padding: '6px 12px', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0, boxShadow: '0 2px 8px rgba(59,130,246,0.4)' }}>
-                                                ✅ Check-in
+                                                 Check-in
                                               </button>
                                             : <button
                                                 onClick={() => { setCompleteGuest(g); setCompleteForm({ phone: g.phone ?? '', cpf: g.cpf ?? '', birth_date: g.birth_date ?? '', photoDataUrl: '', comanda: '', amount: '' }) }}
                                                 style={{ background: C.gold + '22', border: `1px solid ${C.gold}44`, borderRadius: 8, padding: '6px 10px', color: C.gold, fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
-                                                ✏️ Manual
+                                                ️ Manual
                                               </button>
                                         }
                                       </div>
@@ -931,8 +931,8 @@ export function CheckinPage({ house, user }: Props) {
               <button
                 onClick={() => setPortariaAccordion(p => ({ ...p, promoters: !p.promoters }))}
                 style={{ width: '100%', background: 'none', border: 'none', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontFamily: 'inherit' }}>
-                <span style={{ fontWeight: 700, fontSize: 14, color: C.txt }}>👤 Promotores ({promoGuests.length})</span>
-                <span style={{ color: C.mut, fontSize: 16 }}>{portariaAccordion.promoters ? '▼' : '▶'}</span>
+                <span style={{ fontWeight: 700, fontSize: 14, color: C.txt }}> Promotores ({promoGuests.length})</span>
+                <span style={{ color: C.mut, fontSize: 16 }}>{portariaAccordion.promoters ? '▼' : ''}</span>
               </button>
               {portariaAccordion.promoters && (
                 <div style={{ padding: '0 16px 16px' }}>
@@ -948,19 +948,19 @@ export function CheckinPage({ house, user }: Props) {
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ color: g.checked_in ? C.grn : C.txt, fontWeight: 600, fontSize: 13 }}>
                                 {g.full_name}
-                                {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, marginLeft: 5 }}>{g.gender === 'feminino' ? '♀' : '♂'}</span>}
+                                {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, marginLeft: 5 }}>{g.gender === 'feminino' ? '' : ''}</span>}
                               </div>
                               <div style={{ color: C.mut, fontSize: 11, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {g.phone && <span>📱 {ftel(g.phone)}</span>}
-                                {pl?.name && <span>📋 {pl.name}</span>}
+                                {g.phone && <span> {ftel(g.phone)}</span>}
+                                {pl?.name && <span> {pl.name}</span>}
                               </div>
                             </div>
                             {g.checked_in
-                              ? <span style={{ color: C.grn, fontSize: 11, fontWeight: 700, flexShrink: 0 }}>✅ Entrou</span>
+                              ? <span style={{ color: C.grn, fontSize: 11, fontWeight: 700, flexShrink: 0 }}> Entrou</span>
                               : <button
                                   onClick={() => { setPendingCI({ type: 'promo', guest: g }); setListComanda('') }}
                                   style={{ background: `linear-gradient(135deg,${C.acc},#1d4ed8)`, border: 'none', borderRadius: 8, padding: '6px 12px', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0, boxShadow: '0 2px 8px rgba(59,130,246,0.4)' }}>
-                                  ✅ Entrada
+                                   Entrada
                                 </button>
                             }
                           </div>
@@ -1017,7 +1017,7 @@ export function CheckinPage({ house, user }: Props) {
                 ))}
               </select>
             </div>
-            <input value={listSearch} onChange={e => setListSearch(e.target.value)} placeholder="🔍 Buscar nome ou telefone"
+            <input value={listSearch} onChange={e => setListSearch(e.target.value)} placeholder=" Buscar nome ou telefone"
               style={{ ...SL, width: 240 }} />
           </div>
 
@@ -1027,7 +1027,7 @@ export function CheckinPage({ house, user }: Props) {
               <>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
                   <button onClick={loadLists} style={{ background: 'none', border: `1px solid ${C.brd}`, color: C.mut, borderRadius: 10, padding: '8px 14px', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
-                    🔄 Atualizar
+                     Atualizar
                   </button>
                 </div>
 
@@ -1041,7 +1041,7 @@ export function CheckinPage({ house, user }: Props) {
                         onClick={() => setListasAccordion(p => ({ ...p, reservas: !p.reservas }))}
                         style={{ width: '100%', background: 'none', border: 'none', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontFamily: 'inherit' }}>
                         <span style={{ fontWeight: 700, fontSize: 15, color: C.txt }}>🪑 Reservas ({filteredRes.length})</span>
-                        <span style={{ color: C.mut, fontSize: 16 }}>{listasAccordion.reservas ? '▼' : '▶'}</span>
+                        <span style={{ color: C.mut, fontSize: 16 }}>{listasAccordion.reservas ? '▼' : ''}</span>
                       </button>
                       {listasAccordion.reservas && (
                         <div style={{ padding: '0 16px 16px' }}>
@@ -1059,20 +1059,20 @@ export function CheckinPage({ house, user }: Props) {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                                           <span style={{ color: C.txt, fontWeight: 800, fontSize: 16 }}>{r.name}</span>
                                           <span style={{ background: arrived ? C.grn + '22' : C.gold + '22', color: arrived ? C.grn : C.gold, border: `1px solid ${arrived ? C.grn : C.gold}44`, borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                                            {arrived ? '✅ Chegou' : '⏳ Aguardando'}
+                                            {arrived ? ' Chegou' : ' Aguardando'}
                                           </span>
                                         </div>
                                         <div style={{ color: C.mut, fontSize: 12, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                                          {r.phone && <span>📱 {ftel(r.phone)}</span>}
-                                          <span>👥 {r.people_count} pessoa{r.people_count !== 1 ? 's' : ''}</span>
-                                          {r.location && <span>📍 {r.location}</span>}
-                                          {r.expected_arrival && <span>🕐 {r.expected_arrival}</span>}
-                                          {r.amount_cents > 0 && <span style={{ color: C.gold }}>💰 {fmtCurrency(r.amount_cents)}</span>}
+                                          {r.phone && <span> {ftel(r.phone)}</span>}
+                                          <span> {r.people_count} pessoa{r.people_count !== 1 ? 's' : ''}</span>
+                                          {r.location && <span> {r.location}</span>}
+                                          {r.expected_arrival && <span> {r.expected_arrival}</span>}
+                                          {r.amount_cents > 0 && <span style={{ color: C.gold }}> {fmtCurrency(r.amount_cents)}</span>}
                                         </div>
                                       </div>
                                       {!arrived && (
                                         <Btn onClick={() => confirmReservation(r.id)} style={{ marginLeft: 10, flexShrink: 0, fontSize: 12 }}>
-                                          ✅ Chegou
+                                           Chegou
                                         </Btn>
                                       )}
                                     </div>
@@ -1087,10 +1087,10 @@ export function CheckinPage({ house, user }: Props) {
                                           <div key={g.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 10px', borderRadius: 8, background: g.checked_in ? C.grn + '0d' : C.bg, marginBottom: 4, border: `1px solid ${g.checked_in ? C.grn + '33' : C.brd + '55'}` }}>
                                             <div>
                                               <span style={{ color: g.checked_in ? C.grn : C.txt, fontWeight: 600, fontSize: 14 }}>
-                                                {g.checked_in ? '✅' : '○'} {g.name}
+                                                {g.checked_in ? '' : '○'} {g.name}
                                               </span>
-                                              {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, marginLeft: 6 }}>{g.gender === 'feminino' ? '♀' : '♂'}</span>}
-                                              {g.phone && <span style={{ color: C.mut, fontSize: 11, marginLeft: 8 }}>📱 {ftel(g.phone)}</span>}
+                                              {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, marginLeft: 6 }}>{g.gender === 'feminino' ? '' : ''}</span>}
+                                              {g.phone && <span style={{ color: C.mut, fontSize: 11, marginLeft: 8 }}> {ftel(g.phone)}</span>}
                                               {g.checked_in && g.checked_in_at && (
                                                 <span style={{ color: C.grn, fontSize: 10, marginLeft: 8 }}>
                                                   {new Date(g.checked_in_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
@@ -1109,15 +1109,15 @@ export function CheckinPage({ house, user }: Props) {
                                     ) : (
                                       <div style={{ borderTop: `1px solid ${C.brd}`, paddingTop: 10 }}>
                                         <div style={{ color: C.mut, fontSize: 12, marginBottom: 8 }}>
-                                          ⚠️ Nenhum convidado pré-cadastrado. Compartilhe o link para o responsável preencher:
+                                          ️ Nenhum convidado pré-cadastrado. Compartilhe o link para o responsável preencher:
                                         </div>
                                         <div style={{ display: 'flex', gap: 8 }}>
                                           <div style={{ flex: 1, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '7px 12px', color: C.acc, fontSize: 11, fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                             {reservaLink}
                                           </div>
-                                          <button onClick={() => navigator.clipboard.writeText(reservaLink).then(() => sT(setToast, '✅ Link copiado!', 'success'))}
+                                          <button onClick={() => navigator.clipboard.writeText(reservaLink).then(() => sT(setToast, ' Link copiado!', 'success'))}
                                             style={{ background: C.acc + '22', border: `1px solid ${C.acc}44`, color: C.acc, borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
-                                            📋 Copiar
+                                             Copiar
                                           </button>
                                         </div>
                                       </div>
@@ -1135,8 +1135,8 @@ export function CheckinPage({ house, user }: Props) {
                       <button
                         onClick={() => setListasAccordion(p => ({ ...p, promoters: !p.promoters }))}
                         style={{ width: '100%', background: 'none', border: 'none', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontFamily: 'inherit' }}>
-                        <span style={{ fontWeight: 700, fontSize: 15, color: C.txt }}>👤 Lista de Promoters ({filteredGuests.length})</span>
-                        <span style={{ color: C.mut, fontSize: 16 }}>{listasAccordion.promoters ? '▼' : '▶'}</span>
+                        <span style={{ fontWeight: 700, fontSize: 15, color: C.txt }}> Lista de Promoters ({filteredGuests.length})</span>
+                        <span style={{ color: C.mut, fontSize: 16 }}>{listasAccordion.promoters ? '▼' : ''}</span>
                       </button>
                       {listasAccordion.promoters && (
                         <div style={{ padding: '0 16px 16px' }}>
@@ -1151,15 +1151,15 @@ export function CheckinPage({ house, user }: Props) {
                                       <div style={{ flex: 1 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                                           <span style={{ color: C.txt, fontWeight: 800, fontSize: 15 }}>{g.full_name}</span>
-                                          {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, fontWeight: 700 }}>{g.gender === 'feminino' ? '♀' : '♂'}</span>}
+                                          {g.gender && <span style={{ color: g.gender === 'feminino' ? '#f472b6' : C.acc, fontSize: 11, fontWeight: 700 }}>{g.gender === 'feminino' ? '' : ''}</span>}
                                           <span style={{ background: g.checked_in ? C.grn + '22' : C.brd + '88', color: g.checked_in ? C.grn : C.mut, borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                                            {g.checked_in ? '✅ Entrou' : '⏳ Pendente'}
+                                            {g.checked_in ? ' Entrou' : ' Pendente'}
                                           </span>
                                         </div>
                                         <div style={{ color: C.mut, fontSize: 12, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                                          {g.phone && <span>📱 {ftel(g.phone)}</span>}
-                                          {pl?.name && <span>📋 {pl.name}</span>}
-                                          {pl?.promoters?.full_name && <span>👤 {pl.promoters.full_name}</span>}
+                                          {g.phone && <span> {ftel(g.phone)}</span>}
+                                          {pl?.name && <span> {pl.name}</span>}
+                                          {pl?.promoters?.full_name && <span> {pl.promoters.full_name}</span>}
                                         </div>
                                         {g.checked_in && g.checked_in_at && (
                                           <div style={{ color: C.grn, fontSize: 11, marginTop: 4 }}>
@@ -1169,15 +1169,15 @@ export function CheckinPage({ house, user }: Props) {
                                       </div>
                                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginLeft: 10 }}>
                                         {listaLink && (
-                                          <button onClick={() => navigator.clipboard.writeText(listaLink).then(() => sT(setToast, '✅ Link copiado!', 'success'))}
+                                          <button onClick={() => navigator.clipboard.writeText(listaLink).then(() => sT(setToast, ' Link copiado!', 'success'))}
                                             style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', color: '#a78bfa', borderRadius: 8, padding: '5px 10px', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}
                                             title="Copiar link da lista">
-                                            🔗
+                                            
                                           </button>
                                         )}
                                         {!g.checked_in && (
                                           <Btn onClick={() => { setPendingCI({ type: 'promo', guest: g }); setListComanda('') }} style={{ fontSize: 13 }}>
-                                            ✅ Entrada
+                                             Entrada
                                           </Btn>
                                         )}
                                       </div>
@@ -1210,14 +1210,14 @@ export function CheckinPage({ house, user }: Props) {
               <div style={{ color: C.txt, fontWeight: 800, fontSize: 18, marginBottom: 4 }}>{scanned.ticket_orders?.buyer_name ?? scanned.holder_name}</div>
               <div style={{ color: C.mut, fontSize: 13, marginBottom: 12 }}>{scanned.events?.name} · Token {scanned.token.slice(0, 8).toUpperCase()}</div>
               <div style={{ display: 'flex', gap: 8 }}>
-                <Btn onClick={confirmTicketCheckin} style={{ flex: 1 }}>✅ Confirmar Entrada</Btn>
+                <Btn onClick={confirmTicketCheckin} style={{ flex: 1 }}> Confirmar Entrada</Btn>
                 <Btn onClick={() => setScanned(null)} variant="ghost">Cancelar</Btn>
               </div>
             </Card>
           )}
           {scanned && scanned.checked_in && (
             <Card style={{ marginBottom: 16, border: `1px solid ${C.red}44` }}>
-              <div style={{ color: C.red, fontWeight: 800, fontSize: 16, marginBottom: 4 }}>⚠️ Ingresso já utilizado</div>
+              <div style={{ color: C.red, fontWeight: 800, fontSize: 16, marginBottom: 4 }}>️ Ingresso já utilizado</div>
               <div style={{ color: C.mut, fontSize: 13, marginBottom: 12 }}>
                 {scanned.ticket_orders?.buyer_name} · Entrada às {scanned.checked_in_at ? new Date(scanned.checked_in_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--'}
               </div>
@@ -1226,12 +1226,12 @@ export function CheckinPage({ house, user }: Props) {
           )}
           <button onClick={() => setScanning(true)}
             style={{ width: '100%', background: `linear-gradient(135deg,#1d4ed8,${C.acc})`, color: '#fff', border: 'none', borderRadius: 14, padding: 18, fontSize: 18, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit' }}>
-            📷 Escanear QR Code
+             Escanear QR Code
           </button>
         </div>
       )}
 
-      <FAB onClick={() => { setShowForm(true); setResult(null); setMode('checkin') }} icon="➕" title="Novo cliente" />
+      <FAB onClick={() => { setShowForm(true); setResult(null); setMode('checkin') }} icon="" title="Novo cliente" />
 
       {/* ── Modal Comanda + Confirmar Check-in ── */}
       {pendingCI && (
@@ -1240,7 +1240,7 @@ export function CheckinPage({ house, user }: Props) {
           <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 20, width: '100%', maxWidth: 380, padding: 24 }}
             onClick={e => e.stopPropagation()}>
             <div style={{ fontWeight: 800, fontSize: 17, color: C.txt, marginBottom: 4 }}>
-              {pendingCI.type === 'reserva' ? '✅ Confirmar Check-in' : '✅ Confirmar Entrada'}
+              {pendingCI.type === 'reserva' ? ' Confirmar Check-in' : ' Confirmar Entrada'}
             </div>
             <div style={{ color: C.acc, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>
               {'name' in pendingCI.guest ? pendingCI.guest.name : pendingCI.guest.full_name}
@@ -1248,14 +1248,14 @@ export function CheckinPage({ house, user }: Props) {
             {pendingCI.reservation && pendingCI.reservation.list_type && (
               <div style={{ marginBottom: 14, display: 'flex', gap: 6, alignItems: 'center' }}>
                 <span style={{ fontSize: 11, color: pendingCI.reservation.list_type === 'vip' ? '#f59e0b' : pendingCI.reservation.list_type === 'custom' ? '#a78bfa' : '#94a3b8', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>
-                  {pendingCI.reservation.list_type === 'vip' ? '⭐ VIP · entrada gratuita' : pendingCI.reservation.list_type === 'custom' ? '💲 Valor combinado' : '📋 Lista normal'}
+                  {pendingCI.reservation.list_type === 'vip' ? ' VIP · entrada gratuita' : pendingCI.reservation.list_type === 'custom' ? ' Valor combinado' : ' Lista normal'}
                 </span>
               </div>
             )}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
               <div>
                 <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 6 }}>
-                  🎫 Comanda <span style={{ fontWeight: 400 }}>(opcional)</span>
+                   Comanda <span style={{ fontWeight: 400 }}>(opcional)</span>
                 </label>
                 <input
                   autoFocus
@@ -1269,7 +1269,7 @@ export function CheckinPage({ house, user }: Props) {
               </div>
               <div>
                 <label style={{ fontSize: 12, color: C.gold, fontWeight: 600, display: 'block', marginBottom: 6 }}>
-                  💰 Valor Entrada <span style={{ fontWeight: 400, color: C.mut }}>(R$)</span>
+                   Valor Entrada <span style={{ fontWeight: 400, color: C.mut }}>(R$)</span>
                 </label>
                 <input
                   type="number"
@@ -1292,7 +1292,7 @@ export function CheckinPage({ house, user }: Props) {
                   else await checkInPromoGuest(g as PromoterGuest)
                 }}
                 style={{ flex: 1, background: 'linear-gradient(135deg,#10b981,#059669)', border: 'none', borderRadius: 12, padding: '12px', fontSize: 15, fontWeight: 800, color: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
-                ✅ Confirmar Entrada
+                 Confirmar Entrada
               </button>
               <button onClick={() => setPendingCI(null)}
                 style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 12, padding: '12px 16px', color: C.mut, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -1309,11 +1309,11 @@ export function CheckinPage({ house, user }: Props) {
           <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 20, width: '100%', maxWidth: 480, maxHeight: '90vh', overflow: 'auto', padding: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
-                <h2 style={{ color: C.txt, fontWeight: 900, fontSize: 18, margin: 0 }}>✏️ Completar Cadastro</h2>
+                <h2 style={{ color: C.txt, fontWeight: 900, fontSize: 18, margin: 0 }}>️ Completar Cadastro</h2>
                 <div style={{ color: C.mut, fontSize: 13, marginTop: 4 }}>{completeGuest.name}</div>
               </div>
               <button onClick={() => { stopCamera(); setCompleteGuest(null) }}
-                style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer' }}>✕</button>
+                style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer' }}></button>
             </div>
 
             <div style={{ display: 'grid', gap: 12 }}>
@@ -1342,7 +1342,7 @@ export function CheckinPage({ house, user }: Props) {
                     <img src={completeForm.photoDataUrl} alt="Foto capturada" style={{ width: '100%', maxWidth: 280, borderRadius: 12, border: `1px solid ${C.brd}` }} />
                     <button onClick={() => setCompleteForm(p => ({ ...p, photoDataUrl: '' }))}
                       style={{ background: C.gold + '22', border: `1px solid ${C.gold}44`, color: C.gold, borderRadius: 8, padding: '6px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      🔄 Tirar Novamente
+                       Tirar Novamente
                     </button>
                   </div>
                 ) : cameraStream ? (
@@ -1352,7 +1352,7 @@ export function CheckinPage({ house, user }: Props) {
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button onClick={capturePhoto}
                         style={{ background: `linear-gradient(135deg,${C.acc},#1d4ed8)`, border: 'none', color: '#fff', borderRadius: 8, padding: '8px 18px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                        📸 Capturar
+                         Capturar
                       </button>
                       <button onClick={stopCamera}
                         style={{ background: 'transparent', border: `1px solid ${C.brd}`, color: C.mut, borderRadius: 8, padding: '8px 14px', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -1363,7 +1363,7 @@ export function CheckinPage({ house, user }: Props) {
                 ) : (
                   <button onClick={startCamera}
                     style={{ width: '100%', background: C.bg, border: `1px dashed ${C.brd}`, color: C.mut, borderRadius: 10, padding: '12px', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit' }}>
-                    📷 Tirar Foto
+                     Tirar Foto
                   </button>
                 )}
               </div>
@@ -1371,14 +1371,14 @@ export function CheckinPage({ house, user }: Props) {
               {/* Comanda + Valor */}
               <div style={{ borderTop: `1px solid ${C.brd}`, paddingTop: 14, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>🎫 COMANDA</label>
+                  <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}> COMANDA</label>
                   <input type="text" inputMode="numeric" value={completeForm.comanda}
                     onChange={e => setCompleteForm(p => ({ ...p, comanda: e.target.value }))}
                     placeholder="Ex: 42"
                     style={{ ...SL, textAlign: 'center', fontWeight: 700, fontSize: 16, letterSpacing: 3 }} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, color: C.gold, fontWeight: 600, display: 'block', marginBottom: 4 }}>💰 VALOR ENTRADA (R$)</label>
+                  <label style={{ fontSize: 11, color: C.gold, fontWeight: 600, display: 'block', marginBottom: 4 }}> VALOR ENTRADA (R$)</label>
                   <input type="number" min="0" step="0.01" value={completeForm.amount}
                     onChange={e => setCompleteForm(p => ({ ...p, amount: e.target.value }))}
                     placeholder="0,00"
@@ -1388,7 +1388,7 @@ export function CheckinPage({ house, user }: Props) {
 
               <button onClick={saveCompleteGuest}
                 style={{ width: '100%', background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit', marginTop: 4 }}>
-                ✅ Confirmar Check-in
+                 Confirmar Check-in
               </button>
             </div>
           </div>

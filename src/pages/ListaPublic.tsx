@@ -103,7 +103,7 @@ export function ListaPublicPage({ token }: { token: string }) {
   if (notFound) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+        <div style={{ fontSize: 48, marginBottom: 12 }}></div>
         <div style={{ color: C.txt, fontWeight: 700, fontSize: 18 }}>Lista não encontrada</div>
         <div style={{ color: C.mut, fontSize: 14, marginTop: 8 }}>Verifique o link com seu promoter</div>
       </div>
@@ -113,7 +113,7 @@ export function ListaPublicPage({ token }: { token: string }) {
   if (done) return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
-        <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+        <div style={{ fontSize: 64, marginBottom: 16 }}></div>
         <div style={{ color: C.grn, fontWeight: 900, fontSize: 22, marginBottom: 8 }}>Na lista!</div>
         <div style={{ color: C.sub, fontSize: 14, marginBottom: 24 }}>
           {saved.length} convidado{saved.length !== 1 ? 's' : ''} na lista de <strong style={{ color: C.acc }}>{lista?.promoters?.full_name}</strong>
@@ -121,13 +121,13 @@ export function ListaPublicPage({ token }: { token: string }) {
         <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 16, padding: 16, textAlign: 'left', marginBottom: 16 }}>
           {saved.map((g, i) => (
             <div key={g.id} style={{ padding: '8px 0', borderBottom: i < saved.length - 1 ? `1px solid ${C.brd}` : 'none', color: C.txt, fontSize: 14 }}>
-              {g.gender === 'feminino' ? '♀' : g.gender === 'masculino' ? '♂' : '👤'} {g.full_name}
+              {g.gender === 'feminino' ? '' : g.gender === 'masculino' ? '' : ''} {g.full_name}
               {g.phone ? <span style={{ color: C.mut, fontSize: 12 }}> · {fmtPhone(g.phone)}</span> : ''}
             </div>
           ))}
         </div>
         <div style={{ background: C.gold + '15', border: `1px solid ${C.gold}33`, borderRadius: 12, padding: '12px 16px', color: C.gold, fontSize: 13, fontWeight: 600 }}>
-          📍 Apresente este link ou seu nome na portaria em {lista?.events?.name}
+           Apresente este link ou seu nome na portaria em {lista?.events?.name}
         </div>
       </div>
     </div>
@@ -157,14 +157,14 @@ export function ListaPublicPage({ token }: { token: string }) {
           </h1>
           {ev && (
             <div style={{ color: C.sub, fontSize: 13, marginBottom: 8 }}>
-              📅 {fdate(ev.event_date)}{ev.start_time ? ` · 🕙 ${ev.start_time.slice(0, 5)}` : ''}
+               {fdate(ev.event_date)}{ev.start_time ? ` ·  ${ev.start_time.slice(0, 5)}` : ''}
             </div>
           )}
           {/* Promoter badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(124,58,237,0.2)', border: '1px solid rgba(124,58,237,0.4)', borderRadius: 20, padding: '6px 14px' }}>
             {promoter?.photo_url
               ? <img src={promoter.photo_url} style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} />
-              : <span style={{ fontSize: 16 }}>👤</span>
+              : <span style={{ fontSize: 16 }}></span>
             }
             <span style={{ color: '#c4b5fd', fontSize: 13, fontWeight: 700 }}>{promoter?.full_name ?? 'Promoter'}</span>
           </div>
@@ -179,7 +179,7 @@ export function ListaPublicPage({ token }: { token: string }) {
             <div style={{ color: C.txt, fontWeight: 800, fontSize: 20 }}>{saved.length}</div>
             <div style={{ color: C.mut, fontSize: 12 }}>convidado{saved.length !== 1 ? 's' : ''} na lista</div>
           </div>
-          <div style={{ color: '#a78bfa', fontSize: 28 }}>🎭</div>
+          <div style={{ color: '#a78bfa', fontSize: 28 }}></div>
         </div>
 
         {/* Saved guests */}
@@ -193,18 +193,18 @@ export function ListaPublicPage({ token }: { token: string }) {
                 <div>
                   <div style={{ color: C.txt, fontWeight: 700, fontSize: 15 }}>
                     {i + 1}.{' '}
-                    {g.gender === 'feminino' ? <span style={{ color: '#f472b6' }}>♀ </span> : g.gender === 'masculino' ? <span style={{ color: C.acc }}>♂ </span> : ''}
+                    {g.gender === 'feminino' ? <span style={{ color: '#f472b6' }}> </span> : g.gender === 'masculino' ? <span style={{ color: C.acc }}> </span> : ''}
                     {g.full_name}
                   </div>
                   <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
-                    {g.phone ? `📱 ${fmtPhone(g.phone)}` : ''}
+                    {g.phone ? ` ${fmtPhone(g.phone)}` : ''}
                     {g.phone && g.cpf ? '  ·  ' : ''}
-                    {g.cpf ? `📄 ${fmtCPF(g.cpf)}` : ''}
+                    {g.cpf ? ` ${fmtCPF(g.cpf)}` : ''}
                   </div>
                 </div>
                 <button onClick={() => removeGuest(g.id)}
                   style={{ background: 'none', border: 'none', color: C.mut, fontSize: 18, cursor: 'pointer', padding: '4px 8px' }}>
-                  ✕
+                  
                 </button>
               </div>
             ))}
@@ -245,7 +245,7 @@ export function ListaPublicPage({ token }: { token: string }) {
               {['masculino', 'feminino'].map(g => (
                 <button key={g} onClick={() => setForm(p => ({ ...p, gender: p.gender === g ? '' : g }))}
                   style={{ flex: 1, padding: 10, borderRadius: 10, border: `2px solid ${form.gender === g ? '#7c3aed' : C.brd}`, background: form.gender === g ? 'rgba(124,58,237,0.2)' : 'transparent', color: form.gender === g ? '#a78bfa' : C.mut, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  {g === 'masculino' ? '♂ Masculino' : '♀ Feminino'}
+                  {g === 'masculino' ? ' Masculino' : ' Feminino'}
                 </button>
               ))}
             </div>
@@ -260,13 +260,13 @@ export function ListaPublicPage({ token }: { token: string }) {
 
         <button onClick={addGuest} disabled={submitting}
           style={{ width: '100%', background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 14, padding: 16, fontSize: 16, fontWeight: 800, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, fontFamily: 'inherit', marginBottom: 12 }}>
-          {submitting ? 'Salvando...' : '➕ Adicionar à Lista'}
+          {submitting ? 'Salvando...' : ' Adicionar à Lista'}
         </button>
 
         {saved.length > 0 && (
           <button onClick={() => setDone(true)}
             style={{ width: '100%', background: C.grn + '22', border: `1px solid ${C.grn}44`, color: C.grn, borderRadius: 14, padding: 14, fontSize: 15, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit' }}>
-            ✅ Fechar lista ({saved.length} convidado{saved.length !== 1 ? 's' : ''})
+             Fechar lista ({saved.length} convidado{saved.length !== 1 ? 's' : ''})
           </button>
         )}
 
