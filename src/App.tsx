@@ -92,15 +92,15 @@ export default function App() {
   }
 
   const pages: Record<PageId, React.ReactNode> = {
-    dashboard: <DashboardPage house={session.house} user={session.user} role={session.role} setActive={setActive} />,
-    checkin:   <CheckinPage house={session.house} user={session.user} role={session.role} />,
-    clients:   <ClientsPage house={session.house} user={session.user} role={session.role} />,
+    dashboard: <DashboardPage house={session.house} user={session.user} role={session.role ?? 'admin'} setActive={setActive} />,
+    checkin:   <CheckinPage house={session.house} user={session.user} role={session.role ?? 'admin'} />,
+    clients:   <ClientsPage house={session.house} user={session.user} role={session.role ?? 'admin'} />,
     events:    <EventsPage house={session.house} onGoToReservas={(date, eventId) => { setReservaNav({ date, eventId }); setActive('reservas') }} />,
     reservas:  <ReservasPage house={session.house} user={session.user} initialNav={reservaNav} onNavConsumed={() => setReservaNav(null)} />,
     promoters: <PromotersPage house={session.house} user={session.user} />,
     reports:   <ReportsPage house={session.house} />,
     whatsapp:  <WhatsAppPage house={session.house} />,
-    users:       <UsersPage house={session.house} user={session.user} role={session.role} />,
+    users:       <UsersPage house={session.house} user={session.user} role={session.role ?? 'admin'} />,
     freelancers: <FreelancersPage house={session.house} />,
     settings:    <SettingsPage house={session.house} />,
   }

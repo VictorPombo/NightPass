@@ -8,7 +8,7 @@ export function InvitesPage({ user, onHouseSelected }: { user: any, onHouseSelec
   const [invites, setInvites] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [toast, setToast] = useState<ToastState | null>(null)
-  const st2 = (m: string, t: 'success' | 'error' | 'warn' | 'info' = 'success') => sT(m, t, setToast)
+  const st2 = (m: string, t: 'success' | 'error' | 'warn' = 'success') => sT(setToast, m, t)
 
   useEffect(() => {
     load()

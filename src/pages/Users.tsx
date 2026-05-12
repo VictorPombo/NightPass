@@ -18,7 +18,7 @@ const ROLES = ['super_admin', 'admin', 'door', 'finance', 'promoter', 'manager']
 export function UsersPage({ house, user }: Props) {
   const [users, setUsers] = useState<HouseUser[]>([])
   const [toast, setToast] = useState<ToastState | null>(null)
-  const st2 = (m: string, t: 'success' | 'error' | 'warn' | 'info' = 'success') => sT(m, t, setToast)
+  const st2 = (m: string, t: 'success' | 'error' | 'warn' = 'success') => sT(setToast, m, t)
 
   const [ldg, setLdg] = useState(true)
   const [editing, setEditing] = useState<HouseUser | null>(null)

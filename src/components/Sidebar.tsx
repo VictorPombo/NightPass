@@ -40,7 +40,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, onLogout }: SidebarProps) {
-  const isAdmin = ['super_admin', 'admin'].includes(session.role)
+  const isAdmin = ['super_admin', 'admin'].includes(session.role ?? '')
 
   return (
     <>
@@ -83,11 +83,11 @@ export function Sidebar({ session, active, setActive, mOpen, setMOpen, newCI, on
               boxShadow: `0 0 14px rgba(236,72,153,0.5)`,
             }}><i className="bi bi-moon-stars" style={{ color: '#fff' }} /></div>
             <div style={{ color: C.txt, fontWeight: 700, fontSize: 14, lineHeight: 1.3 }}>
-              {session.house.name || 'NightPass'}
+              {session.house?.name || 'NightPass'}
             </div>
           </div>
-          <Pill color={RC[session.role] || C.mut} small>
-            {RL[session.role] || session.role}
+          <Pill color={RC[session.role ?? ''] || C.mut} small>
+            {RL[session.role ?? ''] || session.role || 'Membro'}
           </Pill>
         </div>
 
