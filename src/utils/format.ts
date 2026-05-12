@@ -52,6 +52,40 @@ export function loyalTier(n: number): LoyalTier {
   return { icon: '', label: 'Novo', color: '#6b7280' }
 }
 
+/** Validate CPF using modulo-11 algorithm */
+export function validCPF(raw?: string | null): boolean {
+  const cpf = (raw || '').replace(/\D/g, '')
+  if (cpf.length !== 11) return false
+  // Reject known invalid sequences (all same digit)
+  if (/^(\d)\1{10}$/.test(cpf)) return false
+  // Validate check digits
+  for (let t = 9; t < 11; t++) {
+    let sum = 0
+    for (let i = 0; i < t; i++) sum += parseInt(cpf[i]) * (t + 1 - i)
+    const rem = (sum * 10) % 11
+    if ((rem === 10 ? 0 : rem) !== parseInt(cpf[t])) return false
+  }
+  return true
+}
+
+/** Validate Brazilian phone (DDD + 9 digits for mobile, DDD + 8 for landline) */
+export function validPhone(raw?: string | null): boolean {
+  const ph = (raw || '').replace(/\D/g, '')
+  // Accept 10 digits (landline) or 11 digits (mobile with 9)
+  if (ph.length < 10 || ph.length > 11) return false
+  const ddd = parseInt(ph.slice(0, 2))
+  if (ddd < 11 || ddd > 99) return false
+  // Mobile must start with 9
+  if (ph.length === 11 && ph[2] !== '9') return false
+  return true
+}
+
+/** Validate email format */
+export function validEmail(v?: string | null): boolean {
+  if (!v || !v.trim()) return true // empty is ok (optional field)
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+}
+
 export const PAY_COLORS: Record<string, string> = {
   pix: '#10b981', cartao: '#3b82f6', credito: '#3b82f6',
   debito: '#60a5fa', dinheiro: '#f59e0b', cortesia: '#9ca3af',

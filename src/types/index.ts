@@ -24,9 +24,12 @@ export interface Client {
   full_name: string
   cpf?: string
   phone?: string
+  email?: string
+  photo_url?: string
   birth_date?: string
   source?: string
   status: string
+  created_by?: string
   created_at: string
 }
 

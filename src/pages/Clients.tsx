@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { C } from '../constants/theme'
 import { Card, Toast, Btn, Modal, FAB } from '../components/ui'
-import { cn, fcpf, ftel, fd, fmtCurrency, loyalTier } from '../utils/format'
+import { cn, fcpf, ftel, fd, fmtCurrency, loyalTier, validCPF, validPhone, validEmail } from '../utils/format'
 import { sT, _err, type ToastState } from '../utils/toast'
 import type { House, Client } from '../types'
 
@@ -24,6 +24,8 @@ export function ClientsPage({ house, user }: Props) {
   const [toast, setToast] = useState<ToastState | null>(null)
   const [ldg, setLdg] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ── Handlers de Upload ──
   async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -35,14 +37,14 @@ export function ClientsPage({ house, user }: Props) {
       const path = `clients/${house.id}/${Date.now()}.${ext}`
       const { error } = await supabase.storage.from('event-flyers').upload(path, file, { upsert: true })
       if (error) {
-        st2('Erro no upload: ' + error.message, 'error')
+        sT(setToast, 'Erro no upload: ' + error.message, 'error')
         return
       }
       const { data } = supabase.storage.from('event-flyers').getPublicUrl(path)
       setForm(p => ({ ...p, photo_url: data.publicUrl }))
-      st2('Foto enviada com sucesso!', 'success')
+      sT(setToast, 'Foto enviada com sucesso!', 'success')
     } catch (err: any) {
-      st2('Erro ao processar arquivo.', 'error')
+      sT(setToast, 'Erro ao processar arquivo.', 'error')
     } finally {
       setUploading(false)
     }
@@ -76,7 +78,12 @@ export function ClientsPage({ house, user }: Props) {
   }, [house, search, page])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => { setPage(0) }, [search])
+  useEffect(() => {
+    setPage(0)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => load(), 400)
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
+  }, [search])
 
   // Load birthdays when tab changes or days filter changes
   useEffect(() => {
@@ -106,17 +113,42 @@ export function ClientsPage({ house, user }: Props) {
   }
 
   function openNew() { setEditing(null); setForm(EMPTY_FORM); setModal(true) }
-  function openEdit(c: Client) { setEditing(c); setForm({ full_name: c.full_name, cpf: c.cpf ?? '', phone: c.phone ?? '', birth_date: c.birth_date ?? '', email: (c as any).email ?? '', photo_url: (c as any).photo_url ?? '' }); setModal(true) }
+  function openEdit(c: Client) { setEditing(c); setForm({ full_name: c.full_name, cpf: c.cpf ?? '', phone: c.phone ?? '', birth_date: c.birth_date ?? '', email: c.email ?? '', photo_url: c.photo_url ?? '' }); setModal(true) }
 
-  function save() {
+  async function save() {
+    if (saving) return
     if (!form.full_name.trim()) { sT(setToast, 'Nome obrigatório', 'error'); return }
-    const data = { full_name: form.full_name, cpf: cn(form.cpf) || null, phone: cn(form.phone) || null, birth_date: form.birth_date || null, email: (form as any).email || null, photo_url: (form as any).photo_url || null, house_id: house.id, status: 'ativo', created_by: user.id }
-    const q = editing ? supabase.from('clients').update(data).eq('id', editing.id) : supabase.from('clients').insert(data)
-    q.then(r => {
+    const cpfClean = cn(form.cpf)
+    const phoneClean = cn(form.phone)
+    if (cpfClean && !validCPF(cpfClean)) { sT(setToast, 'CPF inválido. Verifique os dígitos.', 'error'); return }
+    if (phoneClean && !validPhone(phoneClean)) { sT(setToast, 'Telefone inválido. Use DDD + número.', 'error'); return }
+    if (form.email && !validEmail(form.email)) { sT(setToast, 'E-mail inválido.', 'error'); return }
+    setSaving(true)
+    try {
+      // Check duplicates (skip for edits on same record)
+      if (cpfClean) {
+        let dq = supabase.from('clients').select('id,full_name').eq('house_id', house.id).eq('cpf', cpfClean)
+        if (editing) dq = dq.neq('id', editing.id)
+        const { data: dup } = await dq.maybeSingle()
+        if (dup) { sT(setToast, `CPF já cadastrado para: ${dup.full_name}`, 'error'); setSaving(false); return }
+      }
+      if (phoneClean) {
+        let dq = supabase.from('clients').select('id,full_name').eq('house_id', house.id).eq('phone', phoneClean)
+        if (editing) dq = dq.neq('id', editing.id)
+        const { data: dup } = await dq.maybeSingle()
+        if (dup) { sT(setToast, `Telefone já cadastrado para: ${dup.full_name}`, 'error'); setSaving(false); return }
+      }
+      const data = { full_name: form.full_name, cpf: cpfClean || null, phone: phoneClean || null, birth_date: form.birth_date || null, email: form.email || null, photo_url: form.photo_url || null, house_id: house.id, status: 'ativo', created_by: user.id }
+      const q = editing ? supabase.from('clients').update(data).eq('id', editing.id) : supabase.from('clients').insert(data)
+      const r = await q
       if (r.error) { sT(setToast, 'Erro: ' + r.error.message, 'error'); return }
-      sT(setToast, editing ? ' Cliente atualizado!' : ' Cliente cadastrado!', 'success')
+      sT(setToast, editing ? '✅ Cliente atualizado!' : '✅ Cliente cadastrado!', 'success')
       setModal(false); load()
-    })
+    } catch (err: any) {
+      sT(setToast, 'Erro de conexão. Tente novamente.', 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   function del(c: Client) {
@@ -232,8 +264,8 @@ export function ClientsPage({ house, user }: Props) {
           <div><label style={{ fontSize: 12, color: C.mut, fontWeight: 600 }}>Nascimento</label>
             <input type="date" {...inp()} value={form.birth_date} onChange={e => setForm(p => ({ ...p, birth_date: e.target.value }))} /></div>
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-            <Btn onClick={save} style={{ flex: 1 }}> Salvar</Btn>
-            <Btn onClick={() => setModal(false)} variant="ghost">Cancelar</Btn>
+            <Btn onClick={save} disabled={saving} style={{ flex: 1 }}>{saving ? '⏳ Salvando...' : '💾 Salvar'}</Btn>
+            <Btn onClick={() => setModal(false)} variant="ghost" disabled={saving}>Cancelar</Btn>
           </div>
         </div>
       </Modal>
@@ -278,8 +310,8 @@ export function ClientsPage({ house, user }: Props) {
                   return (
                     <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i < clients.length - 1 ? `1px solid ${C.brd}` : 'none' }}>
                       <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.acc + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0, overflow: 'hidden', border: `2px solid ${tier.color}44` }}>
-                        {(c as any).photo_url
-                          ? <img src={(c as any).photo_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                        {c.photo_url
+                          ? <img src={c.photo_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
                           : tier.icon}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
@@ -287,7 +319,7 @@ export function ClientsPage({ house, user }: Props) {
                         <div style={{ color: C.mut, fontSize: 12, marginTop: 2 }}>
                           {c.cpf ? fcpf(c.cpf) : ''}{c.cpf && c.phone ? ' · ' : ''}{c.phone ? ftel(c.phone) : ''}
                           {c.birth_date ? ` ·  ${fd(c.birth_date)}` : ''}
-                          {(c as any).email ? ` · ${(c as any).email}` : ''}
+                          {c.email ? ` · ${c.email}` : ''}
                         </div>
                       </div>
                       <span style={{ color: tier.color, fontSize: 12, fontWeight: 600, background: tier.color + '18', padding: '3px 8px', borderRadius: 8, flexShrink: 0 }}>
