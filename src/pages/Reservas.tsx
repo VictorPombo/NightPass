@@ -40,7 +40,7 @@ interface Reservation {
 
 const RDEF = (date: string) => ({ name: '', phone: '', people_count: '', location: '', amount_cents: '', expected_arrival: '', event_id: '', reservation_type: '', flyer_url: '', invite_message: '', reservation_date: date, payment_status: 'unpaid', deposit_cents: '', observations: '', list_type: 'normal', list_custom_value_cents: '', list_male_value_cents: '', list_female_value_cents: '' })
 const EMPTY_TYPE = { name: '', icon: '', color: '#3b82f6', sort_order: '0' }
-const ICON_OPTS = ['','','','','','','','','','️','','','','','','','️','','','']
+const ICON_OPTS: string[] = []
 const STATUS_COLOR: Record<string, string> = { pending: '#f59e0b', confirmed: '#10b981', arrived: '#3b82f6', cancelled: '#f87171' }
 const STATUS_LABEL: Record<string, string> = { pending: 'Pendente', confirmed: 'Confirmado', arrived: 'Chegou', cancelled: 'Cancelado' }
 const PAY_COLOR: Record<string, string> = { unpaid: '#f87171', partial: '#f59e0b', paid: '#10b981' }
@@ -866,7 +866,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
       <div style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>🪑 Reservas</h1>
+            <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}>Reservas</h1>
             <p style={{ color: C.mut, fontSize: 14 }}>
               {view === 'list'
                 ? `${resList.length} reserva${resList.length !== 1 ? 's' : ''} · ${viewPeriod === 'day' ? new Date(selDate + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }) : viewPeriod === 'week' ? 'esta semana' : new Date(selDate + 'T12:00').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`
@@ -877,7 +877,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             <button style={TAB(view === 'list')} onClick={() => setView('list')}> Reservas</button>
             <button style={TAB(view === 'settings')} onClick={() => setView('settings')}>️ Tipos</button>
             <button style={TAB(view === 'spaces')} onClick={() => setView('spaces')}>️ Espaços</button>
-            {view === 'list' && <Btn onClick={openNew} icon="">Nova Reserva</Btn>}
+            {view === 'list' && <Btn onClick={openNew} icon="+">Nova Reserva</Btn>}
           </div>
         </div>
 
@@ -896,11 +896,11 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   {res > 0 && (
                     <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                       <span style={{ background: isActive ? C.acc : C.mut + '33', color: isActive ? '#fff' : C.mut, borderRadius: 20, padding: '1px 7px', fontSize: 11, fontWeight: 800, lineHeight: 1.6 }}>
-                        {res}
+                        {res} res.
                       </span>
                       {people > 0 && (
                         <span style={{ background: isActive ? '#10b981' : '#10b98122', color: isActive ? '#fff' : '#10b981', borderRadius: 20, padding: '1px 7px', fontSize: 11, fontWeight: 800, lineHeight: 1.6 }}>
-                           {people}
+                          {people} pes.
                         </span>
                       )}
                     </span>
@@ -940,7 +940,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                           onError={e => { (e.target as HTMLImageElement).parentElement!.style.display = 'none' }} />
                       </div>
                     : <div style={{ width: 44, height: 44, borderRadius: 8, background: resType ? resType.color + '22' : C.card, border: `1px solid ${C.brd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
-                        {resType ? resType.icon : '🪑'}
+                        {resType ? resType.icon : ''}
                       </div>
                   }
 
@@ -1011,7 +1011,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   {/* Actions */}
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
                     {r.status === 'pending' && (
-                      <Btn onClick={() => markArrived(r.id)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}></Btn>
+                      <Btn onClick={() => markArrived(r.id)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44` }}>Check-in</Btn>
                     )}
                     {waHref && (
                       <Btn onClick={() => window.open(waHref, '_blank')} small style={{ background: '#25d36622', color: '#25d366', border: '1px solid #25d36644' }}>
@@ -1019,11 +1019,11 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                       </Btn>
                     )}
                     {r.token && r.phone && (
-                      <Btn onClick={() => sendListLink(r)} small variant="secondary"></Btn>
+                      <Btn onClick={() => sendListLink(r)} small variant="secondary">Link Lista</Btn>
                     )}
                     <Btn onClick={() => openGuestPanel(r)} small style={{ background: '#7c3aed22', color: '#a78bfa', border: '1px solid #7c3aed44' }}> Lista</Btn>
-                    <Btn onClick={() => editRes(r)} small variant="ghost">️</Btn>
-                    <Btn onClick={() => deleteRes(r.id)} small variant="danger"></Btn>
+                    <Btn onClick={() => editRes(r)} small variant="secondary">Editar</Btn>
+                    <Btn onClick={() => deleteRes(r.id)} small variant="danger">Excluir</Btn>
                   </div>
                 </div>
               )
@@ -1045,9 +1045,9 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: t.color + '22', border: `2px solid ${t.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>{t.icon}</div>
                 <span style={{ flex: 1, color: C.txt, fontWeight: 600, fontSize: 14 }}>{t.name}</span>
                 <button onClick={() => { setEditingType(t.id); setTypeForm({ name: t.name, icon: t.icon, color: t.color, sort_order: String(t.sort_order) }) }}
-                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>️</button>
+                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Editar</button>
                 <button onClick={() => deleteType(t.id)}
-                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}></button>
+                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Excluir</button>
               </div>
             ))}
           </Card>
@@ -1056,18 +1056,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
             <div style={{ color: C.sub, fontSize: 11, fontWeight: 700, marginBottom: 14, letterSpacing: '0.06em' }}>
               {editingType ? 'EDITAR TIPO' : 'ADICIONAR TIPO'}
             </div>
-            {/* Icon picker */}
-            <div style={{ marginBottom: 12 }}>
-              <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 6 }}>ÍCONE</label>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {ICON_OPTS.map(ic => (
-                  <button key={ic} onClick={() => setTypeForm(p => ({ ...p, icon: ic }))}
-                    style={{ width: 38, height: 38, borderRadius: 8, border: `2px solid ${typeForm.icon === ic ? C.acc : C.brd}`, background: typeForm.icon === ic ? C.acc + '22' : 'transparent', fontSize: 18, cursor: 'pointer' }}>
-                    {ic}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Removed icon picker */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, marginBottom: 10 }}>
               <div>
                 <label style={{ fontSize: 11, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>NOME *</label>
@@ -1120,9 +1109,9 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   </div>
                 </div>
                 <button onClick={() => { setEditingSpace(sp.id); setSpaceForm({ name: sp.name, capacity: sp.capacity ? String(sp.capacity) : '', price_cents: sp.price_cents > 0 ? String(sp.price_cents / 100) : '' }) }}
-                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>️</button>
+                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, padding: '4px 10px', color: C.mut, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Editar</button>
                 <button onClick={() => deleteSpace(sp.id)}
-                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}></button>
+                  style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, padding: '4px 10px', color: C.red, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Excluir</button>
               </div>
             ))}
           </Card>
@@ -1172,8 +1161,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
           </Card>
         </div>
       )}
-
-      {view === 'list' && <FAB onClick={openNew} icon="" title="Nova reserva" />}
+      {view === 'list' && <FAB onClick={openNew} icon="+" title="Nova reserva" />}
 
       {/* ── Painel lateral de convidados ── */}
       {guestPanel && (
@@ -1196,7 +1184,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                   <span style={{ color: C.txt, fontWeight: 800, fontSize: 16 }}>Lista de Convidados</span>
                 </div>
                 <button onClick={() => closeGuestPanel()}
-                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 16, cursor: 'pointer' }}></button>
+                  style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 16, cursor: 'pointer' }}>X</button>
               </div>
               <div style={{ fontSize: 13, color: C.acc, fontWeight: 700 }}>{guestPanel.name}</div>
               {guestPanel.reservation_date && (
@@ -1263,7 +1251,7 @@ export function ReservasPage({ house, initialNav, onNavConsumed }: Props) {
                               : <button onClick={() => supabase.from('reservation_guests').update({ confirmed: false }).eq('id', g.id).then(() => setGuestList(p => p.map(x => x.id === g.id ? { ...x, confirmed: false } : x)))}
                                   title="Remover confirmação" style={{ background: '#f59e0b22', border: '1px solid #f59e0b44', borderRadius: 8, padding: '4px 8px', color: '#f59e0b', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>↩</button>
                             }
-                            <button onClick={() => removeGuest(g.id)} style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, width: 28, height: 28, color: C.red, fontSize: 12, cursor: 'pointer' }}></button>
+                            <button onClick={() => removeGuest(g.id)} style={{ background: 'none', border: `1px solid ${C.red}44`, borderRadius: 8, width: 28, height: 28, color: C.red, fontSize: 12, cursor: 'pointer' }}>X</button>
                           </div>
                         )}
                       </div>

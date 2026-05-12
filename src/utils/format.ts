@@ -1,6 +1,10 @@
 /** Format date string to pt-BR */
 export function fd(d?: string | null): string {
-  return d ? new Date(d + 'T12:00:00').toLocaleDateString('pt-BR') : '—'
+  if (!d) return '—'
+  const dateStr = d.includes('T') ? d : d + 'T12:00:00'
+  const dateObj = new Date(dateStr)
+  if (isNaN(dateObj.getTime())) return 'Data Inválida'
+  return dateObj.toLocaleDateString('pt-BR')
 }
 
 /** Format CPF: 000.000.000-00 */
@@ -26,7 +30,9 @@ export function fmtCurrency(cents: number): string {
 /** Format date to relative label */
 export function relativeDate(dateStr: string): string {
   const today = new Date()
-  const d = new Date(dateStr + 'T12:00:00')
+  const str = dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00'
+  const d = new Date(str)
+  if (isNaN(d.getTime())) return 'Data Inválida'
   const diff = Math.round((d.getTime() - today.getTime()) / 86400000)
   if (diff === 0) return 'Hoje!'
   if (diff === 1) return 'Amanhã!'

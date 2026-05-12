@@ -23,6 +23,30 @@ export function ClientsPage({ house, user }: Props) {
   const [editing, setEditing] = useState<Client | null>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
   const [ldg, setLdg] = useState(true)
+  const [uploading, setUploading] = useState(false)
+
+  // ── Handlers de Upload ──
+  async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!house || !e.target.files || e.target.files.length === 0) return
+    const file = e.target.files[0]
+    setUploading(true)
+    try {
+      const ext = file.name.split('.').pop()
+      const path = `clients/${house.id}/${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('event-flyers').upload(path, file, { upsert: true })
+      if (error) {
+        st2('Erro no upload: ' + error.message, 'error')
+        return
+      }
+      const { data } = supabase.storage.from('event-flyers').getPublicUrl(path)
+      setForm(p => ({ ...p, photo_url: data.publicUrl }))
+      st2('Foto enviada com sucesso!', 'success')
+    } catch (err: any) {
+      st2('Erro ao processar arquivo.', 'error')
+    } finally {
+      setUploading(false)
+    }
+  }
   const [page, setPage] = useState(0)
   const [total, setTotal] = useState(0)
   const [ciCounts, setCiCounts] = useState<Record<string, number>>({})
@@ -175,8 +199,24 @@ export function ClientsPage({ house, user }: Props) {
                 : ''}
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Foto (URL — opcional)</label>
-              <input {...inp()} value={(form as any).photo_url} onChange={e => setForm(p => ({ ...p, photo_url: e.target.value }))} placeholder="https://..." />
+              <label style={{ fontSize: 12, color: C.mut, fontWeight: 600, display: 'block', marginBottom: 4 }}>Foto do Cliente</label>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="client-photo-upload"
+                  style={{ display: 'none' }}
+                  onChange={uploadPhoto}
+                />
+                <button
+                  onClick={() => document.getElementById('client-photo-upload')?.click()}
+                  disabled={uploading}
+                  style={{ background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 12px', color: C.txt, fontSize: 13, cursor: uploading ? 'wait' : 'pointer' }}
+                >
+                  {uploading ? 'Enviando...' : 'Escolher Arquivo'}
+                </button>
+                {form.photo_url && <span style={{ fontSize: 12, color: C.grn }}>✓ Arquivo anexado</span>}
+              </div>
             </div>
           </div>
           <div><label style={{ fontSize: 12, color: C.mut, fontWeight: 600 }}>Nome Completo *</label>
@@ -204,7 +244,7 @@ export function ClientsPage({ house, user }: Props) {
           <h1 style={{ fontSize: 26, fontWeight: 900, color: C.txt, marginBottom: 4 }}> Clientes</h1>
           <p style={{ color: C.mut, fontSize: 14 }}>{total.toLocaleString('pt-BR')} clientes cadastrados</p>
         </div>
-        {tab === 'clientes' && <Btn onClick={openNew} icon="">Novo Cliente</Btn>}
+        {tab === 'clientes' && <Btn onClick={openNew} icon="+">Novo Cliente</Btn>}
       </div>
 
       {/* Tabs */}
@@ -276,7 +316,7 @@ export function ClientsPage({ house, user }: Props) {
               </div>
             )}
           </Card>
-          <FAB onClick={openNew} icon="" title="Novo cliente" />
+          <FAB onClick={openNew} icon="+" title="Novo cliente" />
         </>
       )}
 

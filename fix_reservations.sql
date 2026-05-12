@@ -1,0 +1,12 @@
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS amount_cents int DEFAULT 0;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS deposit_cents int DEFAULT 0;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS payment_status text DEFAULT 'unpaid';
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS reservation_type text;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS flyer_url text;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS observations text;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS invite_message text;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS list_type text DEFAULT 'normal';
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS list_custom_value_cents int DEFAULT 0;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS list_male_value_cents int DEFAULT 0;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS list_female_value_cents int DEFAULT 0;
+NOTIFY pgrst, 'reload schema';

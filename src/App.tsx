@@ -20,6 +20,7 @@ import { ListaPublicPage } from './pages/ListaPublic'
 import { PromoterPortal } from './pages/PromoterPortal'
 import { AniversariantePortal, NiverGuestPage } from './pages/AniversariantePortal'
 import { LoginPage } from './pages/Login'
+import { InvitesPage } from './pages/Invites'
 
 export default function App() {
   // Public event page: /e/[eventId]
@@ -86,8 +87,12 @@ export default function App() {
     return <LoginPage onLogin={setSession} />
   }
 
+  if (!session.house) {
+    return <InvitesPage user={session.user} onHouseSelected={() => window.location.reload()} />
+  }
+
   const pages: Record<PageId, React.ReactNode> = {
-    dashboard: <DashboardPage house={session.house} user={session.user} role={session.role} />,
+    dashboard: <DashboardPage house={session.house} user={session.user} role={session.role} setActive={setActive} />,
     checkin:   <CheckinPage house={session.house} user={session.user} role={session.role} />,
     clients:   <ClientsPage house={session.house} user={session.user} role={session.role} />,
     events:    <EventsPage house={session.house} onGoToReservas={(date, eventId) => { setReservaNav({ date, eventId }); setActive('reservas') }} />,

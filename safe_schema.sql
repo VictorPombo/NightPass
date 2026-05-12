@@ -19,25 +19,23 @@ END$$;
 
 -- 2. TABELAS CORE
 
-CREATE TABLE houses (
+CREATE TABLE IF NOT EXISTS houses (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   name text NOT NULL,
   slug text UNIQUE,
-  house_code text UNIQUE,
   updated_at timestamptz DEFAULT now(),
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE profiles (
+CREATE TABLE IF NOT EXISTS profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email text NOT NULL,
   full_name text,
-  user_code text UNIQUE,
   updated_at timestamptz DEFAULT now(),
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE house_users (
+CREATE TABLE IF NOT EXISTS house_users (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   user_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
@@ -47,17 +45,7 @@ CREATE TABLE house_users (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE house_invites (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
-  user_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
-  role text NOT NULL DEFAULT 'manager',
-  status text DEFAULT 'pending',
-  updated_at timestamptz DEFAULT now(),
-  created_at timestamptz DEFAULT now()
-);
-
-CREATE TABLE house_spaces (
+CREATE TABLE IF NOT EXISTS house_spaces (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -68,7 +56,7 @@ CREATE TABLE house_spaces (
 
 -- 3. CLIENTES
 
-CREATE TABLE clients (
+CREATE TABLE IF NOT EXISTS clients (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   full_name text NOT NULL,
@@ -86,7 +74,7 @@ CREATE TABLE clients (
 
 -- 4. EVENTOS E PORTARIA
 
-CREATE TABLE events (
+CREATE TABLE IF NOT EXISTS events (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -115,7 +103,7 @@ CREATE TABLE events (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE checkin_types (
+CREATE TABLE IF NOT EXISTS checkin_types (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -125,7 +113,7 @@ CREATE TABLE checkin_types (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE checkins (
+CREATE TABLE IF NOT EXISTS checkins (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   client_id uuid REFERENCES clients(id) ON DELETE SET NULL,
@@ -141,7 +129,7 @@ CREATE TABLE checkins (
 
 -- 5. RESERVAS
 
-CREATE TABLE reservation_types (
+CREATE TABLE IF NOT EXISTS reservation_types (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -152,7 +140,7 @@ CREATE TABLE reservation_types (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE reservations (
+CREATE TABLE IF NOT EXISTS reservations (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   event_id uuid REFERENCES events(id) ON DELETE SET NULL,
@@ -169,7 +157,7 @@ CREATE TABLE reservations (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE reservation_items (
+CREATE TABLE IF NOT EXISTS reservation_items (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   reservation_id uuid REFERENCES reservations(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -180,7 +168,7 @@ CREATE TABLE reservation_items (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE reservation_guests (
+CREATE TABLE IF NOT EXISTS reservation_guests (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   reservation_id uuid REFERENCES reservations(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -191,7 +179,7 @@ CREATE TABLE reservation_guests (
 
 -- 6. ANIVERSÁRIOS
 
-CREATE TABLE birthday_lists (
+CREATE TABLE IF NOT EXISTS birthday_lists (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   event_id uuid REFERENCES events(id) ON DELETE SET NULL,
@@ -204,7 +192,7 @@ CREATE TABLE birthday_lists (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE birthday_list_guests (
+CREATE TABLE IF NOT EXISTS birthday_list_guests (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   list_id uuid REFERENCES birthday_lists(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -215,7 +203,7 @@ CREATE TABLE birthday_list_guests (
 
 -- 7. FREELANCERS / STAFF
 
-CREATE TABLE freelancers (
+CREATE TABLE IF NOT EXISTS freelancers (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   full_name text NOT NULL,
@@ -230,7 +218,7 @@ CREATE TABLE freelancers (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE event_freelancers (
+CREATE TABLE IF NOT EXISTS event_freelancers (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   event_id uuid REFERENCES events(id) ON DELETE CASCADE,
   freelancer_id uuid REFERENCES freelancers(id) ON DELETE CASCADE,
@@ -239,7 +227,7 @@ CREATE TABLE event_freelancers (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE event_tasks (
+CREATE TABLE IF NOT EXISTS event_tasks (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   event_id uuid REFERENCES events(id) ON DELETE CASCADE,
   title text NOT NULL,
@@ -249,7 +237,7 @@ CREATE TABLE event_tasks (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE event_checklist_items (
+CREATE TABLE IF NOT EXISTS event_checklist_items (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   event_id uuid REFERENCES events(id) ON DELETE CASCADE,
   item text NOT NULL,
@@ -260,7 +248,7 @@ CREATE TABLE event_checklist_items (
 
 -- 8. PROMOTERS
 
-CREATE TABLE promoters (
+CREATE TABLE IF NOT EXISTS promoters (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   user_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -270,7 +258,7 @@ CREATE TABLE promoters (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE promoter_lists (
+CREATE TABLE IF NOT EXISTS promoter_lists (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   promoter_id uuid REFERENCES promoters(id) ON DELETE CASCADE,
@@ -281,7 +269,7 @@ CREATE TABLE promoter_lists (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE promoter_tokens (
+CREATE TABLE IF NOT EXISTS promoter_tokens (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   promoter_id uuid REFERENCES promoters(id) ON DELETE CASCADE,
@@ -290,7 +278,7 @@ CREATE TABLE promoter_tokens (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE promoter_list_guests (
+CREATE TABLE IF NOT EXISTS promoter_list_guests (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   list_id uuid REFERENCES promoter_lists(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -301,7 +289,7 @@ CREATE TABLE promoter_list_guests (
 
 -- 9. INGRESSOS (TICKETS)
 
-CREATE TABLE ticket_batches (
+CREATE TABLE IF NOT EXISTS ticket_batches (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   event_id uuid REFERENCES events(id) ON DELETE CASCADE,
@@ -316,7 +304,7 @@ CREATE TABLE ticket_batches (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE ticket_orders (
+CREATE TABLE IF NOT EXISTS ticket_orders (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   event_id uuid REFERENCES events(id) ON DELETE CASCADE,
@@ -335,7 +323,7 @@ CREATE TABLE ticket_orders (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE tickets (
+CREATE TABLE IF NOT EXISTS tickets (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   event_id uuid REFERENCES events(id) ON DELETE CASCADE,
@@ -350,7 +338,7 @@ CREATE TABLE tickets (
 
 -- 10. WHATSAPP & INTEGRACOES
 
-CREATE TABLE whatsapp_config (
+CREATE TABLE IF NOT EXISTS whatsapp_config (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   instance_name text NOT NULL,
@@ -364,7 +352,7 @@ CREATE TABLE whatsapp_config (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE whatsapp_templates (
+CREATE TABLE IF NOT EXISTS whatsapp_templates (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   name text NOT NULL,
@@ -374,7 +362,7 @@ CREATE TABLE whatsapp_templates (
   created_at timestamptz DEFAULT now()
 );
 
-CREATE TABLE whatsapp_logs (
+CREATE TABLE IF NOT EXISTS whatsapp_logs (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   house_id uuid REFERENCES houses(id) ON DELETE CASCADE,
   phone text NOT NULL,
@@ -440,7 +428,6 @@ ALTER TABLE tickets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_config ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_logs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE house_invites ENABLE ROW LEVEL SECURITY;
 
 -- Políticas de Acesso Total para Usuários Autenticados
 -- Permite que usuários logados gerenciem tudo
@@ -472,7 +459,6 @@ CREATE POLICY "Full Access Authenticated" ON tickets FOR ALL TO authenticated US
 CREATE POLICY "Full Access Authenticated" ON whatsapp_config FOR ALL TO authenticated USING (true);
 CREATE POLICY "Full Access Authenticated" ON whatsapp_templates FOR ALL TO authenticated USING (true);
 CREATE POLICY "Full Access Authenticated" ON whatsapp_logs FOR ALL TO authenticated USING (true);
-CREATE POLICY "Full Access Authenticated" ON house_invites FOR ALL TO authenticated USING (true);
 
 -- Políticas de Leitura e Escrita Pública (Anon) para Portais e Links
 -- Visitantes precisam poder ver eventos, lotes de ingressos e criar pedidos

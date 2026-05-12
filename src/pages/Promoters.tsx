@@ -392,7 +392,7 @@ export function PromotersPage({ house }: Props) {
       {/* ── Header ── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}> Promoters</h1>
-        <Btn onClick={openNew} icon="">Novo Promoter</Btn>
+        <Btn onClick={openNew} icon="+">Novo Promoter</Btn>
       </div>
 
       <Card>
@@ -432,12 +432,12 @@ export function PromotersPage({ house }: Props) {
                 {pr.phone && (
                   <a href={`https://wa.me/55${cn(pr.phone)}`} target="_blank" rel="noreferrer"
                     style={{ display: 'inline-flex', alignItems: 'center', background: '#25D36622', color: '#25D366', border: '1px solid #25D36644', borderRadius: 8, padding: '6px 10px', fontSize: 12, textDecoration: 'none', fontWeight: 700 }}>
-                    
+                    WhatsApp
                   </a>
                 )}
-                <Btn onClick={() => openEdit(pr)} small variant="ghost">️</Btn>
+                <Btn onClick={() => openEdit(pr)} small variant="ghost">Editar</Btn>
                 <Btn onClick={() => loadPromoterLists(pr)} small variant="secondary"> Listas</Btn>
-                <Btn onClick={() => del(pr.id)} small variant="danger">️</Btn>
+                <Btn onClick={() => del(pr.id)} small variant="danger">Excluir</Btn>
               </div>
             </div>
           ))

@@ -14,13 +14,16 @@ export function useSession() {
         supabase.from('profiles').select('*').eq('id', uid).single(),
         supabase.from('house_users').select('*,houses(*)').eq('user_id', uid).eq('is_active', true).single()
       ])
-      if (houseRes.data) {
-        setSession({
-          user: { id: uid, email: data.session.user.email ?? '', full_name: profRes.data?.full_name },
-          house: houseRes.data.houses as any,
-          role: houseRes.data.role,
-        })
-      }
+      setSession({
+        user: { 
+          id: uid, 
+          email: data.session.user.email ?? '', 
+          full_name: profRes.data?.full_name,
+          user_code: profRes.data?.user_code // we need to read user_code too
+        } as any,
+        house: houseRes.data ? (houseRes.data.houses as any) : null,
+        role: houseRes.data ? houseRes.data.role : null,
+      })
       setChecked(true)
     })
   }, [])

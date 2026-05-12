@@ -6,7 +6,7 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function createAccess() {
-  const email = 'victordeassis2010@hotmail.com'
+  const email = 'teste@gmail.com'
   const password = '123456'
 
   console.log('Criando usuário...')

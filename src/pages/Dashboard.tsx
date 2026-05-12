@@ -11,6 +11,7 @@ interface Props {
   house: House
   user: { id: string; email: string }
   role: string
+  setActive: (page: any) => void
 }
 
 interface Stats {
@@ -46,13 +47,16 @@ const KPIS = (s: Stats) => [
   { icon: <i className="bi bi-people" />, label: 'Clientes', value: s.clients.toLocaleString('pt-BR'), color: C.acc },
   { icon: <i className="bi bi-calendar2-event" />, label: 'Eventos Ativos', value: s.events.toLocaleString('pt-BR'), color: C.mut },
   { icon: <i className="bi bi-check-circle" />, label: 'Check-ins Hoje', value: s.todayCount.toLocaleString('pt-BR'), color: C.grn },
-  { icon: <i className="bi bi-cash-stack" />, label: 'Receita Hoje', value: fmtCurrency(s.todayRev), color: C.gold },
-  { icon: <i className="bi bi-bookmark-check" />, label: 'Reservas Hoje', value: s.reservations.toLocaleString('pt-BR'), color: '#a78bfa' },
+  { icon: <i className="bi bi-people" />, label: 'Clientes', value: s.clients.toLocaleString('pt-BR'), color: C.acc, page: 'clients' },
+  { icon: <i className="bi bi-calendar2-event" />, label: 'Eventos Ativos', value: s.events.toLocaleString('pt-BR'), color: C.mut, page: 'events' },
+  { icon: <i className="bi bi-check-circle" />, label: 'Check-ins Hoje', value: s.todayCount.toLocaleString('pt-BR'), color: C.grn, page: 'checkin' },
+  { icon: <i className="bi bi-cash-stack" />, label: 'Receita Hoje', value: fmtCurrency(s.todayRev), color: C.gold, page: 'reports' },
+  { icon: <i className="bi bi-bookmark-check" />, label: 'Reservas Hoje', value: s.reservations.toLocaleString('pt-BR'), color: '#a78bfa', page: 'reservas' },
 ]
 
 const PAY_METHODS = ['pix', 'cartao', 'dinheiro', 'cortesia', 'credito', 'debito']
 
-export function DashboardPage({ house, user }: Props) {
+export function DashboardPage({ house, user, setActive }: Props) {
   const [stats, setStats] = useState<Stats>({ clients: 0, events: 0, todayCount: 0, todayRev: 0, reservations: 0 })
   const [_hourly, setHourly] = useState<HourData[]>([])
   const [payStats, setPayStats] = useState<PayStat[]>([])
@@ -248,7 +252,8 @@ export function DashboardPage({ house, user }: Props) {
       {/* KPI Grid */}
       <div className="kpi-grid-r" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginBottom: 24 }}>
         {kpis.map((kpi, i) => (
-          <div key={i} className="card-3d" style={{
+          <div key={i} className="card-3d" onClick={() => setActive(kpi.page)} style={{
+            cursor: 'pointer',
             background: 'linear-gradient(160deg,rgba(20,28,46,0.98),rgba(10,14,26,0.99))',
             backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
             border: '1px solid rgba(59,130,246,0.12)', borderTop: `3px solid ${kpi.color}`,

@@ -196,7 +196,7 @@ export function AniversariosPage({ house }: Props) {
             style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 10, padding: '8px 12px', color: C.txt, fontSize: 14, minHeight: 40, fontFamily: 'inherit' }}>
             {['7', '14', '30', '60', '90'].map(d => <option key={d} value={d}>{d} dias</option>)}
           </select>
-          <Btn onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="">Nova Lista</Btn>
+          <Btn onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="+">Nova Lista</Btn>
         </div>
       </div>
 
@@ -252,7 +252,7 @@ export function AniversariosPage({ house }: Props) {
         </div>
       }
 
-      <FAB onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="" title="Nova lista" />
+      <FAB onClick={() => { setBdEditing(null); setBdForm({ birthday_person_name: '', birthday_date: '', phone: '', status: 'pendente', event_id: '' }); setBdModal(true) }} icon="+" title="Nova lista" />
     </div>
   )
 }

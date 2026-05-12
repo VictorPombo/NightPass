@@ -176,6 +176,29 @@ export function FreelancersPage({ house }: Props) {
                   </button>
                 )
               })}
+              {form.work_types.filter(wt => !WORK_MAP[wt]).map(wt => (
+                <button key={wt} onClick={() => toggleWorkType(wt)}
+                  style={{
+                    background: C.mut + '22', color: C.mut, border: `1px solid ${C.mut}`,
+                    borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer'
+                  }}>
+                  {wt}
+                </button>
+              ))}
+              <input
+                style={{ background: C.bg, border: `1px dashed ${C.brd}`, borderRadius: 8, padding: '6px 10px', color: C.txt, fontSize: 12, width: 140 }}
+                placeholder="+ Função (Enter)"
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const v = e.currentTarget.value.trim()
+                    if (v && !form.work_types.includes(v as any)) {
+                      setForm(p => ({ ...p, work_types: [...p.work_types, v as any] }))
+                    }
+                    e.currentTarget.value = ''
+                  }
+                }}
+              />
             </div>
           </div>
 
@@ -207,7 +230,7 @@ export function FreelancersPage({ house }: Props) {
           <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}> Freelancers</h1>
           <div style={{ color: C.mut, fontSize: 13, marginTop: 4 }}>{freelancers.filter(f => f.status === 'ativo').length} ativos</div>
         </div>
-        <Btn onClick={openNew} icon="">Novo Freelancer</Btn>
+        <Btn onClick={openNew} icon="+">Novo Freelancer</Btn>
       </div>
 
       {/* Filters */}
@@ -251,7 +274,7 @@ export function FreelancersPage({ house }: Props) {
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 4 }}>
                   {(fr.work_types ?? []).map(wt => {
-                    const meta = WORK_MAP[wt]
+                    const meta = WORK_MAP[wt] || { label: wt, color: C.mut, icon: '' }
                     if (!meta) return null
                     return (
                       <span key={wt} style={{ background: meta.color + '18', color: meta.color, border: `1px solid ${meta.color}44`, borderRadius: 5, padding: '1px 6px', fontSize: 10, fontWeight: 600 }}>
@@ -287,7 +310,7 @@ export function FreelancersPage({ house }: Props) {
         }
       </Card>
 
-      <FAB onClick={openNew} icon="" title="Novo freelancer" />
+      <FAB onClick={openNew} icon="+" title="Novo freelancer" />
     </div>
   )
 }

@@ -1,0 +1,23 @@
+Retrieving project…
+Deploying marmo-hub/nightpass-app
+Uploading [--------------------] (0.0B/56B)
+Uploading [====================] (56.0B/56B)
+Inspect: https://vercel.com/marmo-hub/nightpass-app/GH1wZqQyLu251VCq5mdgtjAMwAxQ [3s]
+Production: https://nightpass-6qiqvnyav-marmo-hub.vercel.app [3s]
+https://nightpass-6qiqvnyav-marmo-hub.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1 (Turbo Build Machine)
+Building: Build machine configuration: 30 cores, 60 GB
+Building: Retrieving list of deployment files...
+Building: Previous build caches not available.
+Building: Downloading 82 deployment files...
+Building: Running "vercel build"
+Building: Vercel CLI 51.6.1
+Building: Installing dependencies...
+Building: added 218 packages in 3s
+Building: 27 packages are looking for funding
+Building: run `npm fund` for details
+Building: Running "npm run build"
+Building: > nightpass-app@2.0.0 build
+Building: > tsc -b && vite build && node copy-static.js
+Error: Command "npm run build" exited with 2

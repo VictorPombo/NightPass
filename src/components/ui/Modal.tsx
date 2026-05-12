@@ -84,10 +84,8 @@ export function Modal({ open, onClose, title, wide, maxWidth, fullscreen, childr
         className="modal-inner"
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: 'rgba(12,17,32,0.96)',
-          backdropFilter: 'blur(28px)',
-          WebkitBackdropFilter: 'blur(28px)',
-          border: '1px solid rgba(59,130,246,0.18)',
+          background: C.bg2,
+          border: `1px solid ${C.brd}`,
           borderRadius: fullscreen ? 0 : 24,
           width: fullscreen ? '100vw' : '100%',
           maxWidth: fullscreen ? '100vw' : (maxWidth ?? (wide ? 720 : 480)),

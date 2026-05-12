@@ -239,7 +239,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
     if (!ph) { alert('Freelancer sem telefone cadastrado'); return }
     const lines = [
       `Olá ${frData?.full_name ?? ''}! `,
-      prodEv ? `Temos uma vaga para você no evento *${prodEv.name}* — ${new Date(prodEv.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}` : '',
+      prodEv ? `Temos uma vaga para você no evento *${prodEv.name}* — ${fd(prodEv.event_date)}` : '',
       `Confirme sua disponibilidade respondendo esta mensagem.`,
     ].filter(Boolean).join('\n')
     window.open(`https://wa.me/55${ph}?text=${encodeURIComponent(lines)}`, '_blank')
@@ -291,7 +291,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       @media print { body { padding: 16px; } }
     </style></head><body>
     <h1> ${ev.name}</h1>
-    <div class="sub"> ${new Date(ev.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })} &nbsp;·&nbsp; ${done}/${total} itens concluídos</div>
+    <div class="sub"> ${fd(ev.event_date)} &nbsp;·&nbsp; ${done}/${total} itens concluídos</div>
     <div class="progress"><div class="progress-bar"></div></div>
     ${Object.entries(grouped).map(([cat, items]) => `
       <h2>${cat}</h2>
@@ -810,7 +810,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               {/* Tabs */}
               <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
                 {(['tasks', 'layout', 'budget'] as const).map(tab => {
-                  const labels = { tasks: ` Tarefas (${prodTasks.length})`, layout: `🪑 Layout (${prodRes.length})`, budget: ' Budget' }
+                  const labels = { tasks: ` Tarefas (${prodTasks.length})`, layout: ` Layout (${prodRes.length})`, budget: ' Budget' }
                   return (
                     <button key={tab} onClick={() => setProdTab(tab as typeof prodTab)} style={{ padding: '4px 10px', borderRadius: 6, border: `1px solid ${prodTab === tab ? '#f59e0b' : C.brd}`, background: prodTab === tab ? '#f59e0b22' : 'transparent', color: prodTab === tab ? '#f59e0b' : C.mut, fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                       {labels[tab]}
@@ -962,7 +962,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       </Modal>
 
       {/* Reservations modal */}
-      <Modal open={!!resEv} title={`🪑 Reservas — ${resEv?.name ?? ''}`} onClose={() => { setResEv(null); setResList([]) }}>
+      <Modal open={!!resEv} title={` Reservas — ${resEv?.name ?? ''}`} onClose={() => { setResEv(null); setResList([]) }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ color: C.mut, fontSize: 13 }}>{resList.length} reservas</span>
           <Btn onClick={() => { setResAddOpen(true); setResEdit(null); setResForm(RDEF2) }} small> Nova</Btn>
@@ -1220,28 +1220,48 @@ export function EventsPage({ house, onGoToReservas }: Props) {
           const resItemsTotal = budgetResItems.reduce((s, i) => s + (i.quantity || 1) * (i.unit_cost_cents || 0), 0)
           const total = cache + consumacao + producao + freelancerTotal + promoterTotal + resItemsTotal
 
-          const row = (icon: string, label: string, value: number, color: string, sub?: string) => (
-            <div style={{ display: 'flex', alignItems: 'center', padding: '11px 0', borderBottom: `1px solid ${C.brd}` }}>
-              <div style={{ fontSize: 20, width: 34 }}>{icon}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ color: C.txt, fontSize: 14, fontWeight: 600 }}>{label}</div>
-                {sub && <div style={{ color: C.mut, fontSize: 11, marginTop: 2 }}>{sub}</div>}
+          const editRow = (icon: string, label: string, field: 'artist_fee_cents' | 'consumption_cents' | 'production_cost_cents', color: string, sub?: string) => {
+            const val = (budgetEv as any)[field] ?? 0
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', padding: '11px 0', borderBottom: `1px solid ${C.brd}` }}>
+                <div style={{ fontSize: 20, width: 34 }}>{icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: C.txt, fontSize: 14, fontWeight: 600 }}>{label}</div>
+                  {sub && <div style={{ color: C.mut, fontSize: 11, marginTop: 2 }}>{sub}</div>}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ color: C.mut, fontSize: 13, fontWeight: 600 }}>R$</span>
+                  <input
+                    type="number" step="0.01" min="0"
+                    style={{ background: 'transparent', border: 'none', color, fontWeight: 700, fontSize: 15, width: 80, textAlign: 'right', outline: 'none', borderBottom: `1px dashed ${color}55`, padding: 0 }}
+                    value={val > 0 ? (val / 100).toFixed(2) : ''}
+                    placeholder="0,00"
+                    onChange={e => {
+                      const num = Math.round((parseFloat(e.target.value) || 0) * 100)
+                      setBudgetEv(p => p ? { ...p, [field]: num } : p)
+                      setEvents(prev => prev.map(ev => ev.id === budgetEv.id ? { ...ev, [field]: num } : ev))
+                    }}
+                    onBlur={async e => {
+                      const num = Math.round((parseFloat(e.target.value) || 0) * 100)
+                      await supabase.from('events').update({ [field]: num }).eq('id', budgetEv.id)
+                    }}
+                  />
+                </div>
               </div>
-              <div style={{ color, fontWeight: 700, fontSize: 15 }}>{fmtCurrency(value)}</div>
-            </div>
-          )
+            )
+          }
 
           return (
             <div>
               {/* Artista */}
               {(budgetEv as any)?.artist_fee_type === 'percent'
-                ? row('', `Cachê Variável — ${(budgetEv as any).artist_fee_percent}% da portaria`, cache, C.gold, cache > 0 ? `Mínimo garantido: ${fmtCurrency(cache)}` : 'A calcular após o evento')
+                ? editRow('', `Cachê Variável — ${(budgetEv as any).artist_fee_percent}% da portaria`, 'artist_fee_cents', C.gold, cache > 0 ? `Mínimo garantido: ${fmtCurrency(cache)}` : 'A calcular após o evento')
                 : (budgetEv as any)?.artist_fee_type === 'tbd'
-                  ? row('', 'Cachê — A combinar', 0, C.gold, 'Valor não definido')
-                  : row('', 'Cachê do Artista', cache, C.gold)}
+                  ? editRow('', 'Cachê — A combinar', 'artist_fee_cents', C.gold, 'Valor não definido')
+                  : editRow('', 'Cachê do Artista', 'artist_fee_cents', C.gold)}
 
-              {row('', 'Consumação', consumacao, '#f59e0b')}
-              {row('', 'Gastos de Produção', producao, '#8b5cf6')}
+              {editRow('', 'Consumação', 'consumption_cents', '#f59e0b')}
+              {editRow('', 'Gastos de Produção', 'production_cost_cents', '#8b5cf6')}
 
               {/* Freelancers */}
               <div style={{ borderBottom: `1px solid ${C.brd}` }}>
@@ -1292,7 +1312,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
               {budgetResItems.length > 0 && (
                 <div style={{ borderBottom: `1px solid ${C.brd}` }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '11px 0 6px' }}>
-                    <div style={{ fontSize: 20, width: 34 }}>🪑</div>
+                    <div style={{ fontSize: 20, width: 34 }}></div>
                     <div style={{ flex: 1, color: C.txt, fontSize: 14, fontWeight: 600 }}>Reservas — Opcionais</div>
                     <div style={{ color: C.gold, fontWeight: 700, fontSize: 15 }}>{fmtCurrency(resItemsTotal)}</div>
                   </div>
@@ -1321,7 +1341,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <h1 style={{ color: C.txt, fontSize: 28, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}> Eventos</h1>
-        <Btn onClick={openNew} icon="">Novo Evento</Btn>
+        <Btn onClick={openNew} icon="+">Novo Evento</Btn>
       </div>
 
       {/* Calendar strip */}
@@ -1376,8 +1396,8 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3, flexShrink: 0, marginLeft: 8 }}>
                   <Pill color={evStatusColor(ev.status ?? 'ativo')} small>{ev.status ?? 'ativo'}</Pill>
                   <div style={{ display: 'flex', gap: 4 }}>
-                    {!!ev.checkinCount && <span style={{ background: C.grn + '22', color: C.grn, borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.checkinCount} </span>}
-                    {!!ev.resCount && <span style={{ background: '#a78bfa22', color: '#a78bfa', borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.resCount} 🪑</span>}
+                    {!!ev.checkinCount && <span style={{ background: C.grn + '22', color: C.grn, borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.checkinCount} confirmados</span>}
+                    {!!ev.resCount && <span style={{ background: '#a78bfa22', color: '#a78bfa', borderRadius: 8, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{ev.resCount} reservas</span>}
                   </div>
                 </div>
               </div>
@@ -1393,17 +1413,17 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                     : ev.artist_fee_cents ? <span style={{ color: C.gold }}> {fmtCurrency(ev.artist_fee_cents)}</span> : null}
               </div>
               {/* Botões — 2 linhas organizadas */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
-                <Btn onClick={() => openEdit(ev)} small variant="ghost" style={{ justifyContent: 'center' }}>️ Editar</Btn>
-                <Btn onClick={() => loadGuests(ev)} small variant="secondary" style={{ justifyContent: 'center' }}> Lista</Btn>
-                <Btn onClick={() => onGoToReservas ? onGoToReservas(ev.event_date, ev.id) : openRes(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>🪑 Reservas</Btn>
-                <Btn onClick={() => loadEvFreelancers(ev)} small variant="secondary" style={{ justifyContent: 'center' }}> Freelancers</Btn>
-                <Btn onClick={() => openTickets(ev)} small style={{ background: C.acc + '22', color: C.acc, border: `1px solid ${C.acc}44`, justifyContent: 'center' }}>️ Ingressos</Btn>
-                <Btn onClick={() => openBudget(ev)} small style={{ background: C.grn + '22', color: C.grn, border: `1px solid ${C.grn}44`, justifyContent: 'center' }}> Budget</Btn>
-                <Btn onClick={() => openProd(ev)} small style={{ background: '#f59e0b22', color: '#f59e0b', border: '1px solid #f59e0b44', justifyContent: 'center' }}> Produção</Btn>
-                <Btn onClick={() => openChecklist(ev)} small style={{ background: '#7c3aed22', color: '#a78bfa', border: '1px solid #7c3aed44', justifyContent: 'center' }}> Checklist</Btn>
-                <Btn onClick={() => cancelEv(ev)} small variant={ev.status === 'cancelado' ? 'secondary' : 'danger'} style={{ justifyContent: 'center' }}>
-                  {ev.status === 'cancelado' ? ' Reativar' : ' Cancelar'}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                <Btn onClick={() => openEdit(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Editar</Btn>
+                <Btn onClick={() => loadGuests(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Lista</Btn>
+                <Btn onClick={() => onGoToReservas ? onGoToReservas(ev.event_date, ev.id) : openRes(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Reservas</Btn>
+                <Btn onClick={() => loadEvFreelancers(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Freelancers</Btn>
+                <Btn onClick={() => openTickets(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Ingressos</Btn>
+                <Btn onClick={() => openBudget(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Budget</Btn>
+                <Btn onClick={() => openProd(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Produção</Btn>
+                <Btn onClick={() => openChecklist(ev)} small variant="secondary" style={{ justifyContent: 'center' }}>Checklist</Btn>
+                <Btn onClick={() => cancelEv(ev)} small variant={ev.status === 'cancelado' ? 'secondary' : 'danger'} style={{ justifyContent: 'center', gridColumn: 'span 2', marginTop: 4 }}>
+                  {ev.status === 'cancelado' ? 'Reativar Evento' : 'Cancelar Evento'}
                 </Btn>
               </div>
             </Card>
@@ -1415,7 +1435,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       {prodEv && (
         <>
           <div onClick={() => setProdEv(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 1000 }} />
-          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: '100%', maxWidth: 680, background: C.card, borderLeft: `1px solid ${C.brd}`, zIndex: 1001, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: '100%', maxWidth: 680, background: C.bg2, borderLeft: `1px solid ${C.brd}`, zIndex: 1001, display: 'flex', flexDirection: 'column' }}>
 
             {/* Header */}
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.brd}`, flexShrink: 0 }}>
@@ -1424,11 +1444,11 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   <div style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 2 }}> PRODUÇÃO</div>
                   <div style={{ fontSize: 17, fontWeight: 900, color: C.txt }}>{prodEv.name}</div>
                   <div style={{ fontSize: 12, color: C.mut, marginTop: 2 }}>
-                    {new Date(prodEv.event_date + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}
+                    {fd(prodEv.event_date)}
                     {prodEv.start_time ? ` · ${prodEv.start_time.slice(0,5)}` : ''}
                   </div>
                 </div>
-                <button onClick={() => setProdEv(null)} style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 18, cursor: 'pointer' }}></button>
+                <button onClick={() => setProdEv(null)} style={{ background: 'none', border: `1px solid ${C.brd}`, borderRadius: 8, width: 32, height: 32, color: C.mut, fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
               </div>
               {/* Progress bar */}
               {prodTasks.length > 0 && (() => {
@@ -1475,7 +1495,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                     {prodRes.length > 0 && (
                       <div style={{ marginBottom: 18 }}>
                         <div style={{ fontSize: 11, fontWeight: 700, color: C.sub, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span>🪑 Reservas do dia ({prodRes.length})</span>
+                          <span> Reservas do dia ({prodRes.length})</span>
                           <span style={{ color: C.mut, fontWeight: 400 }}>{prodRes.filter(r => r.status === 'arrived').length} chegaram</span>
                         </div>
                         {prodRes.map(r => (
@@ -1759,7 +1779,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
       {/* ── Checklist modal ── */}
       {checklistEv && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-          <div style={{ background: C.card, border: `1px solid ${C.brd}`, borderRadius: 20, width: '100%', maxWidth: 620, maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ background: C.bg2, border: `1px solid ${C.brd}`, borderRadius: 20, width: '100%', maxWidth: 620, maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px 16px', borderBottom: `1px solid ${C.brd}` }}>
               <div>
@@ -1781,7 +1801,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                   ️ Imprimir
                 </button>
                 <button onClick={() => { setChecklistEv(null); setChecklist([]) }}
-                  style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer', lineHeight: 1 }}></button>
+                  style={{ background: 'none', border: 'none', color: C.mut, fontSize: 22, cursor: 'pointer', lineHeight: 1 }}>×</button>
               </div>
             </div>
 
@@ -1797,7 +1817,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
                 style={{ flex: 1, background: C.bg, border: `1px solid ${C.brd}`, borderRadius: 8, padding: '8px 12px', color: C.txt, fontSize: 13, fontFamily: 'inherit' }} />
               <button onClick={addClItem}
                 style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: C.acc, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
-                
+                Adicionar
               </button>
             </div>
 
@@ -1835,7 +1855,7 @@ export function EventsPage({ house, onGoToReservas }: Props) {
         </div>
       )}
 
-      <FAB onClick={openNew} icon="" title="Novo evento" />
+      <FAB onClick={openNew} icon="+" title="Novo evento" />
     </div>
   )
 }

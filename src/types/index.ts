@@ -9,12 +9,13 @@ export interface UserProfile {
   id: string
   email: string
   full_name?: string
+  user_code?: string
 }
 
 export interface Session {
-  house: House
+  house: House | null
   user: UserProfile
-  role: string
+  role: string | null
 }
 
 export interface Client {

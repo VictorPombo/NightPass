@@ -1231,7 +1231,7 @@ export function CheckinPage({ house, user }: Props) {
         </div>
       )}
 
-      <FAB onClick={() => { setShowForm(true); setResult(null); setMode('checkin') }} icon="" title="Novo cliente" />
+      <FAB onClick={() => { setShowForm(true); setResult(null); setMode('checkin') }} icon="+" title="Novo cliente" />
 
       {/* ── Modal Comanda + Confirmar Check-in ── */}
       {pendingCI && (
